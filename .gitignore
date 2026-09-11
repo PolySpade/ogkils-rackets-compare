@@ -43,3 +43,7 @@ OGKILS-2026 Brochure.pdf
 
 # stale working screenshots
 compare-mobile.png
+
+# Brand masters dropped at the repo root. Leading slash matters: a bare "assets/" would
+# also match src/assets/, which holds the racket artwork the build imports.
+/assets/
