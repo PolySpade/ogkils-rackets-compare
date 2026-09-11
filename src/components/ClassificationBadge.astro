@@ -1,0 +1,40 @@
+---
+import { classMeta } from '../lib/classification';
+import type { Classification } from '../lib/types';
+
+interface Props {
+  classification: Classification;
+  /** 'sm' = compact chip (cards, tables); 'md' = standalone. */
+  size?: 'sm' | 'md';
+  /** Show the one-line blurb after the label. */
+  withBlurb?: boolean;
+  /**
+   * 'tint'    — teal label with a thin teal outline, for white/aqua catalogue surfaces.
+   * 'inherit' — takes the surrounding text colour, for the turquoise comparison header
+   *             where a teal-on-teal chip would fall below AA.
+   */
+  variant?: 'tint' | 'inherit';
+}
+
+const { classification, size = 'sm', withBlurb = false, variant = 'tint' } = Astro.props;
+const meta = classMeta(classification);
+---
+
+<span
+  class:list={[
+    'inline-flex items-center gap-1.5 rounded-[2px] border font-extrabold uppercase leading-none tracking-[0.08em]',
+    variant === 'inherit'
+      ? 'border-current/40 text-current'
+      : 'border-brand text-brand-strong',
+    size === 'sm' ? 'px-1.5 py-1 text-[0.64rem]' : 'px-2.5 py-1.5 text-[0.72rem]',
+  ]}
+>
+  <!-- The brochure marks a category with a small filled square (p.11 "▪ SPEED"). -->
+  <span class="inline-block h-[0.3rem] w-[0.3rem] bg-current" aria-hidden="true"></span>
+  {meta.label}
+  {
+    withBlurb && (
+      <span class="font-medium normal-case tracking-normal text-fg-muted">— {meta.blurb}</span>
+    )
+  }
+</span>

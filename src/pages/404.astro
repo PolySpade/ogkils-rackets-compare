@@ -1,0 +1,42 @@
+---
+import Base from '../layouts/Base.astro';
+import RacketCard from '../components/RacketCard.astro';
+import { getRacket } from '../lib/data';
+
+const top = ['fire-breathing', 'thunder-breathing', 'mist-breathing']
+  .map((id) => getRacket(id))
+  .filter((r): r is NonNullable<typeof r> => Boolean(r));
+---
+
+<Base title="Page not found | OGKILS Racket Compare" path="/404">
+  <div class="mx-auto max-w-6xl px-4 py-16 sm:px-6 sm:py-20">
+    <header>
+      <p class="section-kicker">Error 404</p>
+      <h1 class="display-heading is-title mt-2 text-4xl text-fg sm:text-5xl">
+        That page isn't here.
+      </h1>
+      <p class="prose-measure mt-4 leading-relaxed text-fg-muted">
+        The racket or page you were after may have moved. Try browsing the full lineup, or
+        start with one of these.
+      </p>
+      <div class="mt-6 flex flex-wrap gap-3">
+        <a href="/rackets" class="primary-action press">Browse all rackets <span aria-hidden="true">→</span></a>
+        <a href="/finder" class="secondary-action press">Find my racket <span aria-hidden="true">↗</span></a>
+      </div>
+    </header>
+
+    <section class="mt-14" aria-labelledby="popular-heading">
+      <p class="section-kicker">Popular rackets</p>
+      <h2 id="popular-heading" class="display-heading mt-2 text-2xl text-fg sm:text-3xl">
+        Start here
+      </h2>
+      <div class="catalog-rule mt-5 grid gap-5 pt-5 sm:grid-cols-2 lg:grid-cols-3">
+        {
+          top.map((r) => (
+            <RacketCard racket={r} sizes="(max-width: 639px) 100vw, (max-width: 1023px) 45vw, 360px" />
+          ))
+        }
+      </div>
+    </section>
+  </div>
+</Base>

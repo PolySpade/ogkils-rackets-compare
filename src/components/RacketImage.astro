@@ -1,0 +1,54 @@
+---
+import { Image } from 'astro:assets';
+import { racketImage } from '../lib/images';
+import type { Racket } from '../lib/types';
+
+interface Props {
+  racket: Racket;
+  /**
+   * Stage shape. The assets in src/assets/rackets are square campaign panels, so every
+   * stage shows the artwork whole (`object-fit: contain`) rather than cropping into it
+   * — DESIGN.md: "Show the entire racket … with object-fit: contain".
+   */
+  ratio?: 'square' | 'fill';
+  /** Hint for responsive sizing. */
+  sizes?: string;
+  /** Eager-load above-the-fold hero images. */
+  eager?: boolean;
+  /** Rendered widths for the responsive source set. */
+  widths?: number[];
+  class?: string;
+}
+
+const {
+  racket: r,
+  ratio = 'square',
+  sizes = '(max-width: 640px) 100vw, 400px',
+  eager = false,
+  widths = [240, 400, 500],
+  class: cls = '',
+} = Astro.props;
+const img = racketImage(r.id);
+---
+
+<div class:list={['stage', ratio === 'square' ? 'aspect-square' : 'h-full w-full', cls]}>
+  {
+    img ? (
+      <Image
+        src={img}
+        alt={`OGKILS ${r.name} — product artwork`}
+        widths={widths}
+        sizes={sizes}
+        loading={eager ? 'eager' : 'lazy'}
+        decoding={eager ? 'sync' : 'async'}
+      />
+    ) : (
+      <div class="stage--empty h-full w-full">
+        <span class="text-sm font-extrabold uppercase tracking-[0.08em] text-fg-muted">
+          {r.modelCode}
+        </span>
+        <span class="text-xs text-fg-faint">Artwork coming soon</span>
+      </div>
+    )
+  }
+</div>

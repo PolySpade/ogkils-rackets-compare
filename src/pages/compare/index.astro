@@ -1,0 +1,102 @@
+---
+import { getImage } from 'astro:assets';
+import Base from '../../layouts/Base.astro';
+import CompareTray, {
+  type CompareRacket,
+  type SuggestedPair,
+} from '../../components/islands/CompareTray.tsx';
+import comparisonsFile from '../../../data/comparisons.json';
+import { catalog, getRacket } from '../../lib/data';
+import { classMeta } from '../../lib/classification';
+import { formatStiffness, trustedGripLengthMm, formatPrice } from '../../lib/format';
+import { stiffnessOrdinal } from '../../lib/derive';
+import { buyLinks, buildBuyUrl, STORE_FALLBACK_URL } from '../../lib/links';
+import { racketImage } from '../../lib/images';
+
+// Build the compact, serialisable compare record for every racket (any pair is possible).
+const data: Record<string, CompareRacket> = {};
+for (const r of catalog) {
+  const meta = classMeta(r.classification);
+  const stiff = formatStiffness(r.stiffness, r.derived.stiffnessWordConflict);
+  const img = racketImage(r.id);
+  const thumb = img ? (await getImage({ src: img, width: 96 })).src : null;
+
+  const links = buyLinks(r);
+  const buys = links.length
+    ? links.map((l) => ({
+        label: l.label,
+        channel: l.channel,
+        primary: l.primary,
+        url: buildBuyUrl(l.url, r.id, l.channel, 'compare'),
+      }))
+    : [{ label: 'OGKILS Store', channel: 'shopify', primary: true, url: STORE_FALLBACK_URL }];
+
+  data[r.id] = {
+    id: r.id,
+    name: r.name,
+    modelCode: r.modelCode,
+    classification: r.classification,
+    classLabel: meta.label,
+    series: r.series,
+    materials: r.materials,
+    balance: r.balance,
+    stiffnessPrimary: stiff.primary,
+    stiffnessLabel: stiff.label,
+    stiffnessOrdinal: stiffnessOrdinal(r.stiffness.word),
+    shaftDiameterMm: r.shaftDiameterMm,
+    frameHoleType: r.frameHoleType,
+    frameAreaCm2: r.frameAreaCm2,
+    gripLengthMm: trustedGripLengthMm(r),
+    racketLengthMm: r.racketLengthMm,
+    variants: r.variants.map((v) => ({
+      weightClass: v.weightClass,
+      weightRangeG: v.weightRangeG,
+      weightMidG: v.weightMidG,
+      gripSizes: v.gripSizes,
+      maxTensionLbs: v.maxTensionLbs,
+      balancePointMm: v.balancePointMm,
+      swingWeight: v.swingWeight,
+      swingWeightMissing: v.swingWeightMissing,
+    })),
+    pricePhp: r.pricePhp,
+    priceLabel: formatPrice(r.pricePhp),
+    stockLevel: r.stockLevel,
+    thumb,
+    buys,
+  };
+}
+
+const suggestions: SuggestedPair[] = (comparisonsFile.pairs ?? [])
+  .slice(0, 4)
+  .map((p: { a: string; b: string }) => {
+    const a = getRacket(p.a);
+    const b = getRacket(p.b);
+    return a && b ? { ids: [a.id, b.id], labels: [a.name, b.name] } : null;
+  })
+  .filter((s): s is SuggestedPair => s !== null);
+---
+
+<Base
+  title="Compare OGKILS rackets side by side"
+  description="Put up to four OGKILS badminton rackets side by side, spec by spec, with every real difference marked."
+  path="/compare"
+  showCompareBar={false}
+>
+  <div class="mx-auto max-w-6xl px-4 py-10 sm:px-6">
+    <header class="mb-8">
+      <p class="section-kicker">Technical table / Up to four rackets</p>
+      <h1 class="display-heading is-title mt-2 text-4xl text-fg sm:text-5xl">Compare rackets</h1>
+      <p class="prose-measure mt-3 text-fg-muted">
+        Shortlist up to four rackets. Compare a pair on your phone or the full shortlist on
+        a larger screen, with the differences that matter marked automatically.
+      </p>
+    </header>
+
+    <CompareTray client:only="react" data={data} suggestions={suggestions} />
+  </div>
+</Base>
+
+<script>
+  import { initBuyTracking } from '../../lib/analytics';
+  initBuyTracking();
+</script>

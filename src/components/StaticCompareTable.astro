@@ -1,0 +1,122 @@
+---
+import ClassificationBadge from './ClassificationBadge.astro';
+import RacketImage from './RacketImage.astro';
+import { extremeIndices, stiffnessOrdinal } from '../lib/derive';
+import { formatStiffness, formatPrice, trustedGripLengthMm } from '../lib/format';
+import type { Racket } from '../lib/types';
+
+interface Props {
+  rackets: Racket[];
+}
+const { rackets } = Astro.props;
+const DASH = '—';
+
+type Diff = 'high' | 'low' | 'both' | null;
+interface Row {
+  label: string;
+  termKey?: string;
+  unit?: string;
+  diff: Diff;
+  /** Only mark a diff when the row spans at least this much — filters imperceptible gaps. */
+  minSpread?: number;
+  cell: (r: Racket) => { display: string; num: number | null };
+}
+
+// Server-side comparison uses each racket's first (lightest) variant.
+const v0 = (r: Racket) => r.variants[0]!;
+
+const rows: Row[] = [
+  { label: 'Classification', diff: null, cell: (r) => ({ display: r.classification, num: null }) },
+  { label: 'Materials', diff: null, cell: (r) => ({ display: r.materials.join(' · ') || DASH, num: null }) },
+  { label: 'Balance', termKey: 'balance-label', diff: null, cell: (r) => ({ display: r.balance, num: null }) },
+  {
+    label: 'Stiffness', termKey: 'shaft-stiffness', diff: 'both',
+    cell: (r) => {
+      const s = formatStiffness(r.stiffness, r.derived.stiffnessWordConflict);
+      return { display: s.label ? `${s.primary} ${s.label}` : s.primary, num: stiffnessOrdinal(r.stiffness.word) };
+    },
+  },
+  { label: 'Balance point', termKey: 'balance-point', unit: 'mm', diff: 'both', minSpread: 5, cell: (r) => ({ display: `${v0(r).balancePointMm}`, num: v0(r).balancePointMm }) },
+  { label: 'Weight', termKey: 'weight-class', unit: 'g', diff: 'both', cell: (r) => ({ display: `${v0(r).weightRangeG[0]}–${v0(r).weightRangeG[1]}`, num: v0(r).weightMidG }) },
+  { label: 'Swing weight', termKey: 'swing-weight', diff: 'both', cell: (r) => (v0(r).swingWeightMissing ? { display: DASH, num: null } : { display: `${v0(r).swingWeight}`, num: v0(r).swingWeight }) },
+  { label: 'Shaft diameter', termKey: 'shaft-diameter', unit: 'mm', diff: 'both', minSpread: 0.2, cell: (r) => ({ display: `${r.shaftDiameterMm}`, num: r.shaftDiameterMm }) },
+  { label: 'Max tension', termKey: 'max-tension', unit: 'lbs', diff: 'high', cell: (r) => ({ display: `${v0(r).maxTensionLbs}`, num: v0(r).maxTensionLbs }) },
+  { label: 'Frame area', termKey: 'frame-area', unit: 'cm²', diff: 'high', cell: (r) => (r.frameAreaCm2 === null ? { display: DASH, num: null } : { display: `${r.frameAreaCm2}`, num: r.frameAreaCm2 }) },
+  { label: 'Grip length', unit: 'mm', diff: null, cell: (r) => { const g = trustedGripLengthMm(r); return g === null ? { display: DASH, num: null } : { display: `${g}`, num: g }; } },
+  { label: 'Price', diff: 'low', cell: (r) => (r.pricePhp === null ? { display: DASH, num: null } : { display: formatPrice(r.pricePhp) ?? DASH, num: r.pricePhp }) },
+];
+
+const computed = rows.map((row) => {
+  const cells = rackets.map((r) => row.cell(r));
+  const nums = cells.map((c) => c.num);
+  const highs = row.diff === 'high' || row.diff === 'both' ? extremeIndices(nums, 'high', row.minSpread) : new Set<number>();
+  const lows = row.diff === 'low' || row.diff === 'both' ? extremeIndices(nums, 'low', row.minSpread) : new Set<number>();
+  return { row, cells, highs, lows };
+});
+---
+
+<!-- Two columns always fit above 640px, so the wrapper can stay out of scroll-container
+     mode and let the product headers stick to the page as you read down the table. -->
+<div class="spec-table-wrap is-fitting">
+  <table class="spec-table">
+    <caption class="sr-only">
+      Specification comparison. Cells marked “highest” or “lowest” carry the extreme value
+      in that row. A dash means the figure is not published.
+    </caption>
+    <thead>
+      <tr>
+        <th scope="col" class="th-corner">Item name</th>
+        {rackets.map((r) => (
+          <th scope="col" class="th-product">
+            <div class="flex flex-col items-center gap-2.5">
+              <RacketImage
+                racket={r}
+                sizes="64px"
+                widths={[128]}
+                class="stage--thumb h-16 w-16 shrink-0 bg-panel"
+              />
+              <a href={`/rackets/${r.id}`} class="th-name uppercase">{r.name}</a>
+              <ClassificationBadge classification={r.classification} variant="inherit" />
+            </div>
+          </th>
+        ))}
+      </tr>
+    </thead>
+    <tbody>
+      {computed.map(({ row, cells, highs, lows }) => (
+        <tr>
+          <th scope="row">
+            <span class="flex items-center">
+              {row.label}
+              {row.termKey && (
+                <a href={`/guide/racket-specs#${row.termKey}`} class="spec-help" aria-label={`What is ${row.label}? Opens the spec guide.`}>?</a>
+              )}
+            </span>
+          </th>
+          {cells.map((c, i) => {
+            const isHigh = highs.has(i);
+            const isLow = lows.has(i);
+            const marked = isHigh || isLow;
+            const missing = c.display === DASH;
+            return (
+              <td class:list={[marked && 'is-marked']}>
+                <span
+                  class:list={[missing ? 'spec-missing' : 'tnum font-semibold']}
+                  title={missing ? 'Not published by OGKILS' : undefined}
+                >{c.display}</span>
+                {row.unit && !missing ? <span class="spec-unit">{row.unit}</span> : null}
+                {missing && <span class="sr-only">Not published</span>}
+                {marked && (
+                  <span class="spec-diff-mark">
+                    <span aria-hidden="true">{isHigh ? '▲' : '▼'}</span>
+                    <span class="sr-only">{isHigh ? 'highest of these rackets' : 'lowest of these rackets'}</span>
+                  </span>
+                )}
+              </td>
+            );
+          })}
+        </tr>
+      ))}
+    </tbody>
+  </table>
+</div>

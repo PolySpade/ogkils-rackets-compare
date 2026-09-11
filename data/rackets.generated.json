@@ -1,0 +1,1368 @@
+{
+  "schemaVersion": 1,
+  "source": "Product_Database_Racket_Specs.xlsx",
+  "count": 19,
+  "rackets": [
+    {
+      "id": "mist-breathing",
+      "name": "Mist Breathing",
+      "modelCode": "MIST BREATHING",
+      "series": "Breathing",
+      "classification": "CONTROL",
+      "balance": "Even Balance",
+      "materials": [
+        "VIBRANIUM",
+        "TORAY M46J",
+        "HIGH MODULUS CARBON FIBER"
+      ],
+      "materialsRaw": "VIBRANIUM + TORAY M46J + HIGH MODULUS CARBON FIBER",
+      "shaftDiameterMm": 6.8,
+      "shaftNote": "6.8mm",
+      "stiffness": {
+        "word": "Medium",
+        "rangeLow": 8.2,
+        "rangeHigh": 8.5,
+        "value": 8.35,
+        "raw": "8.2-8.5 (Stiff)"
+      },
+      "frameHoleCount": 76,
+      "frameHoleType": "76 Slanted Hole",
+      "frameAreaCm2": 355.07,
+      "gripLengthMm": 217.0,
+      "racketLengthMm": 675.0,
+      "variants": [
+        {
+          "weightClass": "3U",
+          "weightRangeG": [
+            85.0,
+            89.9
+          ],
+          "weightMidG": 87.5,
+          "gripSizes": [
+            "G5"
+          ],
+          "maxTensionLbs": 31.0,
+          "balancePointMm": 296.0,
+          "balancePointToleranceMm": 3.0,
+          "swingWeight": 87.0,
+          "swingWeightTolerance": 2.0,
+          "swingWeightMissing": false
+        },
+        {
+          "weightClass": "4U",
+          "weightRangeG": [
+            80.0,
+            84.9
+          ],
+          "weightMidG": 82.5,
+          "gripSizes": [
+            "G5",
+            "G6"
+          ],
+          "maxTensionLbs": 30.0,
+          "balancePointMm": 299.0,
+          "balancePointToleranceMm": 3.0,
+          "swingWeight": 85.0,
+          "swingWeightTolerance": 2.0,
+          "swingWeightMissing": false
+        }
+      ],
+      "tagline": null,
+      "description": null,
+      "pricePhp": null,
+      "images": [],
+      "inStock": true,
+      "links": {
+        "shopify": null,
+        "shopee": null,
+        "lazada": null,
+        "tiktok": null
+      }
+    },
+    {
+      "id": "thunder-breathing",
+      "name": "Thunder Breathing",
+      "modelCode": "THUNDER BREATHING",
+      "series": "Breathing",
+      "classification": "SPEED",
+      "balance": "Head-Heavy",
+      "materials": [
+        "VIBRANIUM",
+        "TORAY M46J",
+        "HIGH MODULUS CARBON FIBER"
+      ],
+      "materialsRaw": "VIBRANIUM + TORAY M46J + HIGH MODULUS CARBON FIBER",
+      "shaftDiameterMm": 6.6,
+      "shaftNote": "6.6mm",
+      "stiffness": {
+        "word": "Stiff",
+        "rangeLow": 8.2,
+        "rangeHigh": 8.5,
+        "value": 8.35,
+        "raw": "8.2-8.5 (Stiff)"
+      },
+      "frameHoleCount": 76,
+      "frameHoleType": "76 Slanted Hole",
+      "frameAreaCm2": 344.46,
+      "gripLengthMm": 209.0,
+      "racketLengthMm": 675.0,
+      "variants": [
+        {
+          "weightClass": "3U",
+          "weightRangeG": [
+            85.0,
+            89.9
+          ],
+          "weightMidG": 87.5,
+          "gripSizes": [
+            "G5",
+            "G6"
+          ],
+          "maxTensionLbs": 31.0,
+          "balancePointMm": 302.0,
+          "balancePointToleranceMm": 3.0,
+          "swingWeight": 87.5,
+          "swingWeightTolerance": 1.5,
+          "swingWeightMissing": false
+        },
+        {
+          "weightClass": "4U",
+          "weightRangeG": [
+            80.0,
+            84.9
+          ],
+          "weightMidG": 82.5,
+          "gripSizes": [
+            "G5",
+            "G6"
+          ],
+          "maxTensionLbs": 29.0,
+          "balancePointMm": 305.0,
+          "balancePointToleranceMm": 3.0,
+          "swingWeight": 84.5,
+          "swingWeightTolerance": 1.5,
+          "swingWeightMissing": false
+        }
+      ],
+      "tagline": null,
+      "description": null,
+      "pricePhp": null,
+      "images": [],
+      "inStock": true,
+      "links": {
+        "shopify": null,
+        "shopee": null,
+        "lazada": null,
+        "tiktok": null
+      }
+    },
+    {
+      "id": "water-breathing",
+      "name": "Water Breathing",
+      "modelCode": "WATER BREATHING",
+      "series": "Breathing",
+      "classification": "CONTROL",
+      "balance": "Even Balance",
+      "materials": [
+        "TORAY M46J",
+        "HIGH MODULUS CARBON FIBER"
+      ],
+      "materialsRaw": "TORAY M46J + HIGH MODULUS CARBON FIBER",
+      "shaftDiameterMm": 6.8,
+      "shaftNote": "6.8mm",
+      "stiffness": {
+        "word": "Medium",
+        "rangeLow": 7.9,
+        "rangeHigh": 8.2,
+        "value": 8.05,
+        "raw": "7.9-8.2 (Moderate)"
+      },
+      "frameHoleCount": 76,
+      "frameHoleType": "76 Slanted Hole",
+      "frameAreaCm2": 363.0,
+      "gripLengthMm": 207.0,
+      "racketLengthMm": 673.0,
+      "variants": [
+        {
+          "weightClass": "3U",
+          "weightRangeG": [
+            85.0,
+            89.9
+          ],
+          "weightMidG": 87.5,
+          "gripSizes": [
+            "G5"
+          ],
+          "maxTensionLbs": 30.0,
+          "balancePointMm": 296.0,
+          "balancePointToleranceMm": 3.0,
+          "swingWeight": 87.5,
+          "swingWeightTolerance": 2.0,
+          "swingWeightMissing": false
+        },
+        {
+          "weightClass": "4U",
+          "weightRangeG": [
+            80.0,
+            84.9
+          ],
+          "weightMidG": 82.5,
+          "gripSizes": [
+            "G5",
+            "G6"
+          ],
+          "maxTensionLbs": 29.0,
+          "balancePointMm": 299.0,
+          "balancePointToleranceMm": 3.0,
+          "swingWeight": 85.0,
+          "swingWeightTolerance": 2.0,
+          "swingWeightMissing": false
+        }
+      ],
+      "tagline": null,
+      "description": null,
+      "pricePhp": null,
+      "images": [],
+      "inStock": true,
+      "links": {
+        "shopify": null,
+        "shopee": null,
+        "lazada": null,
+        "tiktok": null
+      }
+    },
+    {
+      "id": "fire-breathing",
+      "name": "Fire Breathing",
+      "modelCode": "FIRE BREATHING",
+      "series": "Breathing",
+      "classification": "ATTACK",
+      "balance": "Head-Heavy",
+      "materials": [
+        "4X CARBON",
+        "TORAY M46J",
+        "HIGH MODULUS CARBON FIBER"
+      ],
+      "materialsRaw": "4X CARBON+ TORAY M46J + HIGH MODULUS CARBON FIBER",
+      "shaftDiameterMm": 6.8,
+      "shaftNote": "6.8mm",
+      "stiffness": {
+        "word": "Medium",
+        "rangeLow": 8.4,
+        "rangeHigh": 8.7,
+        "value": 8.55,
+        "raw": "3U/4U: 8.4-8.7 (Moderate)"
+      },
+      "frameHoleCount": 76,
+      "frameHoleType": "76 Slanted Hole",
+      "frameAreaCm2": 355.4,
+      "gripLengthMm": 205.0,
+      "racketLengthMm": 675.0,
+      "variants": [
+        {
+          "weightClass": "3U",
+          "weightRangeG": [
+            85.0,
+            89.9
+          ],
+          "weightMidG": 87.5,
+          "gripSizes": [
+            "G5",
+            "G6"
+          ],
+          "maxTensionLbs": 31.0,
+          "balancePointMm": 302.0,
+          "balancePointToleranceMm": 3.0,
+          "swingWeight": 90.0,
+          "swingWeightTolerance": 2.0,
+          "swingWeightMissing": false
+        },
+        {
+          "weightClass": "4U",
+          "weightRangeG": [
+            80.0,
+            84.9
+          ],
+          "weightMidG": 82.5,
+          "gripSizes": [
+            "G5",
+            "G6"
+          ],
+          "maxTensionLbs": 29.0,
+          "balancePointMm": 305.0,
+          "balancePointToleranceMm": 3.0,
+          "swingWeight": 87.0,
+          "swingWeightTolerance": 2.0,
+          "swingWeightMissing": false
+        },
+        {
+          "weightClass": "5U",
+          "weightRangeG": [
+            75.0,
+            79.9
+          ],
+          "weightMidG": 77.5,
+          "gripSizes": [
+            "G5",
+            "G6"
+          ],
+          "maxTensionLbs": 28.0,
+          "balancePointMm": 308.0,
+          "balancePointToleranceMm": 3.0,
+          "swingWeight": 83.0,
+          "swingWeightTolerance": 2.0,
+          "swingWeightMissing": false
+        }
+      ],
+      "tagline": null,
+      "description": null,
+      "pricePhp": null,
+      "images": [],
+      "inStock": true,
+      "links": {
+        "shopify": null,
+        "shopee": null,
+        "lazada": null,
+        "tiktok": null
+      }
+    },
+    {
+      "id": "love-breathing",
+      "name": "Love Breathing",
+      "modelCode": "LOVE BREATHING",
+      "series": "Breathing",
+      "classification": "SPEED",
+      "balance": "Head-Heavy",
+      "materials": [
+        "TORAY M40J",
+        "HIGH MODULUS CARBON FIBER"
+      ],
+      "materialsRaw": "TORAY M40J + HIGH MODULUS CARBON FIBER",
+      "shaftDiameterMm": 7.0,
+      "shaftNote": "7.0mm",
+      "stiffness": {
+        "word": "Slightly Soft",
+        "rangeLow": 8.5,
+        "rangeHigh": 8.9,
+        "value": 8.7,
+        "raw": "8.5-8.9 (Moderate)"
+      },
+      "frameHoleCount": 76,
+      "frameHoleType": "76 Slanted Hole",
+      "frameAreaCm2": 350.0,
+      "gripLengthMm": 202.0,
+      "racketLengthMm": 675.0,
+      "variants": [
+        {
+          "weightClass": "5U",
+          "weightRangeG": [
+            75.0,
+            79.9
+          ],
+          "weightMidG": 77.5,
+          "gripSizes": [
+            "G6"
+          ],
+          "maxTensionLbs": 30.0,
+          "balancePointMm": 307.0,
+          "balancePointToleranceMm": 3.0,
+          "swingWeight": 83.5,
+          "swingWeightTolerance": 2.0,
+          "swingWeightMissing": false
+        },
+        {
+          "weightClass": "6U",
+          "weightRangeG": [
+            70.0,
+            74.9
+          ],
+          "weightMidG": 72.5,
+          "gripSizes": [
+            "G6"
+          ],
+          "maxTensionLbs": 29.0,
+          "balancePointMm": 312.0,
+          "balancePointToleranceMm": 3.0,
+          "swingWeight": 82.0,
+          "swingWeightTolerance": 2.0,
+          "swingWeightMissing": false
+        }
+      ],
+      "tagline": null,
+      "description": null,
+      "pricePhp": null,
+      "images": [],
+      "inStock": true,
+      "links": {
+        "shopify": null,
+        "shopee": null,
+        "lazada": null,
+        "tiktok": null
+      }
+    },
+    {
+      "id": "ld77pro",
+      "name": "LD77PRO",
+      "modelCode": "LD77PRO",
+      "series": "LD",
+      "classification": "ATTACK",
+      "balance": "Head-Heavy",
+      "materials": [
+        "TORAY M46J",
+        "M40",
+        "M30 HIGH MODULUS CARBON FIBER"
+      ],
+      "materialsRaw": "TORAY M46J + M40 + M30 HIGH MODULUS CARBON FIBER",
+      "shaftDiameterMm": 6.8,
+      "shaftNote": "6.8mm",
+      "stiffness": {
+        "word": "Slightly Stiff",
+        "rangeLow": 7.7,
+        "rangeHigh": 8.0,
+        "value": 7.85,
+        "raw": "7.7-8.0 (Slightly Stiff)"
+      },
+      "frameHoleCount": 76,
+      "frameHoleType": "76 Slanted Hole",
+      "frameAreaCm2": 355.07,
+      "gripLengthMm": 202.0,
+      "racketLengthMm": 673.0,
+      "variants": [
+        {
+          "weightClass": "3U",
+          "weightRangeG": [
+            85.0,
+            89.9
+          ],
+          "weightMidG": 87.5,
+          "gripSizes": [
+            "G5"
+          ],
+          "maxTensionLbs": 31.0,
+          "balancePointMm": 302.0,
+          "balancePointToleranceMm": 3.0,
+          "swingWeight": 88.0,
+          "swingWeightTolerance": 2.0,
+          "swingWeightMissing": false
+        },
+        {
+          "weightClass": "4U",
+          "weightRangeG": [
+            80.0,
+            84.9
+          ],
+          "weightMidG": 82.5,
+          "gripSizes": [
+            "G5",
+            "G6"
+          ],
+          "maxTensionLbs": 30.0,
+          "balancePointMm": 305.0,
+          "balancePointToleranceMm": 3.0,
+          "swingWeight": 86.0,
+          "swingWeightTolerance": 2.0,
+          "swingWeightMissing": false
+        }
+      ],
+      "tagline": null,
+      "description": null,
+      "pricePhp": null,
+      "images": [],
+      "inStock": true,
+      "links": {
+        "shopify": null,
+        "shopee": null,
+        "lazada": null,
+        "tiktok": null
+      }
+    },
+    {
+      "id": "ld800pro",
+      "name": "LD800PRO",
+      "modelCode": "LD800PRO",
+      "series": "LD",
+      "classification": "SPEED",
+      "balance": "Even Balance",
+      "materials": [
+        "TORAY M46J",
+        "HIGH MODULUS CARBON FIBER",
+        "COPPER ALLOY"
+      ],
+      "materialsRaw": "TORAY M46J + HIGH MODULUS CARBON FIBER + COPPER ALLOY",
+      "shaftDiameterMm": 6.8,
+      "shaftNote": "6.8mm",
+      "stiffness": {
+        "word": "Slightly Stiff",
+        "rangeLow": 7.6,
+        "rangeHigh": 7.9,
+        "value": 7.75,
+        "raw": "7.6-7.9 (Slightly Stiff)"
+      },
+      "frameHoleCount": 78,
+      "frameHoleType": "78 Slanted Hole",
+      "frameAreaCm2": 361.71,
+      "gripLengthMm": 207.0,
+      "racketLengthMm": 673.0,
+      "variants": [
+        {
+          "weightClass": "4U",
+          "weightRangeG": [
+            80.0,
+            84.9
+          ],
+          "weightMidG": 82.5,
+          "gripSizes": [
+            "G5",
+            "G6"
+          ],
+          "maxTensionLbs": 30.0,
+          "balancePointMm": 298.0,
+          "balancePointToleranceMm": 3.0,
+          "swingWeight": 83.5,
+          "swingWeightTolerance": 1.5,
+          "swingWeightMissing": false
+        }
+      ],
+      "tagline": null,
+      "description": null,
+      "pricePhp": null,
+      "images": [],
+      "inStock": true,
+      "links": {
+        "shopify": null,
+        "shopee": null,
+        "lazada": null,
+        "tiktok": null
+      }
+    },
+    {
+      "id": "ld1000z",
+      "name": "LD1000Z",
+      "modelCode": "LD1000Z",
+      "series": "LD",
+      "classification": "SPEED",
+      "balance": "Head-Light",
+      "materials": [
+        "TORAY M46J",
+        "M40X"
+      ],
+      "materialsRaw": "TORAY M46J + M40X",
+      "shaftDiameterMm": 6.8,
+      "shaftNote": "6.8mm",
+      "stiffness": {
+        "word": "Stiff",
+        "rangeLow": 8.0,
+        "rangeHigh": 8.3,
+        "value": 8.15,
+        "raw": "8.0-8.3 (Stiff)"
+      },
+      "frameHoleCount": 76,
+      "frameHoleType": "76 Slanted Hole",
+      "frameAreaCm2": 342.45,
+      "gripLengthMm": 214.0,
+      "racketLengthMm": 673.0,
+      "variants": [
+        {
+          "weightClass": "3U",
+          "weightRangeG": [
+            85.0,
+            89.9
+          ],
+          "weightMidG": 87.5,
+          "gripSizes": [
+            "G5"
+          ],
+          "maxTensionLbs": 30.0,
+          "balancePointMm": 293.0,
+          "balancePointToleranceMm": 3.0,
+          "swingWeight": 87.0,
+          "swingWeightTolerance": 2.0,
+          "swingWeightMissing": false
+        },
+        {
+          "weightClass": "4U",
+          "weightRangeG": [
+            80.0,
+            84.9
+          ],
+          "weightMidG": 82.5,
+          "gripSizes": [
+            "G5",
+            "G6"
+          ],
+          "maxTensionLbs": 29.0,
+          "balancePointMm": 300.0,
+          "balancePointToleranceMm": 3.0,
+          "swingWeight": 84.0,
+          "swingWeightTolerance": 2.0,
+          "swingWeightMissing": false
+        }
+      ],
+      "tagline": null,
+      "description": null,
+      "pricePhp": null,
+      "images": [],
+      "inStock": true,
+      "links": {
+        "shopify": null,
+        "shopee": null,
+        "lazada": null,
+        "tiktok": null
+      }
+    },
+    {
+      "id": "ld100zz",
+      "name": "LD100ZZ",
+      "modelCode": "LD100ZZ",
+      "series": "LD",
+      "classification": "ATTACK",
+      "balance": "Head-Heavy",
+      "materials": [
+        "TORAY M50JB",
+        "M30"
+      ],
+      "materialsRaw": "TORAY M50JB + M30",
+      "shaftDiameterMm": 6.2,
+      "shaftNote": "6.2mm Solid",
+      "stiffness": {
+        "word": "Medium",
+        "rangeLow": 8.2,
+        "rangeHigh": 8.5,
+        "value": 8.35,
+        "raw": "8.2-8.5 (Moderate)"
+      },
+      "frameHoleCount": 76,
+      "frameHoleType": "76 Slanted Hole",
+      "frameAreaCm2": 349.6,
+      "gripLengthMm": 217.0,
+      "racketLengthMm": 675.0,
+      "variants": [
+        {
+          "weightClass": "3U",
+          "weightRangeG": [
+            85.0,
+            89.9
+          ],
+          "weightMidG": 87.5,
+          "gripSizes": [
+            "G5"
+          ],
+          "maxTensionLbs": 30.0,
+          "balancePointMm": 305.0,
+          "balancePointToleranceMm": 3.0,
+          "swingWeight": 90.0,
+          "swingWeightTolerance": 2.0,
+          "swingWeightMissing": false
+        },
+        {
+          "weightClass": "4U",
+          "weightRangeG": [
+            80.0,
+            84.9
+          ],
+          "weightMidG": 82.5,
+          "gripSizes": [
+            "G5",
+            "G6"
+          ],
+          "maxTensionLbs": 28.0,
+          "balancePointMm": 305.0,
+          "balancePointToleranceMm": 3.0,
+          "swingWeight": 86.0,
+          "swingWeightTolerance": 2.0,
+          "swingWeightMissing": false
+        }
+      ],
+      "tagline": null,
+      "description": null,
+      "pricePhp": null,
+      "images": [],
+      "inStock": true,
+      "links": {
+        "shopify": null,
+        "shopee": null,
+        "lazada": null,
+        "tiktok": null
+      }
+    },
+    {
+      "id": "ld700",
+      "name": "LD700",
+      "modelCode": "LD700",
+      "series": "LD",
+      "classification": "SPEED",
+      "balance": "Head-Light",
+      "materials": [
+        "TORAY M46J",
+        "M30"
+      ],
+      "materialsRaw": "TORAY M46J + M30",
+      "shaftDiameterMm": 6.8,
+      "shaftNote": "6.8mm",
+      "stiffness": {
+        "word": "Medium",
+        "rangeLow": 8.3,
+        "rangeHigh": 8.5,
+        "value": 8.4,
+        "raw": "8.3-8.5 (Moderate)"
+      },
+      "frameHoleCount": 76,
+      "frameHoleType": "76 Slanted Hole",
+      "frameAreaCm2": 361.4,
+      "gripLengthMm": 207.0,
+      "racketLengthMm": 675.0,
+      "variants": [
+        {
+          "weightClass": "3U",
+          "weightRangeG": [
+            85.0,
+            89.9
+          ],
+          "weightMidG": 87.5,
+          "gripSizes": [
+            "G5"
+          ],
+          "maxTensionLbs": 29.0,
+          "balancePointMm": 292.0,
+          "balancePointToleranceMm": 3.0,
+          "swingWeight": 87.0,
+          "swingWeightTolerance": 2.0,
+          "swingWeightMissing": false
+        },
+        {
+          "weightClass": "4U",
+          "weightRangeG": [
+            80.0,
+            84.9
+          ],
+          "weightMidG": 82.5,
+          "gripSizes": [
+            "G5",
+            "G6"
+          ],
+          "maxTensionLbs": 27.0,
+          "balancePointMm": 295.0,
+          "balancePointToleranceMm": 3.0,
+          "swingWeight": 84.5,
+          "swingWeightTolerance": 2.0,
+          "swingWeightMissing": false
+        }
+      ],
+      "tagline": null,
+      "description": null,
+      "pricePhp": null,
+      "images": [],
+      "inStock": true,
+      "links": {
+        "shopify": null,
+        "shopee": null,
+        "lazada": null,
+        "tiktok": null
+      }
+    },
+    {
+      "id": "dimensional-slash-pro",
+      "name": "Dimensional Slash Pro",
+      "modelCode": "DSPRO",
+      "series": "Other",
+      "classification": "ALL-AROUND",
+      "balance": "Even Balance",
+      "materials": [
+        "High Modulus Carbon Fiber"
+      ],
+      "materialsRaw": "High Modulus Carbon Fiber",
+      "shaftDiameterMm": 6.8,
+      "shaftNote": "6.8mm",
+      "stiffness": {
+        "word": "Medium",
+        "rangeLow": 8.7,
+        "rangeHigh": 9.3,
+        "value": 9.0,
+        "raw": "8.7-9.3 (Moderate)"
+      },
+      "frameHoleCount": 76,
+      "frameHoleType": "76 Hole",
+      "frameAreaCm2": 359.7,
+      "gripLengthMm": 207.0,
+      "racketLengthMm": 675.0,
+      "variants": [
+        {
+          "weightClass": "4U",
+          "weightRangeG": [
+            80.0,
+            84.9
+          ],
+          "weightMidG": 82.5,
+          "gripSizes": [
+            "G6"
+          ],
+          "maxTensionLbs": 29.0,
+          "balancePointMm": 297.0,
+          "balancePointToleranceMm": 5.0,
+          "swingWeight": null,
+          "swingWeightTolerance": null,
+          "swingWeightMissing": true
+        },
+        {
+          "weightClass": "5U",
+          "weightRangeG": [
+            75.0,
+            79.9
+          ],
+          "weightMidG": 77.5,
+          "gripSizes": [
+            "G6"
+          ],
+          "maxTensionLbs": 28.0,
+          "balancePointMm": 304.0,
+          "balancePointToleranceMm": 5.0,
+          "swingWeight": null,
+          "swingWeightTolerance": null,
+          "swingWeightMissing": true
+        }
+      ],
+      "tagline": null,
+      "description": null,
+      "pricePhp": null,
+      "images": [],
+      "inStock": true,
+      "links": {
+        "shopify": null,
+        "shopee": null,
+        "lazada": null,
+        "tiktok": null
+      }
+    },
+    {
+      "id": "freezing",
+      "name": "Freezing",
+      "modelCode": "FREEZING",
+      "series": "Other",
+      "classification": "ALL-AROUND",
+      "balance": "Even Balance",
+      "materials": [
+        "High Modulus Carbon Fiber"
+      ],
+      "materialsRaw": "High Modulus Carbon Fiber",
+      "shaftDiameterMm": 7.0,
+      "shaftNote": "7.0mm",
+      "stiffness": {
+        "word": "Medium",
+        "rangeLow": 8.7,
+        "rangeHigh": 9.3,
+        "value": 9.0,
+        "raw": "8.7-9.3 (Moderate)"
+      },
+      "frameHoleCount": 76,
+      "frameHoleType": "76 Hole",
+      "frameAreaCm2": 354.0,
+      "gripLengthMm": 202.0,
+      "racketLengthMm": 675.0,
+      "variants": [
+        {
+          "weightClass": "4U",
+          "weightRangeG": [
+            80.0,
+            84.9
+          ],
+          "weightMidG": 82.5,
+          "gripSizes": [
+            "G6"
+          ],
+          "maxTensionLbs": 29.0,
+          "balancePointMm": 297.0,
+          "balancePointToleranceMm": 5.0,
+          "swingWeight": null,
+          "swingWeightTolerance": null,
+          "swingWeightMissing": true
+        },
+        {
+          "weightClass": "5U",
+          "weightRangeG": [
+            75.0,
+            79.9
+          ],
+          "weightMidG": 77.5,
+          "gripSizes": [
+            "G6"
+          ],
+          "maxTensionLbs": 28.0,
+          "balancePointMm": 304.0,
+          "balancePointToleranceMm": 5.0,
+          "swingWeight": null,
+          "swingWeightTolerance": null,
+          "swingWeightMissing": true
+        }
+      ],
+      "tagline": null,
+      "description": null,
+      "pricePhp": null,
+      "images": [],
+      "inStock": true,
+      "links": {
+        "shopify": null,
+        "shopee": null,
+        "lazada": null,
+        "tiktok": null
+      }
+    },
+    {
+      "id": "serpent-breathing",
+      "name": "Serpent Breathing",
+      "modelCode": "SERPENT BREATHING",
+      "series": "Breathing",
+      "classification": "ATTACK",
+      "balance": "Head-Heavy",
+      "materials": [
+        "VIBRANIUM",
+        "M46J HIGH MODULUS CARBON FIBER"
+      ],
+      "materialsRaw": "VIBRANIUM + M46J HIGH MODULUS CARBON FIBER",
+      "shaftDiameterMm": 6.8,
+      "shaftNote": "6.8mm",
+      "stiffness": {
+        "word": "Medium",
+        "rangeLow": 8.3,
+        "rangeHigh": 8.6,
+        "value": 8.45,
+        "raw": "8.3-8.6 (Moderate)"
+      },
+      "frameHoleCount": 76,
+      "frameHoleType": "76 Slanted Hole",
+      "frameAreaCm2": 355.2,
+      "gripLengthMm": 217.0,
+      "racketLengthMm": 675.0,
+      "variants": [
+        {
+          "weightClass": "3U",
+          "weightRangeG": [
+            85.0,
+            89.9
+          ],
+          "weightMidG": 87.5,
+          "gripSizes": [
+            "G5"
+          ],
+          "maxTensionLbs": 31.0,
+          "balancePointMm": 301.0,
+          "balancePointToleranceMm": 3.0,
+          "swingWeight": 90.0,
+          "swingWeightTolerance": 2.0,
+          "swingWeightMissing": false
+        },
+        {
+          "weightClass": "4U",
+          "weightRangeG": [
+            80.0,
+            84.9
+          ],
+          "weightMidG": 82.5,
+          "gripSizes": [
+            "G5",
+            "G6"
+          ],
+          "maxTensionLbs": 30.0,
+          "balancePointMm": 304.0,
+          "balancePointToleranceMm": 3.0,
+          "swingWeight": 87.5,
+          "swingWeightTolerance": 2.0,
+          "swingWeightMissing": false
+        }
+      ],
+      "tagline": null,
+      "description": null,
+      "pricePhp": null,
+      "images": [],
+      "inStock": true,
+      "links": {
+        "shopify": null,
+        "shopee": null,
+        "lazada": null,
+        "tiktok": null
+      }
+    },
+    {
+      "id": "wind-breathing",
+      "name": "Wind Breathing",
+      "modelCode": "WIND BREATHING",
+      "series": "Breathing",
+      "classification": "SPEED",
+      "balance": "Even Balance",
+      "materials": [
+        "VIBRANIUM",
+        "M46X High Modulus Carbon Fiber"
+      ],
+      "materialsRaw": "VIBRANIUM + M46X High Modulus Carbon Fiber",
+      "shaftDiameterMm": 6.6,
+      "shaftNote": "6.6mm",
+      "stiffness": {
+        "word": "Slightly Stiff",
+        "rangeLow": null,
+        "rangeHigh": null,
+        "value": null,
+        "raw": "Slightly Stiff"
+      },
+      "frameHoleCount": 76,
+      "frameHoleType": "76 Slanted Hole",
+      "frameAreaCm2": 351.34,
+      "gripLengthMm": 209.0,
+      "racketLengthMm": 675.0,
+      "variants": [
+        {
+          "weightClass": "3U",
+          "weightRangeG": [
+            85.0,
+            89.9
+          ],
+          "weightMidG": 87.5,
+          "gripSizes": [
+            "G5"
+          ],
+          "maxTensionLbs": 31.0,
+          "balancePointMm": 294.0,
+          "balancePointToleranceMm": 3.0,
+          "swingWeight": 87.5,
+          "swingWeightTolerance": 2.0,
+          "swingWeightMissing": false
+        },
+        {
+          "weightClass": "4U",
+          "weightRangeG": [
+            80.0,
+            84.9
+          ],
+          "weightMidG": 82.5,
+          "gripSizes": [
+            "G5",
+            "G6"
+          ],
+          "maxTensionLbs": 30.0,
+          "balancePointMm": 297.0,
+          "balancePointToleranceMm": 3.0,
+          "swingWeight": 84.5,
+          "swingWeightTolerance": 2.0,
+          "swingWeightMissing": false
+        }
+      ],
+      "tagline": null,
+      "description": null,
+      "pricePhp": null,
+      "images": [],
+      "inStock": true,
+      "links": {
+        "shopify": null,
+        "shopee": null,
+        "lazada": null,
+        "tiktok": null
+      }
+    },
+    {
+      "id": "ld88dpro",
+      "name": "LD88DPRO",
+      "modelCode": "LD88DPRO",
+      "series": "LD",
+      "classification": "ATTACK",
+      "balance": "Head-Heavy",
+      "materials": [
+        "TORAY T1100",
+        "M46J High Modulus Carbon Fiber"
+      ],
+      "materialsRaw": "TORAY T1100 + M46J High Modulus Carbon Fiber",
+      "shaftDiameterMm": 6.6,
+      "shaftNote": "6.6mm",
+      "stiffness": {
+        "word": "Medium",
+        "rangeLow": null,
+        "rangeHigh": null,
+        "value": null,
+        "raw": "Stiff"
+      },
+      "frameHoleCount": 76,
+      "frameHoleType": "76 Slanted Hole",
+      "frameAreaCm2": null,
+      "gripLengthMm": 170.0,
+      "racketLengthMm": 675.0,
+      "variants": [
+        {
+          "weightClass": "4U",
+          "weightRangeG": [
+            80.0,
+            84.9
+          ],
+          "weightMidG": 82.5,
+          "gripSizes": [
+            "G5",
+            "G6"
+          ],
+          "maxTensionLbs": 30.0,
+          "balancePointMm": 305.0,
+          "balancePointToleranceMm": 3.0,
+          "swingWeight": null,
+          "swingWeightTolerance": null,
+          "swingWeightMissing": true
+        }
+      ],
+      "tagline": null,
+      "description": null,
+      "pricePhp": null,
+      "images": [],
+      "inStock": true,
+      "links": {
+        "shopify": null,
+        "shopee": null,
+        "lazada": null,
+        "tiktok": null
+      }
+    },
+    {
+      "id": "ldlyd",
+      "name": "LDLYD",
+      "modelCode": "LDLYD",
+      "series": "LD",
+      "classification": "SPEED",
+      "balance": "Head-Heavy",
+      "materials": [
+        "TORAY M40J",
+        "High Modulus Carbon Fiber"
+      ],
+      "materialsRaw": "TORAY M40J + High Modulus Carbon Fiber",
+      "shaftDiameterMm": 7.0,
+      "shaftNote": "7.0mm",
+      "stiffness": {
+        "word": "Stiff",
+        "rangeLow": null,
+        "rangeHigh": null,
+        "value": null,
+        "raw": "Stiff"
+      },
+      "frameHoleCount": 72,
+      "frameHoleType": "72 Slanted Hole",
+      "frameAreaCm2": 352.8,
+      "gripLengthMm": 206.0,
+      "racketLengthMm": 675.0,
+      "variants": [
+        {
+          "weightClass": "4U",
+          "weightRangeG": [
+            80.0,
+            84.9
+          ],
+          "weightMidG": 82.5,
+          "gripSizes": [
+            "G5",
+            "G6"
+          ],
+          "maxTensionLbs": 30.0,
+          "balancePointMm": 302.0,
+          "balancePointToleranceMm": 3.0,
+          "swingWeight": null,
+          "swingWeightTolerance": null,
+          "swingWeightMissing": true
+        }
+      ],
+      "tagline": null,
+      "description": null,
+      "pricePhp": null,
+      "images": [],
+      "inStock": true,
+      "links": {
+        "shopify": null,
+        "shopee": null,
+        "lazada": null,
+        "tiktok": null
+      }
+    },
+    {
+      "id": "ld12l",
+      "name": "LD12L",
+      "modelCode": "LD12L",
+      "series": "LD",
+      "classification": "SPEED",
+      "balance": "Even Balance",
+      "materials": [
+        "TORAY M40J",
+        "High Modulus Carbon Fiber"
+      ],
+      "materialsRaw": "TORAY M40J + High Modulus Carbon Fiber",
+      "shaftDiameterMm": 7.0,
+      "shaftNote": "7.0mm",
+      "stiffness": {
+        "word": "Slightly Stiff",
+        "rangeLow": null,
+        "rangeHigh": null,
+        "value": null,
+        "raw": "Stiff"
+      },
+      "frameHoleCount": 72,
+      "frameHoleType": "72 Slanted Hole",
+      "frameAreaCm2": 352.8,
+      "gripLengthMm": 206.0,
+      "racketLengthMm": 675.0,
+      "variants": [
+        {
+          "weightClass": "4U",
+          "weightRangeG": [
+            80.0,
+            84.9
+          ],
+          "weightMidG": 82.5,
+          "gripSizes": [
+            "G5",
+            "G6"
+          ],
+          "maxTensionLbs": 30.0,
+          "balancePointMm": 298.0,
+          "balancePointToleranceMm": 3.0,
+          "swingWeight": null,
+          "swingWeightTolerance": null,
+          "swingWeightMissing": true
+        }
+      ],
+      "tagline": null,
+      "description": null,
+      "pricePhp": null,
+      "images": [],
+      "inStock": true,
+      "links": {
+        "shopify": null,
+        "shopee": null,
+        "lazada": null,
+        "tiktok": null
+      }
+    },
+    {
+      "id": "annihilation",
+      "name": "ANNIHILATION",
+      "modelCode": "ANNIHILATION",
+      "series": "Other",
+      "classification": "ATTACK",
+      "balance": "Head-Heavy",
+      "materials": [
+        "SMASH Gel",
+        "TORAY M50JB",
+        "HIGH MODULUS CARBON FIBER"
+      ],
+      "materialsRaw": "SMASH Gel + TORAY M50JB + HIGH MODULUS CARBON FIBER",
+      "shaftDiameterMm": 6.4,
+      "shaftNote": "6.4mm",
+      "stiffness": {
+        "word": "Stiff",
+        "rangeLow": null,
+        "rangeHigh": null,
+        "value": null,
+        "raw": null
+      },
+      "frameHoleCount": 76,
+      "frameHoleType": "76 Slanted Hole",
+      "frameAreaCm2": null,
+      "gripLengthMm": null,
+      "racketLengthMm": 675.0,
+      "variants": [
+        {
+          "weightClass": "3U",
+          "weightRangeG": [
+            85.0,
+            89.9
+          ],
+          "weightMidG": 87.5,
+          "gripSizes": [
+            "G5"
+          ],
+          "maxTensionLbs": 31.0,
+          "balancePointMm": 300.0,
+          "balancePointToleranceMm": 3.0,
+          "swingWeight": null,
+          "swingWeightTolerance": null,
+          "swingWeightMissing": true
+        },
+        {
+          "weightClass": "4U",
+          "weightRangeG": [
+            80.0,
+            84.9
+          ],
+          "weightMidG": 82.5,
+          "gripSizes": [
+            "G5",
+            "G6"
+          ],
+          "maxTensionLbs": 30.0,
+          "balancePointMm": 304.0,
+          "balancePointToleranceMm": 3.0,
+          "swingWeight": null,
+          "swingWeightTolerance": null,
+          "swingWeightMissing": true
+        }
+      ],
+      "tagline": null,
+      "description": null,
+      "pricePhp": null,
+      "images": [],
+      "inStock": true,
+      "links": {
+        "shopify": null,
+        "shopee": null,
+        "lazada": null,
+        "tiktok": null
+      }
+    },
+    {
+      "id": "ld88spro",
+      "name": "LD88SPRO",
+      "modelCode": "LD88SPRO",
+      "series": "LD",
+      "classification": "ATTACK",
+      "balance": "Head-Heavy",
+      "materials": [
+        "TORAY T1100",
+        "M46J High Modulus Carbon Fiber"
+      ],
+      "materialsRaw": "TORAY T1100 + M46J High Modulus Carbon Fiber",
+      "shaftDiameterMm": 6.8,
+      "shaftNote": "6.8mm",
+      "stiffness": {
+        "word": "Medium",
+        "rangeLow": null,
+        "rangeHigh": null,
+        "value": null,
+        "raw": null
+      },
+      "frameHoleCount": 76,
+      "frameHoleType": "76 Slanted Hole",
+      "frameAreaCm2": null,
+      "gripLengthMm": 165.0,
+      "racketLengthMm": 670.0,
+      "variants": [
+        {
+          "weightClass": "4U",
+          "weightRangeG": [
+            80.0,
+            84.9
+          ],
+          "weightMidG": 82.5,
+          "gripSizes": [
+            "G5",
+            "G6"
+          ],
+          "maxTensionLbs": 30.0,
+          "balancePointMm": 302.0,
+          "balancePointToleranceMm": 3.0,
+          "swingWeight": null,
+          "swingWeightTolerance": null,
+          "swingWeightMissing": true
+        }
+      ],
+      "tagline": null,
+      "description": null,
+      "pricePhp": null,
+      "images": [],
+      "inStock": true,
+      "links": {
+        "shopify": null,
+        "shopee": null,
+        "lazada": null,
+        "tiktok": null
+      }
+    }
+  ]
+}

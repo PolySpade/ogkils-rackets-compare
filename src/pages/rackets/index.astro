@@ -1,0 +1,76 @@
+---
+import Base from '../../layouts/Base.astro';
+import RacketCard from '../../components/RacketCard.astro';
+import FilterBar, { type FilterGroup } from '../../components/islands/FilterBar.tsx';
+import { catalog } from '../../lib/data';
+import { stiffnessOrdinal, weightOrdinal } from '../../lib/derive';
+import type { Classification, WeightClass } from '../../lib/types';
+
+// Distinct, sensibly-ordered options for each filter group.
+const distinct = <T,>(arr: T[]): T[] => [...new Set(arr)];
+
+const classifications: Classification[] = ['ATTACK', 'SPEED', 'CONTROL', 'ALL-AROUND'];
+const series = distinct(catalog.map((r) => r.series));
+const balances = ['Head-Heavy', 'Even Balance', 'Head-Light'].filter((b) =>
+  catalog.some((r) => r.balance === b),
+);
+const weights = distinct(catalog.flatMap((r) => r.variants.map((v) => v.weightClass))).sort(
+  (a, b) => weightOrdinal(b as WeightClass) - weightOrdinal(a as WeightClass),
+);
+const stiffnesses = distinct(catalog.map((r) => r.stiffness.word)).sort(
+  (a, b) => stiffnessOrdinal(a) - stiffnessOrdinal(b),
+);
+const grips = distinct(catalog.flatMap((r) => r.variants.flatMap((v) => v.gripSizes))).sort();
+
+const groups: FilterGroup[] = [
+  { key: 'classification', label: 'Classification', attr: 'data-classification', list: false, options: classifications },
+  { key: 'series', label: 'Series', attr: 'data-series', list: false, options: series },
+  { key: 'balance', label: 'Balance', attr: 'data-balance', list: false, options: balances },
+  { key: 'weight', label: 'Weight', attr: 'data-weights', list: true, options: weights },
+  { key: 'stiffness', label: 'Stiffness', attr: 'data-stiffness', list: false, options: stiffnesses },
+  { key: 'grip', label: 'Grip', attr: 'data-grips', list: true, options: grips },
+];
+---
+
+<Base
+  title="Browse the OGKILS racket lineup"
+  description="Explore the OGKILS badminton racket lineup by playing style, balance, weight, and stiffness."
+  path="/rackets"
+>
+  <div class="mx-auto max-w-6xl px-4 py-12 sm:px-6">
+    <header class="mb-8">
+      <p class="section-kicker">Rackets / 2026 collection</p>
+      <h1 class="display-heading is-title mt-2 text-4xl text-fg sm:text-5xl">The lineup</h1>
+      <p class="prose-measure mt-3 text-fg-muted">
+        All {catalog.length} OGKILS rackets. Filter to your style, then open one for the full
+        spec sheet — or send a few to compare.
+      </p>
+    </header>
+
+    <div class="catalog-rule grid gap-6 pt-5 lg:grid-cols-[15rem_1fr] lg:gap-8">
+      <aside class="filter-host lg:sticky lg:top-24 lg:self-start">
+        <FilterBar client:load groups={groups} total={catalog.length} />
+      </aside>
+
+      <div>
+        <div class="grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
+          {
+            catalog.map((r) => (
+              <RacketCard
+                racket={r}
+                sizes="(max-width: 639px) 100vw, (max-width: 1279px) 45vw, 300px"
+              />
+            ))
+          }
+        </div>
+        <p
+          id="rackets-empty"
+          hidden
+          class="catalog-rule mt-8 border-x border-b border-line bg-panel p-10 text-center text-fg-muted"
+        >
+          No rackets match those filters. Try clearing one.
+        </p>
+      </div>
+    </div>
+  </div>
+</Base>

@@ -1,0 +1,88 @@
+---
+import { getImage } from 'astro:assets';
+import Base from '../../layouts/Base.astro';
+import FinderQuiz from '../../components/islands/FinderQuiz.tsx';
+import { catalog, pricedFraction } from '../../lib/data';
+import { classMeta } from '../../lib/classification';
+import { buyLinks, buildBuyUrl, STORE_FALLBACK_URL } from '../../lib/links';
+import { racketImage } from '../../lib/images';
+import type { Classification } from '../../lib/types';
+
+const thumbs: Record<string, string | null> = {};
+const buys: Record<string, { label: string; url: string; channel: string; primary: boolean }[]> = {};
+for (const r of catalog) {
+  const img = racketImage(r.id);
+  thumbs[r.id] = img ? (await getImage({ src: img, width: 160 })).src : null;
+  const links = buyLinks(r);
+  buys[r.id] = links.length
+    ? links.map((l) => ({ label: l.label, channel: l.channel, primary: l.primary, url: buildBuyUrl(l.url, r.id, l.channel, 'finder') }))
+    : [{ label: 'OGKILS Store', channel: 'shopify', primary: true, url: STORE_FALLBACK_URL }];
+}
+
+const classes: Classification[] = ['ATTACK', 'SPEED', 'CONTROL', 'ALL-AROUND'];
+const classTokens = Object.fromEntries(classes.map((c) => [c, { label: classMeta(c).label }]));
+
+// Q8 budget only appears when most of the catalog is priced (§7.1).
+const showBudget = pricedFraction() >= 0.8;
+---
+
+<Base
+  title="Find my OGKILS racket — a 60-second match"
+  description="Answer a few questions about how you play and get three matched OGKILS rackets, ranked, with the honest trade-offs."
+  path="/finder"
+>
+  <div class="mx-auto max-w-3xl px-4 py-12 sm:px-6">
+    <header class="mb-8">
+      <p class="section-kicker">Player match / 60 seconds</p>
+      <h1 class="display-heading is-title mt-2 text-4xl text-fg sm:text-5xl">Find your racket</h1>
+      <p class="prose-measure mt-3 text-fg-muted">
+        A few quick questions about how you actually play. No sign-up — just three matched
+        picks and why they fit.
+      </p>
+    </header>
+
+    <div class="catalog-rule pt-6">
+
+      <FinderQuiz
+        client:only="react"
+        catalog={catalog}
+        thumbs={thumbs}
+        buys={buys}
+        classTokens={classTokens}
+        showBudget={showBudget}
+      />
+
+      <!-- What the quiz actually weighs, so the result never feels like a black box. -->
+      <section class="mt-14 border-t border-line pt-8">
+        <h2 class="panel-heading text-fg-muted">How the match is worked out</h2>
+        <dl class="mt-4 grid gap-x-8 gap-y-5 sm:grid-cols-3">
+          <div>
+            <dt class="text-sm font-bold text-fg">Your answers only</dt>
+            <dd class="mt-1 text-sm leading-relaxed text-fg-muted">
+              No sign-up and nothing stored — the result lives in the page URL, so you can
+              share it or come back to it.
+            </dd>
+          </div>
+          <div>
+            <dt class="text-sm font-bold text-fg">Published specs only</dt>
+            <dd class="mt-1 text-sm leading-relaxed text-fg-muted">
+              Balance point, weight class, shaft stiffness, grip and max tension, taken
+              from the OGKILS product database.
+            </dd>
+          </div>
+          <div>
+            <dt class="text-sm font-bold text-fg">Trade-offs included</dt>
+            <dd class="mt-1 text-sm leading-relaxed text-fg-muted">
+              Every pick names what it gives up as well as what it does well.
+            </dd>
+          </div>
+        </dl>
+      </section>
+    </div>
+  </div>
+</Base>
+
+<script>
+  import { initBuyTracking } from '../../lib/analytics';
+  initBuyTracking();
+</script>

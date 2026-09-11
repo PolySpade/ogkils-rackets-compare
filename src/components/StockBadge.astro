@@ -1,0 +1,35 @@
+---
+import type { StockLevel } from '../lib/types';
+
+interface Props {
+  level: StockLevel | null;
+  size?: 'sm' | 'md';
+}
+const { level, size = 'sm' } = Astro.props;
+
+const meta: Record<StockLevel, { label: string; color: string }> = {
+  'In Stock': { label: 'In stock', color: 'var(--color-success)' },
+  'Low Stock': { label: 'Low stock', color: 'var(--color-warning)' },
+  'Out of Stock': { label: 'Out of stock', color: 'var(--color-danger)' },
+};
+const m = level ? meta[level] : null;
+---
+
+{
+  m && (
+    <span
+      class:list={[
+        'inline-flex items-center gap-1.5 font-bold uppercase leading-none tracking-[0.06em]',
+        size === 'sm' ? 'text-[0.66rem]' : 'text-[0.72rem]',
+      ]}
+      style={`color:${m.color};`}
+    >
+      <span
+        class="inline-block h-1.5 w-1.5 rounded-full"
+        style={`background:${m.color};`}
+        aria-hidden="true"
+      />
+      {m.label}
+    </span>
+  )
+}

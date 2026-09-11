@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "_note": "Hand-authored fields only. build_rackets_json.py never writes here. Fill tagline / description / whoItsFor / pricePhp / images / links per racket. `aliases` feed the assistant's fuzzy matcher (§8.2).",
+  "overrides": {
+    "mist-breathing": { "aliases": ["mist"] },
+    "thunder-breathing": { "aliases": ["thunder"] },
+    "water-breathing": { "aliases": ["water"] },
+    "fire-breathing": { "aliases": ["fire"] },
+    "love-breathing": { "aliases": ["love"] },
+    "ld77pro": { "aliases": ["77", "ld77", "77pro"] },
+    "ld800pro": { "aliases": ["800", "ld800", "800pro"] },
+    "ld1000z": { "aliases": ["1000z", "ld1000", "1000"] },
+    "ld100zz": { "aliases": ["100zz", "ld100", "100"] },
+    "ld700": { "aliases": ["700", "ld700"] },
+    "dimensional-slash-pro": { "aliases": ["dspro", "slash", "dimensional", "dimensional slash"] },
+    "freezing": { "aliases": ["freeze", "freezing pro"] },
+    "serpent-breathing": { "aliases": ["serpent", "snake"] },
+    "wind-breathing": { "aliases": ["wind"] },
+    "ld88dpro": { "aliases": ["88d", "ld88d", "88dpro", "88 d"] },
+    "ldlyd": { "aliases": ["lyd", "ld lyd"] },
+    "ld12l": { "aliases": ["12l", "ld12", "12 l"] },
+    "annihilation": { "aliases": ["annihilator", "anni", "annihilate"] },
+    "ld88spro": { "aliases": ["88s", "ld88s", "88spro", "88 s"] }
+  }
+}

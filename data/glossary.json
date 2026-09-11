@@ -1,0 +1,61 @@
+{
+  "schemaVersion": 1,
+  "_note": "Single source of truth for the ? tooltips (§6) AND the assistant's explain_term intent (§8). Keep `short` to one sentence — it renders inside a tooltip.",
+  "terms": {
+    "weight-class": {
+      "term": "Weight (U)",
+      "short": "The U number is the frame's weight band — smaller U means heavier: 3U (85–89g) is heaviest, then 4U, 5U, 6U (70–74g) the lightest.",
+      "long": "Badminton frames are graded by weight in \"U\" classes. Confusingly, a smaller number is heavier: 3U ≈ 85–89g, 4U ≈ 80–84g, 5U ≈ 75–79g, 6U ≈ 70–74g. Heavier frames put more mass behind a smash but are slower to swing and more tiring in fast exchanges; lighter frames are quicker to react and defend with, but need cleaner timing to generate power."
+    },
+    "balance-point": {
+      "term": "Balance point",
+      "short": "Distance from the handle to the frame's balance point in mm — higher number = more weight in the head = more power, slower swing.",
+      "long": "Balance point is where the racket balances along its length, measured in millimetres from the butt cap. A higher number means weight sits further toward the head (head-heavy: more power, slower to swing). A lower number means weight sits toward the handle (head-light: faster, easier to defend and block with). We treat the measured balance point — not the printed label — as the source of truth, because the two occasionally disagree in the spec sheet."
+    },
+    "balance-label": {
+      "term": "Balance",
+      "short": "Head-Heavy, Even, or Head-Light — a plain-language reading of where the weight sits. The measured balance point is the precise version.",
+      "long": "The balance label summarises the balance point: Head-Heavy (power-oriented), Even Balance (all-round), or Head-Light (speed and defence). It's a quick read; for exact comparisons use the balance-point number in millimetres."
+    },
+    "shaft-stiffness": {
+      "term": "Shaft stiffness",
+      "short": "How much the shaft flexes on contact — stiffer shafts reward fast, clean swings; softer shafts add repulsion and forgiveness.",
+      "long": "The shaft is the thin tube between the handle and the head. A stiff shaft flexes little and returns energy fast, which suits players with quick, well-timed swings and gives a crisp, controlled feel. A softer (more flexible) shaft loads and springs back to add power for slower swings, and is more forgiving of imperfect timing, at the cost of a little control. We show the measured stiffness range as the primary number and the word (Soft…Stiff) as a label."
+    },
+    "shaft-diameter": {
+      "term": "Shaft diameter",
+      "short": "How thick the shaft is in mm — thinner shafts cut through the air faster; thicker shafts are more stable on hard hits.",
+      "long": "Shaft diameter, in millimetres, trades air resistance against stability. A thinner shaft (around 6.2–6.6mm) slices through the air for faster swings and quick flat exchanges. A thicker shaft (around 6.8–7.0mm) is more stable and planted on powerful smashes and off-centre hits."
+    },
+    "frame-holes": {
+      "term": "Grommet holes",
+      "short": "How many string holes the frame has — more holes can mean a denser, more controlled string bed; the pattern also affects feel.",
+      "long": "The number and layout of grommet holes in the frame shape the string bed. More holes and slanted patterns can support a denser, more controlled bed and a larger sweet spot, while the exact feel depends on how the frame and stringing interact. Treat it as a construction detail, not a headline spec."
+    },
+    "frame-area": {
+      "term": "Frame area",
+      "short": "The area of the string face in cm² — a larger face is more forgiving on off-centre hits; a smaller face can feel more precise.",
+      "long": "Frame (string-face) area, in square centimetres, roughly tracks the size of the hitting surface. A larger area is more forgiving of mishits with a bigger sweet spot; a smaller, more compact head can feel more precise and cut through the air a touch faster. Some models in this lineup don't publish this figure, in which case we show a dash."
+    },
+    "grip-size": {
+      "term": "Grip size",
+      "short": "How thick the handle is — G6 is smaller (thinner), G5 is larger (thicker). Grip your natural finger wrap prefers.",
+      "long": "Grip size describes the handle thickness. In this lineup G6 is the smaller (thinner) handle and G5 is the larger (thicker) one. A grip that's too small encourages over-gripping; too large limits wrist snap. You can always build a thinner grip up with an overgrip, so many players size down when unsure."
+    },
+    "max-tension": {
+      "term": "Max tension",
+      "short": "The highest safe stringing tension for the frame in lbs — a ceiling, NOT a recommended tension. String below it for durability.",
+      "long": "Max tension is the manufacturer's ceiling for how tightly the frame can be strung, in pounds. It is a safety limit, not a suggestion — stringing at the maximum every time shortens frame life and demands very clean contact. Higher tension gives a flatter, more controlled response for advanced players; lower tension adds repulsion and forgiveness. Pick a tension your technique supports, comfortably under this number."
+    },
+    "swing-weight": {
+      "term": "Swing weight",
+      "short": "How heavy the racket feels while swinging (not its static weight) — higher swing weight hits harder but is more tiring and slower.",
+      "long": "Swing weight measures how heavy the racket feels in motion, accounting for how its mass is distributed, not just the number on the scale. A higher swing weight carries more momentum into the shuttle for heavier smashes, but is slower to manoeuvre and more tiring over a long match. Some models in this lineup don't publish a swing weight, shown here as a dash."
+    },
+    "classification": {
+      "term": "Classification",
+      "short": "OGKILS's play-style grade for the frame: ATTACK (power), SPEED (fast/flat), CONTROL (placement), or ALL-AROUND (balanced).",
+      "long": "Classification is OGKILS's own summary of what a frame is built for. ATTACK frames are head-heavy and reward smashing. SPEED frames favour fast, flat exchanges and quick defence. CONTROL frames prioritise placement and a steady feel. ALL-AROUND frames sit in the middle and adapt to most situations — a safe default if you're unsure."
+    }
+  }
+}

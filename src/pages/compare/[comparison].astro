@@ -1,0 +1,104 @@
+---
+import { getImage } from 'astro:assets';
+import Base from '../../layouts/Base.astro';
+import StaticCompareTable from '../../components/StaticCompareTable.astro';
+import BuyButtons from '../../components/BuyButtons.astro';
+import comparisonsFile from '../../../data/comparisons.json';
+import { getRacket } from '../../lib/data';
+import { generateVerdict } from '../../lib/verdict';
+import { breadcrumbJsonLd } from '../../lib/jsonld';
+import { racketImage } from '../../lib/images';
+import type { Racket } from '../../lib/types';
+
+interface Pair {
+  a: string;
+  b: string;
+  verdict: string | null;
+}
+
+export function getStaticPaths() {
+  const pairs = (comparisonsFile as { pairs: Pair[] }).pairs;
+  return pairs
+    .map((p) => {
+      const a = getRacket(p.a);
+      const b = getRacket(p.b);
+      if (!a || !b) return null;
+      return {
+        params: { comparison: `${a.id}-vs-${b.id}` },
+        props: { a, b, verdict: p.verdict },
+      };
+    })
+    .filter((x): x is NonNullable<typeof x> => x !== null);
+}
+
+interface Props {
+  a: Racket;
+  b: Racket;
+  verdict: string | null;
+}
+const { a, b, verdict } = Astro.props;
+const prose = verdict ?? generateVerdict(a, b);
+
+const site = Astro.site!;
+const imgA = racketImage(a.id);
+const ogSrc = imgA ? (await getImage({ src: imgA, width: 600 })).src : undefined;
+const jsonLd = breadcrumbJsonLd(site, [
+  { name: 'Compare', path: '/compare' },
+  { name: `${a.name} vs ${b.name}`, path: `/compare/${a.id}-vs-${b.id}` },
+]);
+---
+
+<Base
+  title={`${a.name} vs ${b.name} — spec-by-spec comparison | OGKILS`}
+  description={`${a.name} or ${b.name}? Compare balance, stiffness, weight, and price side by side, with a plain-language verdict.`}
+  path={`/compare/${a.id}-vs-${b.id}`}
+  ogImage={ogSrc}
+  ogType="article"
+  jsonLd={jsonLd}
+>
+  <div class="mx-auto max-w-4xl px-4 py-10 sm:px-6">
+    <nav aria-label="Breadcrumb" class="mb-6 text-xs font-bold uppercase tracking-[0.08em] text-fg-faint">
+      <a href="/compare" class="transition-colors hover:text-brand-strong">Compare</a>
+      <span class="mx-2" aria-hidden="true">/</span>
+      <span class="text-fg-muted">{a.name} vs {b.name}</span>
+    </nav>
+
+    <header class="mb-8">
+      <p class="section-kicker">Head to head / Technical comparison</p>
+      {/* Each model name owns its own line, so a long pairing never forces a phone
+          sideways or breaks a name mid-word. */}
+      <h1 class="display-heading is-title mt-2 flex flex-col items-start gap-1 text-[clamp(1.9rem,7vw,3rem)] text-fg">
+        <span>{a.name}</span>
+        <span class="text-[0.62em] not-italic tracking-[0.16em] text-brand-strong">versus</span>
+        <span>{b.name}</span>
+      </h1>
+      <p class="prose-measure mt-4 text-fg-muted">
+        A spec-by-spec look at how these two OGKILS rackets differ.
+      </p>
+    </header>
+
+    <StaticCompareTable rackets={[a, b]} />
+
+    <!-- Verdict -->
+    <section class="mt-12 border-t border-line pt-8">
+      <h2 class="panel-heading text-fg-muted">The verdict</h2>
+      <p class="prose-measure mt-3 leading-relaxed text-fg-muted">{prose}</p>
+    </section>
+
+    <!-- Buy both -->
+    <section class="mt-10 grid gap-4 sm:grid-cols-2">
+      {[a, b].map((r) => (
+        <div class="catalog-rule border-x border-b border-line bg-panel p-5">
+          <h3 class="panel-heading mb-4">Buy the {r.name}</h3>
+          <BuyButtons racket={r} placement="compare" layout="row" size="sm" />
+        </div>
+      ))}
+    </section>
+
+    <div class="mt-10 text-center">
+      <a href={`/compare?ids=${a.id},${b.id}`} class="secondary-action inline-flex normal-case tracking-normal">
+        Customize this comparison — switch weight classes, add more <span aria-hidden="true">→</span>
+      </a>
+    </div>
+  </div>
+</Base>

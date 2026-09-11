@@ -1,0 +1,1325 @@
+@import "tailwindcss";
+
+/* ==========================================================================
+   OGKILS Racket Compare — brochure-led design tokens (see DESIGN.md)
+   World: bold campaign artwork, white product stages, turquoise technical tables.
+   Reference: OGKILS-2026 Brochure.pdf (cover p.1, product pages p.11+, tables pp.34–38).
+   ========================================================================== */
+@theme {
+  --color-ink: #ffffff;
+  --color-panel: #ffffff;
+  --color-panel-2: #d7eff0;
+  --color-line: #d5dedd;
+  --color-line-strong: #657e7d;
+  --color-fg: #211613;
+  --color-fg-muted: #555553;
+  --color-fg-faint: #656564;
+
+  --color-brand: #32aeb0;
+  --color-brand-strong: #067174;
+  --color-on-brand: #ffffff;
+  --color-success: #057a55;
+  --color-warning: #8a5906;
+  --color-danger: #c4152b;
+
+  /* The brochure presents every performance class in one shared turquoise system. */
+  --color-attack: #067174;
+  --color-speed: #067174;
+  --color-control: #067174;
+  --color-allaround: #067174;
+
+  /* interaction */
+  --color-focus: #2563eb; /* focus ring — deliberately none of the four */
+  --color-diff: #92400e;
+  /* Difference wash. Warm ivory reads as a marked cell on both the white label column
+     and the pale-aqua data field without muddying either. */
+  --color-diff-surface: #fbf0da;
+
+  /* Quiet stage behind product artwork, so a campaign square always sits on a surface
+     rather than bleeding into the page. */
+  --color-stage: #f2f6f6;
+
+  /* type */
+  --font-sans:
+    ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Helvetica,
+    Arial, sans-serif;
+  --font-mono: var(--font-sans);
+
+  /* Catalogue corners: restrained. Controls get 2px, nothing gets a pill except
+     status dots and swatches (DESIGN.md — "square or subtly rounded corners (0–4px)"). */
+  --radius-control: 2px;
+  --radius-panel: 0px;
+
+  /* motion — exponential ease-out for confident arrivals; exits are quicker */
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in: cubic-bezier(0.4, 0, 1, 1);
+  --dur-fast: 130ms; /* immediate feedback */
+  --dur: 240ms; /* routine state change */
+  --dur-slow: 380ms; /* overlay / view transition */
+}
+
+/* Dark catalogue adaptation. The printed brochure remains the compositional source. */
+html[data-theme="dark"] {
+  color-scheme: dark;
+  --color-ink: #101719;
+  --color-panel: #172225;
+  --color-panel-2: #193233;
+  --color-line: #344b4e;
+  --color-line-strong: #688789;
+  --color-fg: #f4f8f8;
+  --color-fg-muted: #bacaca;
+  --color-fg-faint: #a1b6b6;
+  --color-brand: #32aeb0;
+  --color-brand-strong: #68d5d4;
+  --color-on-brand: #101719;
+  --color-success: #5ee1ae;
+  --color-warning: #f7c45e;
+  --color-danger: #ff6b79;
+  --color-attack: #68d5d4;
+  --color-speed: #68d5d4;
+  --color-control: #68d5d4;
+  --color-allaround: #68d5d4;
+  --color-focus: #6ea8ff;
+  --color-diff: #f7b23b;
+  --color-diff-surface: #2e2a1c;
+  --color-stage: #101a1c;
+}
+
+/* Catalogue cards stay nearly flat; overlays use their own stronger shadows. */
+html:not([data-theme="dark"]) .lift {
+  box-shadow: 0 8px 24px -22px rgb(33 22 19 / 0.38);
+}
+
+@layer base {
+  html {
+    color-scheme: light;
+    scrollbar-gutter: stable;
+    scroll-padding-top: 5.5rem;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    background-color: var(--color-ink);
+    color: var(--color-fg);
+    font-family: var(--font-sans);
+    font-feature-settings: "cv01", "ss01";
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    caret-color: var(--color-brand-strong);
+  }
+
+  /* Browser surfaces themed from the palette — the "built, not assembled" details. */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-line-strong) transparent;
+  }
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: var(--color-line-strong);
+    border-radius: 999px;
+    border: 2px solid var(--color-ink);
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: color-mix(in oklab, var(--color-fg-faint) 60%, var(--color-line-strong));
+  }
+
+  .tnum {
+    font-variant-numeric: tabular-nums;
+    font-family: var(--font-sans);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-focus);
+    outline-offset: 2px;
+    border-radius: 3px;
+  }
+
+  ::selection {
+    background: color-mix(in oklab, var(--color-brand) 34%, transparent);
+  }
+
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  /* Motion is opt-in: movement and keyframes live here, so reduced-motion users get a
+     still, instant page while colour/opacity feedback (defined elsewhere) still reads. */
+  @media (prefers-reduced-motion: no-preference) {
+    html {
+      scroll-behavior: smooth;
+    }
+
+    /* View Transitions: content cross-fades and rises; the shell stays put. */
+    ::view-transition-old(root) {
+      animation: vt-out 160ms both var(--ease-in);
+    }
+    ::view-transition-new(root) {
+      animation: vt-in var(--dur-slow) both var(--ease-out);
+    }
+    @keyframes vt-out {
+      to {
+        opacity: 0;
+      }
+    }
+    @keyframes vt-in {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+    }
+
+    /* Tactile feedback remains restrained so campaign artwork supplies the energy. */
+    .lift {
+      transition:
+        transform var(--dur) var(--ease-out),
+        border-color var(--dur-fast) var(--ease-out),
+        background-color var(--dur-fast) var(--ease-out),
+        box-shadow var(--dur) var(--ease-out);
+    }
+    .lift:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 14px 28px -22px rgb(0 0 0 / 0.5);
+    }
+    button:active,
+    a.press:active {
+      transform: scale(0.975);
+    }
+
+    /* A list that appears as a list rises in, with a capped stagger. */
+    .rise {
+      animation: rise var(--dur-slow) both var(--ease-out);
+    }
+    @keyframes rise {
+      from {
+        opacity: 0;
+        transform: translateY(8px);
+      }
+    }
+
+    /* A value that swaps in place (e.g. variant switch) fades rather than snapping. */
+    .fade {
+      animation: fade var(--dur) both var(--ease-out);
+    }
+    @keyframes fade {
+      from {
+        opacity: 0;
+      }
+    }
+  }
+
+  /* Reduced motion: no keyframes, no smooth scroll. Feedback transitions stay. */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.001ms !important;
+      animation-iteration-count: 1 !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
+
+/* ==========================================================================
+   1. Bottom chrome coordination (mobile tab bar + compare bar + assistant)
+   The compare bar reports its own height into --compare-bar-h (CompareBar.tsx), so
+   nothing below it has to guess: one-row and two-row bars both clear correctly.
+   ========================================================================== */
+:root {
+  /* Matches the sticky site header (h-16 / sm:h-18) so sticky content can clear it. */
+  --header-h: 4rem;
+  --tabbar-h: 0px;
+  --safe-b: env(safe-area-inset-bottom, 0px);
+  --compare-bar-h: 0px;
+  --bottom-chrome: calc(var(--tabbar-h) + var(--safe-b));
+}
+@media (min-width: 640px) {
+  :root {
+    --header-h: 4.5rem;
+  }
+}
+@media (max-width: 639.98px) {
+  :root {
+    --tabbar-h: 3.75rem;
+  }
+}
+
+/* Clear the fixed bottom chrome so content is never hidden behind it. */
+body {
+  padding-bottom: var(--bottom-chrome);
+}
+body.has-compare-bar {
+  padding-bottom: calc(var(--bottom-chrome) + var(--compare-bar-h) + 1.5rem);
+}
+/* On /compare the floating bar is suppressed (the table owns selection), so don't
+   reserve the extra space for a bar that isn't there. */
+body.no-compare-bar.has-compare-bar {
+  padding-bottom: var(--bottom-chrome);
+}
+
+/* Mobile tab bar */
+.tabbar {
+  position: fixed;
+  inset-inline: 0;
+  bottom: 0;
+  z-index: 40;
+  padding-bottom: var(--safe-b);
+  background: color-mix(in oklab, var(--color-ink) 88%, transparent);
+  backdrop-filter: blur(12px);
+  border-top: 1px solid var(--color-line);
+}
+.tabbar ul {
+  height: 3.75rem;
+}
+
+/* Compare bar sits directly above the tab bar. */
+.compare-bar-wrap {
+  bottom: var(--bottom-chrome);
+}
+
+/* Assistant launcher + panel clear the tab bar, and the compare bar when present. */
+.assistant-fab {
+  bottom: calc(var(--bottom-chrome) + 1rem);
+}
+.assistant-panel {
+  bottom: calc(var(--bottom-chrome) + 4.5rem);
+}
+body.has-compare-bar .assistant-fab {
+  bottom: calc(var(--bottom-chrome) + var(--compare-bar-h) + 1.5rem);
+}
+body.has-compare-bar .assistant-panel {
+  bottom: calc(var(--bottom-chrome) + var(--compare-bar-h) + 5rem);
+}
+
+/* On mobile, flatten the filter sidebar so its sticky "Filters" trigger shares a tall
+   containing block with the card grid and stays put while the list scrolls. */
+@media (max-width: 1023.98px) {
+  .filter-host,
+  .filter-host > astro-island {
+    display: contents;
+  }
+}
+
+/* ==========================================================================
+   2. Typography — expressive titles, quiet information
+   ========================================================================== */
+.display-heading {
+  font-weight: 850;
+  font-style: italic;
+  letter-spacing: -0.045em;
+  line-height: 1.02;
+  text-transform: uppercase;
+  /* Long model names ("DIMENSIONAL SLASH PRO") must never push a phone sideways. */
+  overflow-wrap: break-word;
+  hyphens: auto;
+}
+/* A page title that has to survive an arbitrary product name at 390px. */
+.display-heading.is-title {
+  text-wrap: balance;
+}
+.section-kicker {
+  color: var(--color-brand-strong);
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+/* Brochure product pages set the model in caps and the category in turquoise italic. */
+.category-label {
+  color: var(--color-brand-strong);
+  font-size: 0.78rem;
+  font-style: italic;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+/* Section heading inside a page: quiet, structural, never shouty. */
+.panel-heading {
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-fg);
+}
+.catalog-rule {
+  border-top: 3px solid var(--color-brand);
+}
+/* Reading measure for prose-led surfaces (the guide, verdicts, descriptions). */
+.prose-measure {
+  max-width: 64ch;
+}
+
+/* ==========================================================================
+   3. Controls — compact rectangular buttons and tabs, one shared state model
+   ========================================================================== */
+.primary-action,
+.secondary-action {
+  display: inline-flex;
+  min-height: 2.875rem;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  border-radius: var(--radius-control);
+  padding: 0.7rem 1.15rem;
+  font-size: 0.8rem;
+  font-weight: 800;
+  letter-spacing: 0.045em;
+  text-transform: uppercase;
+  text-align: center;
+  transition:
+    background-color var(--dur-fast) var(--ease-out),
+    border-color var(--dur-fast) var(--ease-out),
+    color var(--dur-fast) var(--ease-out);
+}
+.primary-action {
+  border: 1px solid var(--color-brand-strong);
+  background: var(--color-brand-strong);
+  color: var(--color-on-brand);
+}
+.primary-action:hover {
+  background: color-mix(in oklab, var(--color-brand-strong) 86%, var(--color-fg));
+  border-color: color-mix(in oklab, var(--color-brand-strong) 86%, var(--color-fg));
+}
+.secondary-action {
+  border: 1px solid var(--color-line-strong);
+  background: var(--color-panel);
+  color: var(--color-fg);
+}
+.secondary-action:hover {
+  border-color: var(--color-brand-strong);
+  background: var(--color-panel-2);
+}
+.primary-action[disabled],
+.secondary-action[disabled],
+.primary-action[aria-disabled="true"],
+.secondary-action[aria-disabled="true"] {
+  opacity: 0.45;
+  pointer-events: none;
+}
+/* Dense variant for in-table and in-card actions. */
+.action-sm {
+  min-height: 2.25rem;
+  gap: 0.4rem;
+  padding: 0.4rem 0.7rem;
+  font-size: 0.7rem;
+  letter-spacing: 0.05em;
+}
+
+/* Selectable option: filter chips, weight-class tabs, quiz answers.
+   Selected = pale aqua field + teal border + teal label (DESIGN.md "Filters and finder").
+   State never rests on colour alone — aria-pressed/checked carries it for assistive tech
+   and the border weight carries it visually. */
+.chip {
+  display: inline-flex;
+  min-height: 2.25rem;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  border: 1px solid var(--color-line-strong);
+  border-radius: var(--radius-control);
+  background: var(--color-panel);
+  padding: 0.35rem 0.7rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: var(--color-fg-muted);
+  cursor: pointer;
+  transition:
+    color var(--dur-fast) var(--ease-out),
+    border-color var(--dur-fast) var(--ease-out),
+    background-color var(--dur-fast) var(--ease-out);
+}
+.chip:hover {
+  border-color: var(--color-brand-strong);
+  color: var(--color-fg);
+}
+.chip[aria-pressed="true"],
+.chip[data-on] {
+  border-color: var(--color-brand-strong);
+  background: var(--color-panel-2);
+  color: var(--color-brand-strong);
+  box-shadow: inset 0 0 0 1px var(--color-brand-strong);
+}
+.chip[disabled],
+.chip[data-disabled] {
+  opacity: 0.42;
+  cursor: not-allowed;
+}
+
+/* Segmented control (weight class). Same state model, joined into one field. */
+.segmented {
+  display: inline-flex;
+  flex-wrap: wrap;
+  border: 1px solid var(--color-line-strong);
+  border-radius: var(--radius-control);
+  background: var(--color-panel);
+  padding: 2px;
+  gap: 2px;
+}
+.segmented button {
+  min-height: 2rem;
+  border-radius: 1px;
+  padding: 0.25rem 0.7rem;
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.03em;
+  color: var(--color-fg-muted);
+  cursor: pointer;
+  transition:
+    background-color var(--dur-fast) var(--ease-out),
+    color var(--dur-fast) var(--ease-out);
+}
+.segmented button:hover {
+  color: var(--color-fg);
+  background: var(--color-panel-2);
+}
+.segmented button[aria-pressed="true"] {
+  background: var(--color-brand-strong);
+  color: var(--color-on-brand);
+}
+/* Sitting on the turquoise comparison header, the control keeps a white field in both
+   themes — the header is turquoise either way, so theme-following colours would drop
+   the selected state below AA. */
+.segmented--on-brand {
+  background: #ffffff;
+  border-color: rgb(0 0 0 / 0.28);
+}
+.segmented--on-brand button {
+  color: #3f4c4c;
+}
+.segmented--on-brand button:hover {
+  background: #e2f1f1;
+  color: #14201f;
+}
+.segmented--on-brand button[aria-pressed="true"] {
+  background: #067174;
+  color: #ffffff;
+}
+
+/* Add-to-compare button — state driven by the global controls script (data-on). */
+.compare-btn {
+  display: inline-flex;
+  min-height: 2.25rem;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.35rem 0.75rem;
+  border-radius: var(--radius-control);
+  border: 1px solid var(--color-line-strong);
+  background: color-mix(in oklab, var(--color-panel) 92%, transparent);
+  backdrop-filter: blur(6px);
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: var(--color-fg);
+  cursor: pointer;
+  transition:
+    color var(--dur-fast) var(--ease-out),
+    border-color var(--dur-fast) var(--ease-out),
+    background var(--dur-fast) var(--ease-out);
+}
+.compare-btn:hover {
+  border-color: var(--color-brand-strong);
+  background: var(--color-panel);
+}
+.compare-btn .compare-btn-on {
+  display: none;
+}
+.compare-btn[data-on] {
+  color: var(--color-brand-strong);
+  border-color: var(--color-brand-strong);
+  background: var(--color-panel-2);
+  box-shadow: inset 0 0 0 1px var(--color-brand-strong);
+}
+.compare-btn[data-on] .compare-btn-add {
+  display: none;
+}
+.compare-btn[data-on] .compare-btn-on {
+  display: inline;
+}
+.compare-btn[data-disabled] {
+  opacity: 0.42;
+  cursor: not-allowed;
+}
+
+/* Quiet icon-only control (close, remove, theme toggle). */
+.icon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2.25rem;
+  min-height: 2.25rem;
+  border-radius: var(--radius-control);
+  color: var(--color-fg-faint);
+  cursor: pointer;
+  transition:
+    color var(--dur-fast) var(--ease-out),
+    background-color var(--dur-fast) var(--ease-out);
+}
+.icon-btn:hover {
+  color: var(--color-fg);
+  background: color-mix(in oklab, var(--color-fg) 8%, transparent);
+}
+
+/* Skip link — visible only when focused. */
+.skip-link {
+  position: absolute;
+  left: 0.75rem;
+  top: -3rem;
+  z-index: 100;
+  padding: 0.5rem 0.875rem;
+  background: var(--color-fg);
+  color: var(--color-ink);
+  font-weight: 600;
+  border-radius: var(--radius-control);
+  transition: top 0.15s var(--ease-out);
+}
+.skip-link:focus {
+  top: 0.75rem;
+}
+
+/* ---- Touch targets (WCAG 2.5.8 AA ≥24px; 44px best-practice for mobile) ----
+   .tap expands the pointer/tap area of a small standalone control to ≥44px via a
+   centred overlay, without changing the visual glyph size or shifting layout.
+   .tap-min gives dense inline/table controls a ≥24px hittable box. */
+.tap {
+  position: relative;
+}
+.tap::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: max(100%, 44px);
+  height: max(100%, 44px);
+  transform: translate(-50%, -50%);
+}
+.tap-min {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 1.5rem;
+  min-height: 1.5rem;
+}
+
+/* Spec-label helper: a quiet, discoverable "?" that links to the glossary entry. */
+.spec-help {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.05rem;
+  height: 1.05rem;
+  margin-left: 0.3rem;
+  border: 1px solid var(--color-line-strong);
+  border-radius: 999px;
+  font-size: 0.62rem;
+  font-weight: 800;
+  line-height: 1;
+  color: var(--color-fg-faint);
+  transition:
+    color var(--dur-fast) var(--ease-out),
+    border-color var(--dur-fast) var(--ease-out);
+  position: relative;
+}
+.spec-help::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: max(100%, 32px);
+  height: max(100%, 32px);
+  transform: translate(-50%, -50%);
+}
+.spec-help:hover {
+  color: var(--color-fg);
+  border-color: var(--color-brand-strong);
+}
+
+/* Theme toggle: show the icon for the mode you'd switch TO. */
+[data-theme-toggle] .icon-to-light {
+  display: none;
+}
+html[data-theme="dark"] [data-theme-toggle] .icon-to-dark {
+  display: none;
+}
+html[data-theme="dark"] [data-theme-toggle] .icon-to-light {
+  display: inline-flex;
+}
+
+/* ==========================================================================
+   4. Product stages — campaign artwork always sits on a surface, never cropped
+   The assets in src/assets/rackets are square campaign panels (the brochure's
+   pp.10/12/14 treatment), so they are presented whole rather than cropped to fit.
+   ========================================================================== */
+.stage {
+  position: relative;
+  overflow: hidden;
+  background: var(--color-stage);
+  display: grid;
+  place-items: center;
+}
+.stage img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+/* A thumbnail stage keeps the same contain rule so a 48px racket is still a racket. */
+.stage--thumb {
+  border: 1px solid var(--color-line);
+}
+.stage--empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.25rem;
+  padding: 1rem;
+  text-align: center;
+  background:
+    repeating-linear-gradient(
+      135deg,
+      transparent 0 9px,
+      color-mix(in oklab, var(--color-line) 55%, transparent) 9px 10px
+    ),
+    var(--color-stage);
+}
+
+/* ==========================================================================
+   5. Comparison tables — brochure pp.34–38
+   Turquoise header band, pale-aqua data field, fine white grid lines, generous
+   outer white space, values centred under their product column.
+   ========================================================================== */
+.spec-table-wrap {
+  border: 1px solid var(--color-line);
+  border-top: 3px solid var(--color-brand);
+  background: var(--color-panel);
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+}
+
+/* A horizontal scroll container is also the scrollport for anything sticky inside it,
+   which kills a sticky header. When the table fits — the usual two- and three-racket
+   case — we drop the scroll container so the product headers can stick to the page
+   instead, and you never lose track of which column is which. */
+.spec-table-wrap.is-fitting {
+  overflow-x: visible;
+}
+@media (min-width: 640px) {
+  .spec-table-wrap.is-fitting thead th {
+    position: sticky;
+    top: var(--header-h);
+    z-index: 3;
+  }
+  .spec-table-wrap.is-fitting .th-corner {
+    z-index: 5;
+  }
+}
+.spec-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+}
+.spec-table th,
+.spec-table td {
+  border-right: 2px solid var(--color-panel);
+  border-bottom: 2px solid var(--color-panel);
+}
+.spec-table th:last-child,
+.spec-table td:last-child {
+  border-right: 0;
+}
+
+/* Header band */
+.spec-table thead th {
+  background: var(--color-brand);
+  color: var(--color-fg);
+  padding: 0.75rem;
+  vertical-align: top;
+  text-align: center;
+}
+.spec-table .th-corner {
+  position: sticky;
+  left: 0;
+  z-index: 3;
+  min-width: 9rem;
+  text-align: left;
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  vertical-align: middle;
+}
+.spec-table .th-product {
+  position: relative; /* anchors the remove control to the column's corner */
+  min-width: 11.5rem;
+}
+/* Its own class rather than `.tap` + an `absolute` utility: `.tap` sets
+   `position: relative` and, living outside Tailwind's layer, wins the cascade — the
+   control ends up in flow under the thumbnail instead of in the corner. */
+.spec-table .th-remove {
+  position: absolute;
+  right: 0.5rem;
+  top: 0.5rem;
+  display: inline-flex;
+  height: 2rem;
+  width: 2rem;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid color-mix(in oklab, currentColor 35%, transparent);
+  border-radius: var(--radius-control);
+  color: currentColor;
+  cursor: pointer;
+  transition:
+    border-color var(--dur-fast) var(--ease-out),
+    background-color var(--dur-fast) var(--ease-out);
+}
+.spec-table .th-remove::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 44px;
+  height: 44px;
+  transform: translate(-50%, -50%);
+}
+.spec-table .th-remove:hover {
+  border-color: currentColor;
+  background: color-mix(in oklab, currentColor 12%, transparent);
+}
+/* Column headers align because the only variable-height part — the model name — gets a
+   fixed two-line box, not because the cell is stretched.
+   The `height: 1px` + `height: 100%` trick this replaces is not portable: Chrome grows
+   the cell and resolves the child against the used height, Firefox resolves it against
+   the literal 1px and the whole header stack collapses onto the data rows. */
+.spec-table .th-name {
+  display: flex;
+  min-height: 2.5em; /* exactly two lines at this font-size and line-height */
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  font-size: 0.92rem;
+  font-weight: 800;
+  line-height: 1.25;
+  letter-spacing: 0.02em;
+  text-align: center;
+  overflow-wrap: break-word;
+  text-underline-offset: 4px;
+}
+.spec-table .th-name:hover {
+  text-decoration: underline;
+}
+
+/* Row-label column */
+.spec-table tbody th {
+  position: sticky;
+  left: 0;
+  z-index: 2;
+  min-width: 9rem;
+  background: var(--color-panel);
+  padding: 0.7rem 0.75rem;
+  text-align: left;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--color-fg);
+  vertical-align: middle;
+}
+
+/* Data field */
+.spec-table tbody td {
+  background: var(--color-panel-2);
+  padding: 0.7rem 0.75rem;
+  text-align: center;
+  vertical-align: middle;
+  color: var(--color-fg);
+}
+.spec-table tbody tr.is-uniform td {
+  background: color-mix(in oklab, var(--color-panel-2) 45%, var(--color-panel));
+}
+/* Marked extreme: warm field + a solid amber edge + a glyph. Never colour alone. */
+.spec-table tbody td.is-marked {
+  background: var(--color-diff-surface);
+  box-shadow: inset 3px 0 0 var(--color-diff);
+}
+.spec-diff-mark {
+  margin-left: 0.35rem;
+  color: var(--color-diff);
+  font-size: 0.72rem;
+  font-weight: 700;
+}
+.spec-unit {
+  margin-left: 0.15rem;
+  color: var(--color-fg-faint);
+  font-size: 0.72rem;
+}
+.spec-missing {
+  color: var(--color-fg-faint);
+}
+/* The "same across all" disclosure (product.md §6) — a quiet full-width row, not a
+   data cell, so it never reads as a spec. */
+.spec-table tbody tr.is-disclosure td {
+  background: var(--color-panel);
+  padding: 0;
+  text-align: left;
+}
+.spec-same-toggle {
+  display: flex;
+  width: 100%;
+  min-height: 2.75rem;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.65rem 0.75rem;
+  color: var(--color-fg-muted);
+  font-size: 0.78rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: color var(--dur-fast) var(--ease-out), background-color var(--dur-fast) var(--ease-out);
+}
+.spec-same-toggle:hover {
+  color: var(--color-brand-strong);
+  background: color-mix(in oklab, var(--color-panel-2) 45%, var(--color-panel));
+}
+.spec-same-toggle svg {
+  transition: transform var(--dur-fast) var(--ease-out);
+}
+.spec-same-toggle[aria-expanded="true"] svg {
+  transform: rotate(180deg);
+}
+
+/* Actions row sits on the page, not in the data field. */
+.spec-table tbody td.is-actions,
+.spec-table tbody tr.is-actions td {
+  background: var(--color-panel);
+  vertical-align: top;
+}
+
+/* Dark theme: the turquoise band needs the deeper teal to keep text legible. */
+html[data-theme="dark"] .spec-table thead th {
+  background: var(--color-attack);
+  color: #062123;
+}
+html[data-theme="dark"] .spec-table th,
+html[data-theme="dark"] .spec-table td {
+  border-color: var(--color-ink);
+}
+
+/* Phones: one shared label above the pair, values side by side underneath
+   (product.md §6 — values stay adjacent; the table never becomes stacked cards). */
+@media (max-width: 639.98px) {
+  .spec-table-wrap {
+    overflow-x: visible;
+  }
+  .spec-table,
+  .spec-table thead,
+  .spec-table tbody {
+    display: block;
+    width: 100%;
+  }
+  .spec-table tr {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .spec-table th,
+  .spec-table td,
+  .spec-table .th-corner,
+  .spec-table .th-product {
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
+  .spec-table thead .th-corner {
+    display: none;
+  }
+  .spec-table thead th {
+    position: static;
+    text-align: left;
+  }
+  .spec-table tbody th {
+    position: static;
+    grid-column: 1 / -1;
+    min-width: 0;
+    background: color-mix(in oklab, var(--color-panel-2) 55%, var(--color-panel));
+    padding: 0.5rem 0.75rem;
+    font-size: 0.72rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--color-fg-muted);
+  }
+  .spec-table tbody td {
+    padding: 0.8rem 0.75rem;
+    text-align: left;
+  }
+}
+
+/* ==========================================================================
+   6. Homepage — campaign energy beside clean catalogue information
+   ========================================================================== */
+.home-hero {
+  display: grid;
+  grid-template-columns: minmax(0, 0.95fr) minmax(320px, 1.05fr);
+  align-items: stretch;
+  gap: 0;
+  padding-top: 2.25rem;
+  padding-bottom: 3.75rem;
+}
+.hero-copy {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  border-block: 1px solid var(--color-line);
+  border-left: 1px solid var(--color-line);
+  padding: clamp(2rem, 5vw, 4.25rem);
+}
+.eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  color: var(--color-brand-strong);
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+}
+.eyebrow-line {
+  width: 2rem;
+  height: 3px;
+  background: var(--color-brand);
+  transform: skewX(-20deg);
+}
+.hero-copy h1 {
+  margin-top: 1.25rem;
+  max-width: 8ch;
+  font-size: clamp(2.9rem, 6vw, 5.7rem);
+  font-weight: 900;
+  font-style: italic;
+  line-height: 0.93;
+  letter-spacing: -0.07em;
+  text-transform: uppercase;
+}
+.hero-emphasis {
+  color: var(--color-brand-strong);
+}
+.hero-description {
+  margin-top: 1.5rem;
+  max-width: 31rem;
+  color: var(--color-fg-muted);
+  font-size: 1rem;
+  line-height: 1.7;
+}
+.hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+  margin-top: 1.75rem;
+}
+.hero-note {
+  margin-top: 0.9rem;
+  color: var(--color-fg-faint);
+  font-size: 0.75rem;
+}
+.hero-facts {
+  display: flex;
+  gap: 1.25rem;
+  margin-top: 2rem;
+}
+.hero-facts > div {
+  display: flex;
+  flex-direction: column;
+  gap: 0.12rem;
+  padding-right: 1.25rem;
+  border-right: 1px solid var(--color-line-strong);
+}
+.hero-facts > div:last-child {
+  padding-right: 0;
+  border: 0;
+}
+.hero-facts strong {
+  font-size: 1rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+.hero-facts span {
+  color: var(--color-fg-faint);
+  font-size: 0.68rem;
+}
+
+/* The campaign panel shows the artwork whole — it is a poster, not a crop — and the
+   space the copy column adds underneath carries the model's published headline specs
+   instead of empty letterboxing. */
+.hero-visual {
+  position: relative;
+  display: flex;
+  border: 1px solid var(--color-line);
+  background: var(--color-panel);
+}
+.hero-visual-link {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+}
+.hero-visual .stage {
+  background: var(--color-stage);
+}
+.hero-visual-caption {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  border-top: 1px solid var(--color-line);
+  padding: 0.95rem 1.15rem 0.85rem;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.hero-visual-caption .model {
+  color: var(--color-fg);
+}
+.hero-visual-caption .meta {
+  color: var(--color-brand-strong);
+}
+.hero-visual-specs {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  border-top: 1px solid var(--color-line);
+}
+.hero-visual-specs > div {
+  min-width: 0;
+  padding: 0.85rem 1.15rem;
+  border-left: 1px solid var(--color-line);
+}
+.hero-visual-specs > div:first-child {
+  border-left: 0;
+}
+.hero-visual-specs dt {
+  color: var(--color-fg-faint);
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.hero-visual-specs dd {
+  margin-top: 0.15rem;
+  color: var(--color-fg);
+  font-size: 0.82rem;
+  font-weight: 700;
+  overflow-wrap: anywhere;
+}
+.hero-visual-cta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: auto;
+  border-top: 1px solid var(--color-line);
+  background: var(--color-panel-2);
+  padding: 0.85rem 1.15rem;
+  color: var(--color-brand-strong);
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  transition: background-color var(--dur-fast) var(--ease-out);
+}
+.hero-visual-link:hover .hero-visual-cta {
+  background: color-mix(in oklab, var(--color-brand) 28%, var(--color-panel));
+}
+
+.explore-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  border-block: 1px solid var(--color-line);
+  background: var(--color-panel);
+}
+.explore-link {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.5rem;
+  transition: background-color var(--dur-fast);
+}
+.explore-link:hover {
+  background: var(--color-panel-2);
+}
+.explore-link + .explore-link {
+  border-left: 1px solid var(--color-line);
+}
+.explore-icon {
+  display: flex;
+  width: 2.75rem;
+  height: 2.75rem;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--color-brand);
+  color: var(--color-brand-strong);
+  transform: skewX(-7deg);
+}
+.explore-icon svg {
+  transform: skewX(7deg);
+}
+.explore-link h2 {
+  font-size: 0.85rem;
+  font-weight: 800;
+  letter-spacing: 0.035em;
+  text-transform: uppercase;
+}
+.explore-link p {
+  margin-top: 0.25rem;
+  color: var(--color-fg-muted);
+  font-size: 0.8rem;
+  line-height: 1.55;
+}
+.explore-arrow {
+  margin-left: auto;
+  color: var(--color-brand-strong);
+}
+
+/* Playing-style key: a small four-up catalogue table, not a stack of alert bars. */
+.style-key {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  border-bottom: 1px solid var(--color-line);
+}
+.style-key > div {
+  padding: 1.1rem 1.15rem 1.35rem;
+  border-left: 1px solid var(--color-line);
+}
+.style-key > div:first-child {
+  border-left: 0;
+  padding-left: 0;
+}
+.style-key dt {
+  color: var(--color-brand-strong);
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+}
+.style-key dd {
+  margin-top: 0.4rem;
+  color: var(--color-fg-muted);
+  font-size: 0.8rem;
+  line-height: 1.5;
+}
+
+/* ==========================================================================
+   7. Responsive adjustments
+   ========================================================================== */
+@media (min-width: 640px) {
+  .racket-card h3 {
+    font-size: 1.0625rem;
+    letter-spacing: -0.025em;
+  }
+}
+@media (max-width: 1023px) {
+  .hero-copy {
+    padding: 2rem;
+  }
+  .hero-facts {
+    gap: 1rem;
+  }
+  .hero-facts > div {
+    padding-right: 1rem;
+  }
+}
+@media (max-width: 900px) {
+  .style-key {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .style-key > div:nth-child(3) {
+    border-left: 0;
+    padding-left: 0;
+  }
+  .style-key > div:nth-child(-n + 2) {
+    border-bottom: 1px solid var(--color-line);
+  }
+}
+@media (max-width: 899px) {
+  .home-hero {
+    grid-template-columns: 1fr;
+    padding-top: 1rem;
+    padding-bottom: 2rem;
+  }
+  .hero-copy {
+    border-right: 1px solid var(--color-line);
+    border-bottom: 0;
+  }
+  .hero-copy h1 {
+    max-width: 12ch;
+  }
+}
+@media (max-width: 639px) {
+  .hero-copy {
+    padding: 2rem 1.25rem 2.25rem;
+  }
+  .hero-copy h1 {
+    font-size: clamp(2.8rem, 15vw, 4.4rem);
+  }
+  .hero-facts {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0;
+    margin-top: 1.75rem;
+  }
+  .hero-facts > div {
+    min-width: 0;
+    padding-inline: 0.7rem;
+  }
+  .hero-facts > div:first-child {
+    padding-left: 0;
+  }
+  .hero-facts strong {
+    font-size: 0.86rem;
+    overflow-wrap: anywhere;
+  }
+  .hero-facts span {
+    font-size: 0.61rem;
+  }
+  .hero-visual-caption {
+    padding: 0.75rem 1rem;
+    font-size: 0.65rem;
+  }
+  .hero-visual-specs > div {
+    padding: 0.7rem 0.8rem;
+  }
+  .hero-visual-specs dt {
+    font-size: 0.58rem;
+  }
+  .hero-visual-specs dd {
+    font-size: 0.74rem;
+  }
+  .hero-visual-cta {
+    padding: 0.75rem 1rem;
+    font-size: 0.65rem;
+  }
+  .explore-grid {
+    grid-template-columns: 1fr;
+  }
+  .explore-link {
+    padding: 1.25rem;
+  }
+  .explore-link + .explore-link {
+    border-left: 0;
+    border-top: 1px solid var(--color-line);
+  }
+  .style-key {
+    grid-template-columns: 1fr;
+  }
+  .style-key > div {
+    border-left: 0;
+    padding: 0.9rem 0;
+    border-top: 1px solid var(--color-line);
+  }
+  .style-key > div:first-child {
+    border-top: 0;
+    padding-top: 0;
+  }
+  .style-key > div:nth-child(-n + 2) {
+    border-bottom: 0;
+  }
+}

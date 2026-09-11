@@ -1,0 +1,177 @@
+---
+import Base from '../layouts/Base.astro';
+import RacketCard from '../components/RacketCard.astro';
+import RacketImage from '../components/RacketImage.astro';
+import { catalog, getRacket } from '../lib/data';
+import { CLASSIFICATION_META } from '../lib/classification';
+import { organizationJsonLd } from '../lib/jsonld';
+import { seriesLine, formatWeightClasses, racketBalanceRange, formatStiffness } from '../lib/format';
+import type { Classification } from '../lib/types';
+
+const classifications = Object.keys(CLASSIFICATION_META) as Classification[];
+const featured = ['fire-breathing', 'wind-breathing', 'dimensional-slash-pro']
+  .map((id) => getRacket(id))
+  .filter((r): r is NonNullable<typeof r> => Boolean(r));
+const heroRacket = getRacket('wind-breathing')!;
+const heroSeries = seriesLine(heroRacket);
+const heroStiffness = formatStiffness(heroRacket.stiffness, heroRacket.derived.stiffnessWordConflict);
+// Three published figures, so the panel below the artwork carries catalogue information
+// rather than empty space when the copy column runs taller.
+const heroSpecs = [
+  { label: 'Weight', value: formatWeightClasses(heroRacket.variants) },
+  { label: 'Balance point', value: `${racketBalanceRange(heroRacket)} mm` },
+  { label: 'Stiffness', value: heroStiffness.label ?? heroStiffness.primary },
+];
+---
+
+<Base
+  title="OGKILS Racket Compare — pick your OGKILS badminton racket"
+  path="/"
+  jsonLd={organizationJsonLd(Astro.site!)}
+>
+  <section class="home-hero mx-auto max-w-6xl px-4 sm:px-6">
+    <div class="hero-copy">
+      <p class="eyebrow"><span class="eyebrow-line" /> OGKILS 2026 racket collection</p>
+      <h1>Find your<br /><span class="hero-emphasis">winning</span><br />racket.</h1>
+      <p class="hero-description">
+        More power, quicker reactions, or a little of everything. Get to know the OGKILS
+        lineup and find a racket for the way you play.
+      </p>
+      <div class="hero-actions">
+        <a href="/finder" class="primary-action press">Find my racket <span aria-hidden="true">↗</span></a>
+        <a href="/rackets" class="secondary-action press">Explore the lineup <span aria-hidden="true">→</span></a>
+      </div>
+      <p class="hero-note">A few quick questions. Three matched picks. No guesswork.</p>
+      <div class="hero-facts" aria-label="About this guide">
+        <div><strong>{catalog.length}</strong><span>rackets to explore</span></div>
+        <div><strong>4</strong><span>playing styles</span></div>
+        <div><strong>Your game</strong><span>the starting point</span></div>
+      </div>
+    </div>
+
+    <!-- Campaign panel. The artwork is a poster in its own right, so it is shown whole
+         with its caption on a clean surface underneath rather than overprinted. -->
+    <figure class="hero-visual">
+      <a href={`/rackets/${heroRacket.id}`} class="hero-visual-link">
+        <RacketImage
+          racket={heroRacket}
+          eager
+          sizes="(max-width: 639px) 100vw, 620px"
+          widths={[400, 500]}
+        />
+        <figcaption class="hero-visual-caption">
+          <span class="model">{heroRacket.name}</span>
+          <span class="meta">{heroSeries ?? '2026 collection'}</span>
+        </figcaption>
+        <dl class="hero-visual-specs">
+          {
+            heroSpecs.map((spec) => (
+              <div>
+                <dt>{spec.label}</dt>
+                <dd class="tnum">{spec.value}</dd>
+              </div>
+            ))
+          }
+        </dl>
+        <span class="hero-visual-cta">
+          See the full spec sheet <span aria-hidden="true">→</span>
+        </span>
+      </a>
+    </figure>
+  </section>
+
+  <section class="mx-auto max-w-6xl px-4 sm:px-6" aria-label="Ways to explore">
+    <div class="explore-grid">
+      <a href="/compare" class="explore-link group">
+        <span class="explore-icon" aria-hidden="true">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="4" y="8" width="6" height="12" rx="1" />
+            <rect x="14" y="4" width="6" height="16" rx="1" />
+          </svg>
+        </span>
+        <div>
+          <h2>Have a shortlist?</h2>
+          <p>Compare up to four rackets, side by side.</p>
+        </div>
+        <span class="explore-arrow" aria-hidden="true">↗</span>
+      </a>
+      <a href="/guide/racket-specs" class="explore-link group">
+        <span class="explore-icon" aria-hidden="true">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 6.5C10 4.8 6.5 4.5 4 5.5v13c2.5-1 6-.7 8 1 2-1.7 5.5-2 8-1v-13c-2.5-1-6-.7-8 1Z" />
+            <path d="M12 6.5v13" />
+          </svg>
+        </span>
+        <div>
+          <h2>Make sense of the specs</h2>
+          <p>Simple explanations for a more confident choice.</p>
+        </div>
+        <span class="explore-arrow" aria-hidden="true">↗</span>
+      </a>
+    </div>
+
+    <!-- Playing-style key: four quiet catalogue columns, one per classification. -->
+    <section class="pt-12" aria-labelledby="styles-heading">
+      <p class="section-kicker">Performance classes</p>
+      <h2 id="styles-heading" class="display-heading mt-2 text-2xl text-fg sm:text-3xl">
+        Different styles. One that's yours.
+      </h2>
+      <dl class="style-key catalog-rule mt-5 pt-5">
+        {
+          classifications.map((c) => (
+            <div>
+              <dt>{CLASSIFICATION_META[c].label}</dt>
+              <dd>{CLASSIFICATION_META[c].blurb}</dd>
+            </div>
+          ))
+        }
+      </dl>
+    </section>
+  </section>
+
+  <!-- Featured -->
+  <section class="mx-auto max-w-6xl px-4 pt-16 sm:px-6" aria-labelledby="lineup-heading">
+    <div class="flex flex-wrap items-end justify-between gap-x-6 gap-y-2">
+      <div>
+        <p class="section-kicker">Rackets / 2026</p>
+        <h2 id="lineup-heading" class="display-heading mt-2 text-3xl text-fg sm:text-4xl">
+          Meet the lineup
+        </h2>
+      </div>
+      <a
+        href="/rackets"
+        class="pb-1 text-[0.72rem] font-extrabold uppercase tracking-[0.1em] text-brand-strong transition-colors hover:text-fg"
+      >
+        Browse all {catalog.length} →
+      </a>
+    </div>
+    <div class="catalog-rule mt-5 grid gap-5 pt-5 sm:grid-cols-2 lg:grid-cols-3">
+      {
+        featured.map((r) => (
+          <RacketCard racket={r} sizes="(max-width: 639px) 100vw, (max-width: 1023px) 45vw, 360px" />
+        ))
+      }
+    </div>
+  </section>
+
+  <!-- Spec guide teaser -->
+  <section class="mx-auto max-w-6xl px-4 pt-16 sm:px-6">
+    <div class="catalog-rule flex flex-col gap-5 border-x border-b border-line bg-panel p-8 sm:flex-row sm:items-center sm:justify-between">
+      <div class="prose-measure">
+        <h2 class="text-xl font-extrabold tracking-tight text-fg">New to reading racket specs?</h2>
+        <p class="mt-2 leading-relaxed text-fg-muted">
+          “4U”, “balance point”, “shaft stiffness” — we explain what each one actually does
+          for your game, in plain language. Every spec on the site links back to it.
+        </p>
+      </div>
+      <a href="/guide/racket-specs" class="secondary-action shrink-0">
+        Read the spec guide <span aria-hidden="true">→</span>
+      </a>
+    </div>
+
+    <p class="prose-measure mt-10 text-xs leading-relaxed text-fg-faint">
+      Every figure is drawn from the official OGKILS product database and shown as
+      published. Where a spec is unavailable it reads “—”, never a zero.
+    </p>
+  </section>
+</Base>

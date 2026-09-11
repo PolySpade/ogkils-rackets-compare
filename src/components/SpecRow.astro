@@ -1,0 +1,38 @@
+---
+import Tooltip from './Tooltip.astro';
+
+interface Props {
+  label: string;
+  /** null renders as an em dash (missing data is never 0 or blank — §4.3). */
+  value: string | number | null;
+  unit?: string;
+  termKey?: string;
+  /** Render the value with tabular figures (default true for numbers). */
+  mono?: boolean;
+}
+
+const { label, value, unit, termKey, mono } = Astro.props;
+const isMissing = value === null || value === undefined || value === '';
+const useMono = mono ?? typeof value === 'number';
+---
+
+<div class="flex items-baseline justify-between gap-4 border-b border-line py-2.5 last:border-0">
+  <dt class="flex items-center text-sm text-fg-muted">
+    <span>{label}</span>
+    {termKey && <Tooltip termKey={termKey} />}
+  </dt>
+  <dd
+    class:list={[
+      'text-right',
+      isMissing ? 'text-fg-faint' : 'text-fg',
+      useMono && !isMissing ? 'tnum text-[0.95rem] font-semibold' : 'text-sm font-medium',
+    ]}
+  >
+    {isMissing ? '—' : value}{!isMissing && unit ? <span class="spec-unit">{unit}</span> : null}
+    {
+      isMissing && (
+        <span class="sr-only">Not published</span>
+      )
+    }
+  </dd>
+</div>

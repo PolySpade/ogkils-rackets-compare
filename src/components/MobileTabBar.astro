@@ -1,0 +1,86 @@
+---
+// Thumb-reachable primary navigation for mobile (product.md §11: one-handed).
+// Hidden from `sm` up, where the header nav takes over. Icons are authored SVGs in one
+// consistent 1.75px stroke — no emoji/unicode stand-ins.
+const tabs = [
+  { href: '/finder', label: 'Find', icon: 'find' },
+  { href: '/rackets', label: 'Browse', icon: 'browse' },
+  { href: '/compare', label: 'Compare', icon: 'compare' },
+  { href: '/guide/racket-specs', label: 'Guide', icon: 'guide' },
+];
+const here = Astro.url.pathname;
+const isActive = (href: string) => (href === '/' ? here === '/' : here.startsWith(href));
+---
+
+<nav class="tabbar sm:hidden" aria-label="Primary">
+  <ul class="flex">
+    {
+      tabs.map((t) => {
+        const active = isActive(t.href);
+        return (
+          <li class="flex-1">
+            <a
+              href={t.href}
+              aria-current={active ? 'page' : undefined}
+              class:list={[
+                'relative flex h-full flex-col items-center justify-center gap-1 py-2 transition-colors',
+                active ? 'text-brand-strong' : 'text-fg-faint',
+              ]}
+            >
+              <svg
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.75"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                aria-hidden="true"
+              >
+                {t.icon === 'find' && (
+                  <Fragment>
+                    <circle cx="12" cy="12" r="6.5" />
+                    <path d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22" />
+                    <circle cx="12" cy="12" r="1.5" fill="currentColor" stroke="none" />
+                  </Fragment>
+                )}
+                {t.icon === 'browse' && (
+                  <Fragment>
+                    <rect x="3.5" y="3.5" width="7" height="7" rx="1.5" />
+                    <rect x="13.5" y="3.5" width="7" height="7" rx="1.5" />
+                    <rect x="3.5" y="13.5" width="7" height="7" rx="1.5" />
+                    <rect x="13.5" y="13.5" width="7" height="7" rx="1.5" />
+                  </Fragment>
+                )}
+                {t.icon === 'compare' && (
+                  <Fragment>
+                    <rect x="4" y="8" width="6" height="12" rx="1" />
+                    <rect x="14" y="4" width="6" height="16" rx="1" />
+                  </Fragment>
+                )}
+                {t.icon === 'guide' && (
+                  <Fragment>
+                    <path d="M12 6.5C10 4.8 6.5 4.5 4 5.5v13c2.5-1 6-0.7 8 1 2-1.7 5.5-2 8-1v-13c-2.5-1-6-0.7-8 1Z" />
+                    <path d="M12 6.5v13" />
+                  </Fragment>
+                )}
+              </svg>
+              <span
+                class:list={[
+                  'text-[0.62rem] font-bold uppercase leading-none tracking-[0.06em]',
+                  active ? 'text-brand-strong' : 'text-fg-muted',
+                ]}
+              >
+                {t.label}
+              </span>
+              {active && (
+                <span class="absolute top-0 h-[3px] w-10 bg-brand" aria-hidden="true" />
+              )}
+            </a>
+          </li>
+        );
+      })
+    }
+  </ul>
+</nav>

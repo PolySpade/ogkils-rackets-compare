@@ -1,0 +1,133 @@
+{
+  "schemaVersion": 1,
+  "source": "OGKILS Shopify export (OGKILS_Price_List/products.csv)",
+  "generatedNote": "Auto-written by scripts/import-commerce.mjs. Do not hand-edit — re-run the importer.",
+  "commerce": {
+    "annihilation": {
+      "pricePhp": 6000,
+      "stockLevel": "In Stock",
+      "buyUrl": "https://www.ogkilsbadminton.com/products/annihilation",
+      "sku": "OR-ANN-F",
+      "image": "annihilation.png"
+    },
+    "dimensional-slash-pro": {
+      "pricePhp": 2300,
+      "stockLevel": "In Stock",
+      "buyUrl": "https://www.ogkilsbadminton.com/products/ds-pro",
+      "sku": "OR-DSPRO",
+      "image": "dimensional-slash-pro.png"
+    },
+    "fire-breathing": {
+      "pricePhp": 4200,
+      "stockLevel": "Low Stock",
+      "buyUrl": "https://www.ogkilsbadminton.com/products/fire-breathing",
+      "sku": "OR-FIRE-D",
+      "image": "fire-breathing.png"
+    },
+    "freezing": {
+      "pricePhp": 2000,
+      "stockLevel": "In Stock",
+      "buyUrl": "https://www.ogkilsbadminton.com/products/freezing-racket",
+      "sku": "OR-FREEZING-07",
+      "image": "freezing.png"
+    },
+    "ldlyd": {
+      "pricePhp": 4000,
+      "stockLevel": "Low Stock",
+      "buyUrl": "https://www.ogkilsbadminton.com/products/ld-lyd",
+      "sku": "OR-LDLYD-E-4UG",
+      "image": "ldlyd.png"
+    },
+    "ld1000z": {
+      "pricePhp": 4800,
+      "stockLevel": "Low Stock",
+      "buyUrl": "https://www.ogkilsbadminton.com/products/ld1000z",
+      "sku": "OR-LD1000Z",
+      "image": "ld1000z.png"
+    },
+    "ld100zz": {
+      "pricePhp": 5000,
+      "stockLevel": "Low Stock",
+      "buyUrl": "https://www.ogkilsbadminton.com/products/ld100zz",
+      "sku": "OR-LD100ZZ",
+      "image": "ld100zz.png"
+    },
+    "ld12l": {
+      "pricePhp": 4000,
+      "stockLevel": "Low Stock",
+      "buyUrl": "https://www.ogkilsbadminton.com/products/ld12",
+      "sku": "OR-LD12",
+      "image": "ld12l.png"
+    },
+    "ld700": {
+      "pricePhp": 4000,
+      "stockLevel": "Low Stock",
+      "buyUrl": "https://www.ogkilsbadminton.com/products/ld700",
+      "sku": "OR-LD700",
+      "image": "ld700.png"
+    },
+    "ld77pro": {
+      "pricePhp": 4200,
+      "stockLevel": "Low Stock",
+      "buyUrl": "https://www.ogkilsbadminton.com/products/ld77pro",
+      "sku": "OR-LD77PRO",
+      "image": "ld77pro.png"
+    },
+    "ld800pro": {
+      "pricePhp": 4000,
+      "stockLevel": "Low Stock",
+      "buyUrl": "https://www.ogkilsbadminton.com/products/ld800pro",
+      "sku": "OR-LD800PRO",
+      "image": "ld800pro.png"
+    },
+    "ld88dpro": {
+      "pricePhp": 5500,
+      "stockLevel": "Out of Stock",
+      "buyUrl": "https://www.ogkilsbadminton.com/products/ld88dpro",
+      "sku": "OR-LD88DPRO-D-4UG",
+      "image": "ld88dpro.png"
+    },
+    "love-breathing": {
+      "pricePhp": 3500,
+      "stockLevel": "In Stock",
+      "buyUrl": "https://www.ogkilsbadminton.com/products/love-breathing",
+      "sku": "OR-LOVE",
+      "image": "love-breathing.png"
+    },
+    "mist-breathing": {
+      "pricePhp": 4800,
+      "stockLevel": "Low Stock",
+      "buyUrl": "https://www.ogkilsbadminton.com/products/mist-breathing",
+      "sku": "OR-MIST",
+      "image": "mist-breathing.png"
+    },
+    "serpent-breathing": {
+      "pricePhp": 5200,
+      "stockLevel": "Low Stock",
+      "buyUrl": "https://www.ogkilsbadminton.com/products/serpent-breathing",
+      "sku": "OR-SERPENT",
+      "image": "serpent-breathing.png"
+    },
+    "thunder-breathing": {
+      "pricePhp": 5200,
+      "stockLevel": "Low Stock",
+      "buyUrl": "https://www.ogkilsbadminton.com/products/thunder-breathing",
+      "sku": "OR-THUNDER",
+      "image": "thunder-breathing.png"
+    },
+    "water-breathing": {
+      "pricePhp": 4500,
+      "stockLevel": "Low Stock",
+      "buyUrl": "https://www.ogkilsbadminton.com/products/water-breathing",
+      "sku": "OR-WATER-F",
+      "image": "water-breathing.png"
+    },
+    "wind-breathing": {
+      "pricePhp": 7000,
+      "stockLevel": "Low Stock",
+      "buyUrl": "https://www.ogkilsbadminton.com/products/wind-breathing",
+      "sku": "OR-WIND",
+      "image": "wind-breathing.png"
+    }
+  }
+}

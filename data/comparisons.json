@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "_note": "Curated versus pairs pre-rendered at /compare/[a]-vs-[b] for SEO (§10). Keep to same-classification match-ups and flagship cross-overs, not the full 171-pair cross product. `verdict` is hand-authored prose; when null the page falls back to an auto summary from the diff.",
+  "pairs": [
+    { "a": "fire-breathing", "b": "serpent-breathing", "verdict": null },
+    { "a": "fire-breathing", "b": "ld100zz", "verdict": null },
+    { "a": "ld77pro", "b": "ld100zz", "verdict": null },
+    { "a": "annihilation", "b": "ld88spro", "verdict": null },
+    { "a": "ld88dpro", "b": "ld88spro", "verdict": null },
+    { "a": "thunder-breathing", "b": "wind-breathing", "verdict": null },
+    { "a": "love-breathing", "b": "wind-breathing", "verdict": null },
+    { "a": "ld800pro", "b": "ld1000z", "verdict": null },
+    { "a": "ld700", "b": "ld1000z", "verdict": null },
+    { "a": "ldlyd", "b": "ld12l", "verdict": null },
+    { "a": "mist-breathing", "b": "water-breathing", "verdict": null },
+    { "a": "dimensional-slash-pro", "b": "freezing", "verdict": null },
+    { "a": "fire-breathing", "b": "thunder-breathing", "verdict": null },
+    { "a": "fire-breathing", "b": "mist-breathing", "verdict": null },
+    { "a": "ld100zz", "b": "ld800pro", "verdict": null },
+    { "a": "serpent-breathing", "b": "thunder-breathing", "verdict": null }
+  ]
+}

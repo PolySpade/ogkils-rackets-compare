@@ -1,0 +1,72 @@
+---
+import { buyLinks, buildBuyUrl, STORE_FALLBACK_URL, type Placement } from '../lib/links';
+import type { Racket } from '../lib/types';
+
+interface Props {
+  racket: Racket;
+  placement: Placement;
+  /** Weight class of the selected variant, when known (compare/finder). */
+  variant?: string | null;
+  layout?: 'stack' | 'row';
+  /** Dense sizing for in-table and in-card placements. */
+  size?: 'md' | 'sm';
+}
+
+const { racket, placement, variant = null, layout = 'stack', size = 'md' } = Astro.props;
+const links = buyLinks(racket);
+const hasLinks = links.length > 0;
+const dense = size === 'sm' ? 'action-sm' : '';
+---
+
+<div class="buy" data-buy-block>
+  {
+    hasLinks ? (
+      <div class:list={['flex gap-2', layout === 'stack' ? 'flex-col' : 'flex-wrap']}>
+        {links.map((l) => (
+          <a
+            href={buildBuyUrl(l.url, racket.id, l.channel, placement)}
+            target="_blank"
+            rel="noopener"
+            data-buy-channel={l.channel}
+            data-buy-racket={racket.id}
+            data-buy-placement={placement}
+            data-buy-variant={variant}
+            class:list={[
+              'press',
+              l.primary ? 'primary-action' : 'secondary-action',
+              dense,
+              layout === 'stack' ? 'w-full' : '',
+            ]}
+          >
+            {l.label}
+            <span aria-hidden="true" class="text-[0.7em] opacity-70">↗</span>
+          </a>
+        ))}
+      </div>
+    ) : (
+      <a
+        href={STORE_FALLBACK_URL}
+        target="_blank"
+        rel="noopener"
+        data-buy-channel="shopify"
+        data-buy-racket={racket.id}
+        data-buy-placement={placement}
+        data-buy-variant={variant}
+        class:list={['press primary-action', dense, layout === 'stack' ? 'w-full' : '']}
+      >
+        Shop at OGKILS
+        <span aria-hidden="true" class="text-[0.7em] opacity-70">↗</span>
+      </a>
+    )
+  }
+  {
+    !hasLinks && (
+      <p class="mt-2 text-xs text-fg-faint">Direct buy links for this racket are coming soon.</p>
+    )
+  }
+</div>
+
+<script>
+  import { initBuyTracking } from '../lib/analytics';
+  initBuyTracking();
+</script>

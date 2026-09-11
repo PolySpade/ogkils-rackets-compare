@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://compare.ogkilsbadminton.com/sitemap-index.xml

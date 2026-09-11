@@ -1,0 +1,142 @@
+---
+import '../styles/global.css';
+import { ClientRouter } from 'astro:transitions';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import MobileTabBar from '../components/MobileTabBar.astro';
+import CompareBar from '../components/islands/CompareBar.tsx';
+import AssistantWidget from '../components/islands/AssistantWidget.tsx';
+import { catalog } from '../lib/data';
+
+interface Props {
+  title: string;
+  description?: string;
+  /** Path (without origin) for the canonical URL, e.g. "/rackets". */
+  path?: string;
+  /** Absolute or root-relative image for OpenGraph/Twitter cards. */
+  ogImage?: string;
+  ogType?: 'website' | 'article' | 'product';
+  /** One or more JSON-LD objects to embed. */
+  jsonLd?: Record<string, unknown> | Record<string, unknown>[];
+  /** Hide the floating compare bar on surfaces that already show the selection (e.g. /compare). */
+  showCompareBar?: boolean;
+}
+
+const {
+  title,
+  description = 'Compare OGKILS badminton rackets spec by spec, get a matched recommendation, and buy from the store you prefer.',
+  path,
+  ogImage,
+  ogType = 'website',
+  jsonLd,
+  showCompareBar = true,
+} = Astro.props;
+
+const canonical = path ? new URL(path, Astro.site).href : undefined;
+const ogImageUrl = ogImage ? new URL(ogImage, Astro.site).href : undefined;
+const jsonLdBlocks = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [];
+const compareNames = Object.fromEntries(catalog.map((r) => [r.id, r.name]));
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    {canonical && <link rel="canonical" href={canonical} />}
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <ClientRouter />
+    <meta name="theme-color" content="#ffffff" />
+    <!-- Apply the saved theme before paint (default light) to avoid a flash. -->
+    <script is:inline>
+      (function () {
+        try {
+          var t = localStorage.getItem('theme');
+          if (t !== 'dark' && t !== 'light') t = 'light';
+          document.documentElement.dataset.theme = t;
+          var m = document.querySelector('meta[name="theme-color"]');
+          if (m) m.setAttribute('content', t === 'dark' ? '#101719' : '#ffffff');
+        } catch (e) {}
+      })();
+    </script>
+
+    <!-- OpenGraph / Twitter -->
+    <meta property="og:type" content={ogType} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:site_name" content="OGKILS Racket Compare" />
+    {canonical && <meta property="og:url" content={canonical} />}
+    {ogImageUrl && <meta property="og:image" content={ogImageUrl} />}
+    <meta name="twitter:card" content={ogImageUrl ? 'summary_large_image' : 'summary'} />
+    {ogImageUrl && <meta name="twitter:image" content={ogImageUrl} />}
+
+    {jsonLdBlocks.map((block) => (
+      <script type="application/ld+json" is:inline set:html={JSON.stringify(block)} />
+    ))}
+    <slot name="head" />
+  </head>
+  <body class:list={['min-h-screen flex flex-col', { 'no-compare-bar': !showCompareBar }]}>
+    <a href="#main" class="skip-link">Skip to content</a>
+    <Header />
+    <main id="main" class="flex-1">
+      <slot />
+    </main>
+    <Footer />
+    <MobileTabBar />
+    {showCompareBar && <CompareBar client:only="react" names={compareNames} transition:persist />}
+    <AssistantWidget client:only="react" transition:persist />
+  </body>
+</html>
+
+<!-- Global add-to-compare controls: toggles the shared store from any [data-compare-toggle]
+     button and keeps their pressed/disabled state in sync across the page. -->
+<script>
+  import { compareIds, toggleCompare, MAX_COMPARE } from '../stores/compare';
+
+  function sync() {
+    const ids = compareIds.get();
+    // Reserve space so the floating compare bar never covers page content.
+    document.body.classList.toggle('has-compare-bar', ids.length > 0);
+    document.querySelectorAll<HTMLElement>('[data-compare-toggle]').forEach((el) => {
+      const id = el.getAttribute('data-compare-toggle') || '';
+      const on = ids.includes(id);
+      el.setAttribute('aria-pressed', on ? 'true' : 'false');
+      el.toggleAttribute('data-on', on);
+      el.toggleAttribute('data-disabled', ids.length >= MAX_COMPARE && !on);
+    });
+  }
+
+  document.addEventListener('click', (e) => {
+    const target = e.target as HTMLElement | null;
+    const el = target?.closest<HTMLElement>('[data-compare-toggle]');
+    if (!el) return;
+    e.preventDefault();
+    e.stopPropagation();
+    toggleCompare(el.getAttribute('data-compare-toggle') || '');
+  });
+
+  compareIds.subscribe(sync);
+  // Re-sync button states after every View Transition swap (new DOM, same store).
+  document.addEventListener('astro:page-load', sync);
+  sync();
+
+  // Theme toggle — persisted; the inline <head> script sets the initial value.
+  function applyTheme(t: string) {
+    document.documentElement.dataset.theme = t;
+    try {
+      localStorage.setItem('theme', t);
+    } catch (e) {
+      /* private mode */
+    }
+    const meta = document.querySelector('meta[name="theme-color"]');
+    if (meta) meta.setAttribute('content', t === 'dark' ? '#101719' : '#ffffff');
+  }
+  document.addEventListener('click', (e) => {
+    const el = (e.target as HTMLElement | null)?.closest<HTMLElement>('[data-theme-toggle]');
+    if (!el) return;
+    const cur = document.documentElement.dataset.theme === 'dark' ? 'dark' : 'light';
+    applyTheme(cur === 'dark' ? 'light' : 'dark');
+  });
+</script>

@@ -1,0 +1,76 @@
+---
+import Base from '../../layouts/Base.astro';
+import { allTerms } from '../../lib/glossary';
+import { faqJsonLd, breadcrumbJsonLd } from '../../lib/jsonld';
+
+const terms = allTerms();
+const site = Astro.site!;
+const jsonLd = [
+  faqJsonLd(terms),
+  breadcrumbJsonLd(site, [{ name: 'Spec guide', path: '/guide/racket-specs' }]),
+];
+---
+
+<Base
+  title="How to read racket specs — a plain-language guide | OGKILS"
+  description="What U-weights, balance point, shaft stiffness, and grommet holes actually do — in plain language, so the spec sheets make sense."
+  path="/guide/racket-specs"
+  jsonLd={jsonLd}
+>
+  <div class="mx-auto max-w-3xl px-4 py-12 sm:px-6">
+    <header class="mb-10">
+      <p class="section-kicker">Badminton knowledge / Spec guide</p>
+      <h1 class="display-heading is-title mt-2 text-4xl text-fg sm:text-5xl">
+        How to read racket specs
+      </h1>
+      <p class="prose-measure mt-4 text-lg leading-relaxed text-fg-muted">
+        Every number on a badminton racket means something for how it plays. Here's each
+        one in plain language — no jargon, no marketing. Every “?” across the site links
+        back here.
+      </p>
+    </header>
+
+    <!-- Quick index -->
+    <nav aria-label="On this page" class="catalog-rule mb-14 border-x border-b border-line bg-panel p-5">
+      <h2 class="panel-heading text-fg-muted">On this page</h2>
+      <ol class="tnum mt-3 grid grid-cols-1 gap-x-6 gap-y-1 text-sm sm:grid-cols-2">
+        {
+          terms.map((t, i) => (
+            <li class="border-b border-line last:border-0 sm:[&:nth-last-child(-n+2)]:border-0">
+              <a
+                href={`#${t.key}`}
+                class="flex items-baseline gap-3 py-2 text-fg-muted transition-colors hover:text-brand-strong"
+              >
+                <span class="text-xs font-bold text-fg-faint">{String(i + 1).padStart(2, '0')}</span>
+                <span class="font-medium">{t.term}</span>
+              </a>
+            </li>
+          ))
+        }
+      </ol>
+    </nav>
+
+    <div class="flex flex-col gap-12">
+      {
+        terms.map((t, i) => (
+          <section id={t.key} class="scroll-mt-24 border-t border-line pt-6 first:border-0 first:pt-0">
+            <p class="tnum text-xs font-bold tracking-[0.1em] text-brand-strong">
+              {String(i + 1).padStart(2, '0')}
+            </p>
+            <h2 class="mt-1 text-xl font-extrabold tracking-tight text-fg sm:text-2xl">{t.term}</h2>
+            <p class="prose-measure mt-2 text-base font-medium leading-relaxed text-fg">{t.short}</p>
+            <p class="prose-measure mt-3 leading-relaxed text-fg-muted">{t.long}</p>
+          </section>
+        ))
+      }
+    </div>
+
+    <div class="catalog-rule mt-16 border-x border-b border-line bg-panel p-8 text-center">
+      <h2 class="display-heading text-2xl text-fg">Ready to put it to use?</h2>
+      <div class="mt-5 flex flex-wrap justify-center gap-3">
+        <a href="/finder" class="primary-action press">Find my racket <span aria-hidden="true">↗</span></a>
+        <a href="/rackets" class="secondary-action press">Browse the lineup <span aria-hidden="true">→</span></a>
+      </div>
+    </div>
+  </div>
+</Base>
