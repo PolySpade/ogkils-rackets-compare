@@ -2,6 +2,7 @@ import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { useStore } from '@nanostores/react';
 import { compareIds, removeCompare, setCompare } from '../../stores/compare';
 import { extremeIndices } from '../../lib/derive';
+import { DIFF_FOOTNOTE, DIFF_KEY, MIN_SPREAD } from '../../lib/compare';
 
 // --- Shapes passed from compare/index.astro (compact, serialisable) -------------------
 export interface CompareVariant {
@@ -76,7 +77,7 @@ const ROWS: RowDef[] = [
     cell: (r) => ({ display: r.stiffnessLabel ? `${r.stiffnessPrimary} ${r.stiffnessLabel}` : r.stiffnessPrimary, num: r.stiffnessOrdinal }),
   },
   {
-    key: 'balancePt', label: 'Balance point', termKey: 'balance-point', unit: 'mm', diff: 'both', minSpread: 5,
+    key: 'balancePt', label: 'Balance point', termKey: 'balance-point', unit: 'mm', diff: 'both', minSpread: MIN_SPREAD.balancePointMm,
     cell: (_r, v) => ({ display: `${v.balancePointMm}`, num: v.balancePointMm }),
   },
   {
@@ -88,26 +89,26 @@ const ROWS: RowDef[] = [
     cell: (_r, v) => (v.swingWeightMissing ? { display: DASH, num: null } : { display: `${v.swingWeight}`, num: v.swingWeight }),
   },
   {
-    key: 'shaft', label: 'Shaft diameter', termKey: 'shaft-diameter', unit: 'mm', diff: 'both', minSpread: 0.2,
+    key: 'shaft', label: 'Shaft diameter', termKey: 'shaft-diameter', unit: 'mm', diff: 'both', minSpread: MIN_SPREAD.shaftDiameterMm,
     cell: (r) => ({ display: `${r.shaftDiameterMm}`, num: r.shaftDiameterMm }),
   },
   {
-    key: 'maxTension', label: 'Max tension', termKey: 'max-tension', unit: 'lbs', diff: 'high',
+    key: 'maxTension', label: 'Max tension', termKey: 'max-tension', unit: 'lbs', diff: 'both',
     cell: (_r, v) => ({ display: `${v.maxTensionLbs}`, num: v.maxTensionLbs }),
   },
   {
-    key: 'frameArea', label: 'Frame area', termKey: 'frame-area', unit: 'cm²', diff: 'high',
+    key: 'frameArea', label: 'Frame area', termKey: 'frame-area', unit: 'cm²', diff: 'both',
     cell: (r) => (r.frameAreaCm2 === null ? { display: DASH, num: null } : { display: `${r.frameAreaCm2}`, num: r.frameAreaCm2 }),
   },
   { key: 'frameHoles', label: 'Frame holes', termKey: 'frame-holes', diff: null, cell: (r) => ({ display: r.frameHoleType, num: null }) },
   { key: 'grips', label: 'Grip sizes', termKey: 'grip-size', diff: null, cell: (_r, v) => ({ display: v.gripSizes.join(' · '), num: null }) },
   {
-    key: 'gripLen', label: 'Grip length', unit: 'mm', diff: null,
+    key: 'gripLen', label: 'Grip length', unit: 'mm', diff: 'both',
     cell: (r) => (r.gripLengthMm === null ? { display: DASH, num: null } : { display: `${r.gripLengthMm}`, num: r.gripLengthMm }),
   },
-  { key: 'racketLen', label: 'Racket length', unit: 'mm', diff: null, cell: (r) => ({ display: `${r.racketLengthMm}`, num: r.racketLengthMm }) },
+  { key: 'racketLen', label: 'Racket length', unit: 'mm', diff: 'both', cell: (r) => ({ display: `${r.racketLengthMm}`, num: r.racketLengthMm }) },
   {
-    key: 'price', label: 'Price', unit: '', diff: 'low',
+    key: 'price', label: 'Price', unit: '', diff: 'both',
     cell: (r) => (r.pricePhp === null ? { display: DASH, num: null } : { display: r.priceLabel ?? `${r.pricePhp}`, num: r.pricePhp }),
   },
 ];
@@ -120,7 +121,6 @@ function useSelectedRackets(data: Record<string, CompareRacket>): CompareRacket[
 export default function CompareTray({ data, suggestions }: Props) {
   const rackets = useSelectedRackets(data);
   const [variantIdx, setVariantIdx] = useState<Record<string, number>>({});
-  const [showSame, setShowSame] = useState(false);
   const [mobile, setMobile] = useState(false);
   const [pairIds, setPairIds] = useState<string[]>([]);
   const [scrollable, setScrollable] = useState(false);
@@ -245,11 +245,6 @@ export default function CompareTray({ data, suggestions }: Props) {
     return { row, cells, highs, lows, uniform };
   });
 
-  // Identical rows are grouped rather than interleaved, so the differences read as a
-  // block. Order within each group is preserved.
-  const differing = rowMeta.filter((m) => !m.uniform);
-  const same = rowMeta.filter((m) => m.uniform);
-
   const renderRow = ({ row, cells, highs, lows, uniform }: (typeof rowMeta)[number]) => (
     <tr key={row.key} className={uniform ? 'is-uniform' : ''}>
       <th scope="row">
@@ -282,10 +277,13 @@ export default function CompareTray({ data, suggestions }: Props) {
             {row.unit && !missing ? <span className="spec-unit">{row.unit}</span> : null}
             {missing && <span className="sr-only">Not published</span>}
             {marked && (
-              <span className="spec-diff-mark">
+              <span
+                className="spec-diff-mark"
+                title={isHigh ? 'Highest figure in this row' : 'Lowest figure in this row'}
+              >
                 <span aria-hidden="true">{isHigh ? '▲' : '▼'}</span>
                 <span className="sr-only">
-                  {isHigh ? 'highest of these rackets' : 'lowest of these rackets'}
+                  {isHigh ? 'highest figure in this row' : 'lowest figure in this row'}
                 </span>
               </span>
             )}
@@ -298,11 +296,19 @@ export default function CompareTray({ data, suggestions }: Props) {
   return (
     <div>
       {/* Controls */}
-      <div className="mb-4 flex flex-wrap items-center justify-between gap-x-6 gap-y-2">
+      <div className="mb-4 flex flex-wrap items-center justify-between gap-x-6 gap-y-3">
         <p className="text-sm text-fg-muted">
           <span className="tnum font-bold text-fg">{mobile ? `2 of ${rackets.length}` : rackets.length}</span>{' '}
-          rackets · differences marked <span className="text-diff">▲▼</span>
+          rackets compared
         </p>
+        <ul className="spec-key">
+          {DIFF_KEY.map((k) => (
+            <li key={k.glyph}>
+              <span className={k.muted ? 'spec-missing' : 'text-diff'} aria-hidden="true">{k.glyph}</span>
+              {k.label}
+            </li>
+          ))}
+        </ul>
       </div>
 
       <p className="mb-3 text-xs leading-relaxed text-fg-muted sm:hidden">
@@ -354,10 +360,14 @@ export default function CompareTray({ data, suggestions }: Props) {
                       </label>
                     )}
 
-                    <div className="stage stage--thumb h-16 w-16 shrink-0 bg-panel">
+                    <div
+                      className={`stage stage--thumb h-16 w-16 shrink-0 bg-panel${r.thumb ? '' : ' stage--empty'}`}
+                    >
                       {r.thumb ? (
                         <img src={r.thumb} alt="" width={64} height={64} loading="lazy" />
-                      ) : null}
+                      ) : (
+                        <span className="sr-only">Artwork coming soon</span>
+                      )}
                     </div>
                     <button
                       type="button"
@@ -403,34 +413,9 @@ export default function CompareTray({ data, suggestions }: Props) {
             </tr>
           </thead>
           <tbody>
-            {differing.map((meta) => renderRow(meta))}
-
-            {/* Identical rows collapse into one muted group (product.md §6) — the count
-                is the useful part: "these two only differ on five of fifteen specs". */}
-            {same.length > 0 && (
-              <tr className="is-disclosure">
-                <td colSpan={visibleRackets.length + 1}>
-                  <button
-                    type="button"
-                    className="spec-same-toggle"
-                    aria-expanded={showSame}
-                    aria-controls="same-across-all"
-                    onClick={() => setShowSame((v) => !v)}
-                  >
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                      <path d="M6 9l6 6 6-6" />
-                    </svg>
-                    <span>
-                      <span className="tnum">{same.length}</span>{' '}
-                      {same.length === 1 ? 'spec is' : 'specs are'} the same across{' '}
-                      {visibleRackets.length === 2 ? 'both' : `all ${visibleRackets.length}`}
-                      {showSame ? ' — hide them' : ' — show them'}
-                    </span>
-                  </button>
-                </td>
-              </tr>
-            )}
-            {showSame && same.map((meta) => renderRow(meta))}
+            {/* Every spec, always, in the order the brochure lists them. Rows where the
+                values match are tinted a shade lighter — a quiet cue, never a hidden row. */}
+            {rowMeta.map((meta) => renderRow(meta))}
 
             {/* Stock */}
             <tr>
@@ -472,6 +457,8 @@ export default function CompareTray({ data, suggestions }: Props) {
           </tbody>
         </table>
       </div>
+
+      <p className="spec-footnote">{DIFF_FOOTNOTE}</p>
     </div>
   );
 }

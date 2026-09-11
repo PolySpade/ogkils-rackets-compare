@@ -852,6 +852,33 @@ html[data-theme="dark"] [data-theme-toggle] .icon-to-light {
   color: var(--color-diff);
   font-size: 0.72rem;
   font-weight: 700;
+  cursor: help;
+}
+
+/* The key sits with the table controls; the caveat sits under the table as a footnote. */
+.spec-key {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.4rem 1rem;
+  font-size: 0.75rem;
+  color: var(--color-fg-muted);
+}
+.spec-key li {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+.spec-key li span:first-child {
+  font-size: 0.7rem;
+  font-weight: 700;
+}
+.spec-footnote {
+  max-width: 68ch;
+  margin-top: 0.9rem;
+  color: var(--color-fg-faint);
+  font-size: 0.75rem;
+  line-height: 1.6;
 }
 .spec-unit {
   margin-left: 0.15rem;
@@ -861,37 +888,6 @@ html[data-theme="dark"] [data-theme-toggle] .icon-to-light {
 .spec-missing {
   color: var(--color-fg-faint);
 }
-/* The "same across all" disclosure (product.md §6) — a quiet full-width row, not a
-   data cell, so it never reads as a spec. */
-.spec-table tbody tr.is-disclosure td {
-  background: var(--color-panel);
-  padding: 0;
-  text-align: left;
-}
-.spec-same-toggle {
-  display: flex;
-  width: 100%;
-  min-height: 2.75rem;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.65rem 0.75rem;
-  color: var(--color-fg-muted);
-  font-size: 0.78rem;
-  font-weight: 700;
-  cursor: pointer;
-  transition: color var(--dur-fast) var(--ease-out), background-color var(--dur-fast) var(--ease-out);
-}
-.spec-same-toggle:hover {
-  color: var(--color-brand-strong);
-  background: color-mix(in oklab, var(--color-panel-2) 45%, var(--color-panel));
-}
-.spec-same-toggle svg {
-  transition: transform var(--dur-fast) var(--ease-out);
-}
-.spec-same-toggle[aria-expanded="true"] svg {
-  transform: rotate(180deg);
-}
-
 /* Actions row sits on the page, not in the data field. */
 .spec-table tbody td.is-actions,
 .spec-table tbody tr.is-actions td {

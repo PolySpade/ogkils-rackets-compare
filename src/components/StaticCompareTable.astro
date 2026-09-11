@@ -3,6 +3,7 @@ import ClassificationBadge from './ClassificationBadge.astro';
 import RacketImage from './RacketImage.astro';
 import { extremeIndices, stiffnessOrdinal } from '../lib/derive';
 import { formatStiffness, formatPrice, trustedGripLengthMm } from '../lib/format';
+import { DIFF_FOOTNOTE, DIFF_KEY, MIN_SPREAD } from '../lib/compare';
 import type { Racket } from '../lib/types';
 
 interface Props {
@@ -36,14 +37,14 @@ const rows: Row[] = [
       return { display: s.label ? `${s.primary} ${s.label}` : s.primary, num: stiffnessOrdinal(r.stiffness.word) };
     },
   },
-  { label: 'Balance point', termKey: 'balance-point', unit: 'mm', diff: 'both', minSpread: 5, cell: (r) => ({ display: `${v0(r).balancePointMm}`, num: v0(r).balancePointMm }) },
+  { label: 'Balance point', termKey: 'balance-point', unit: 'mm', diff: 'both', minSpread: MIN_SPREAD.balancePointMm, cell: (r) => ({ display: `${v0(r).balancePointMm}`, num: v0(r).balancePointMm }) },
   { label: 'Weight', termKey: 'weight-class', unit: 'g', diff: 'both', cell: (r) => ({ display: `${v0(r).weightRangeG[0]}–${v0(r).weightRangeG[1]}`, num: v0(r).weightMidG }) },
   { label: 'Swing weight', termKey: 'swing-weight', diff: 'both', cell: (r) => (v0(r).swingWeightMissing ? { display: DASH, num: null } : { display: `${v0(r).swingWeight}`, num: v0(r).swingWeight }) },
-  { label: 'Shaft diameter', termKey: 'shaft-diameter', unit: 'mm', diff: 'both', minSpread: 0.2, cell: (r) => ({ display: `${r.shaftDiameterMm}`, num: r.shaftDiameterMm }) },
-  { label: 'Max tension', termKey: 'max-tension', unit: 'lbs', diff: 'high', cell: (r) => ({ display: `${v0(r).maxTensionLbs}`, num: v0(r).maxTensionLbs }) },
-  { label: 'Frame area', termKey: 'frame-area', unit: 'cm²', diff: 'high', cell: (r) => (r.frameAreaCm2 === null ? { display: DASH, num: null } : { display: `${r.frameAreaCm2}`, num: r.frameAreaCm2 }) },
-  { label: 'Grip length', unit: 'mm', diff: null, cell: (r) => { const g = trustedGripLengthMm(r); return g === null ? { display: DASH, num: null } : { display: `${g}`, num: g }; } },
-  { label: 'Price', diff: 'low', cell: (r) => (r.pricePhp === null ? { display: DASH, num: null } : { display: formatPrice(r.pricePhp) ?? DASH, num: r.pricePhp }) },
+  { label: 'Shaft diameter', termKey: 'shaft-diameter', unit: 'mm', diff: 'both', minSpread: MIN_SPREAD.shaftDiameterMm, cell: (r) => ({ display: `${r.shaftDiameterMm}`, num: r.shaftDiameterMm }) },
+  { label: 'Max tension', termKey: 'max-tension', unit: 'lbs', diff: 'both', cell: (r) => ({ display: `${v0(r).maxTensionLbs}`, num: v0(r).maxTensionLbs }) },
+  { label: 'Frame area', termKey: 'frame-area', unit: 'cm²', diff: 'both', cell: (r) => (r.frameAreaCm2 === null ? { display: DASH, num: null } : { display: `${r.frameAreaCm2}`, num: r.frameAreaCm2 }) },
+  { label: 'Grip length', unit: 'mm', diff: 'both', cell: (r) => { const g = trustedGripLengthMm(r); return g === null ? { display: DASH, num: null } : { display: `${g}`, num: g }; } },
+  { label: 'Price', diff: 'both', cell: (r) => (r.pricePhp === null ? { display: DASH, num: null } : { display: formatPrice(r.pricePhp) ?? DASH, num: r.pricePhp }) },
 ];
 
 const computed = rows.map((row) => {
@@ -54,6 +55,17 @@ const computed = rows.map((row) => {
   return { row, cells, highs, lows };
 });
 ---
+
+<ul class="spec-key mb-3 justify-end">
+  {
+    DIFF_KEY.map((k) => (
+      <li>
+        <span class:list={[k.muted ? 'spec-missing' : 'text-diff']} aria-hidden="true">{k.glyph}</span>
+        {k.label}
+      </li>
+    ))
+  }
+</ul>
 
 <!-- Two columns always fit above 640px, so the wrapper can stay out of scroll-container
      mode and let the product headers stick to the page as you read down the table. -->
@@ -107,9 +119,12 @@ const computed = rows.map((row) => {
                 {row.unit && !missing ? <span class="spec-unit">{row.unit}</span> : null}
                 {missing && <span class="sr-only">Not published</span>}
                 {marked && (
-                  <span class="spec-diff-mark">
+                  <span
+                    class="spec-diff-mark"
+                    title={isHigh ? 'Highest figure in this row' : 'Lowest figure in this row'}
+                  >
                     <span aria-hidden="true">{isHigh ? '▲' : '▼'}</span>
-                    <span class="sr-only">{isHigh ? 'highest of these rackets' : 'lowest of these rackets'}</span>
+                    <span class="sr-only">{isHigh ? 'highest figure in this row' : 'lowest figure in this row'}</span>
                   </span>
                 )}
               </td>
@@ -120,3 +135,5 @@ const computed = rows.map((row) => {
     </tbody>
   </table>
 </div>
+
+<p class="spec-footnote">{DIFF_FOOTNOTE}</p>

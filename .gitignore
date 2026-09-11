@@ -34,3 +34,12 @@ graphify-out/
 # deploy
 .vercel
 .netlify
+
+# Reference material and tool output — not build inputs, and the brochure alone is 29MB,
+# which every clone and every Vercel build would have to pull down. DESIGN.md links to
+# it as a local reference; keep your own copy outside git (or in cloud storage).
+OGKILS-2026 Brochure.pdf
+.impeccable/
+
+# stale working screenshots
+compare-mobile.png
