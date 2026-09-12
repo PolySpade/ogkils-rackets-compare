@@ -20,6 +20,7 @@
     "ldlyd": { "aliases": ["lyd", "ld lyd"] },
     "ld12l": { "aliases": ["12l", "ld12", "12 l"] },
     "annihilation": { "aliases": ["annihilator", "anni", "annihilate"] },
-    "ld88spro": { "aliases": ["88s", "ld88s", "88spro", "88 s"] }
+    "ld88spro": { "aliases": ["88s", "ld88s", "88spro", "88 s"] },
+    "insect-breathing": { "aliases": ["insect", "bug", "insect breath"] }
   }
 }

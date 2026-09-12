@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "source": "Product_Database_Racket_Specs.xlsx",
-  "count": 19,
+  "count": 20,
   "rackets": [
     {
       "id": "mist-breathing",
@@ -243,7 +243,7 @@
         "TORAY M46J",
         "HIGH MODULUS CARBON FIBER"
       ],
-      "materialsRaw": "4X CARBON+ TORAY M46J + HIGH MODULUS CARBON FIBER",
+      "materialsRaw": "4X CARBON + TORAY M46J + HIGH MODULUS CARBON FIBER",
       "shaftDiameterMm": 6.8,
       "shaftNote": "6.8mm",
       "stiffness": {
@@ -1346,6 +1346,80 @@
           ],
           "maxTensionLbs": 30.0,
           "balancePointMm": 302.0,
+          "balancePointToleranceMm": 3.0,
+          "swingWeight": null,
+          "swingWeightTolerance": null,
+          "swingWeightMissing": true
+        }
+      ],
+      "tagline": null,
+      "description": null,
+      "pricePhp": null,
+      "images": [],
+      "inStock": true,
+      "links": {
+        "shopify": null,
+        "shopee": null,
+        "lazada": null,
+        "tiktok": null
+      }
+    },
+    {
+      "id": "insect-breathing",
+      "name": "Insect Breathing",
+      "modelCode": "INSECT BREATHING",
+      "series": "Breathing",
+      "classification": "SPEED",
+      "balance": "Head-Heavy",
+      "materials": [
+        "VIBRANIUM",
+        "Toray M40X High Modulus Carbon Fiber"
+      ],
+      "materialsRaw": "VIBRANIUM + Toray M40X High Modulus Carbon Fiber",
+      "shaftDiameterMm": 6.8,
+      "shaftNote": "6.8mm",
+      "stiffness": {
+        "word": "Stiff",
+        "rangeLow": null,
+        "rangeHigh": null,
+        "value": null,
+        "raw": null
+      },
+      "frameHoleCount": 76,
+      "frameHoleType": "76 Slanted Hole",
+      "frameAreaCm2": null,
+      "gripLengthMm": null,
+      "racketLengthMm": 675.0,
+      "variants": [
+        {
+          "weightClass": "5U",
+          "weightRangeG": [
+            75.0,
+            79.9
+          ],
+          "weightMidG": 77.5,
+          "gripSizes": [
+            "G6"
+          ],
+          "maxTensionLbs": 30.0,
+          "balancePointMm": 310.0,
+          "balancePointToleranceMm": 3.0,
+          "swingWeight": null,
+          "swingWeightTolerance": null,
+          "swingWeightMissing": true
+        },
+        {
+          "weightClass": "6U",
+          "weightRangeG": [
+            70.0,
+            74.9
+          ],
+          "weightMidG": 72.5,
+          "gripSizes": [
+            "G6"
+          ],
+          "maxTensionLbs": 29.0,
+          "balancePointMm": 313.0,
           "balancePointToleranceMm": 3.0,
           "swingWeight": null,
           "swingWeightTolerance": null,
