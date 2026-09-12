@@ -1,0 +1,218 @@
+{
+  "schemaVersion": 1,
+  "note": "Live pull of productType:Racket from the OGKILS PH Shopify Admin API. Written by scripts/import-commerce.mjs (or by Claude via the Shopify MCP when no Admin token is on hand). Feeds scripts/import-commerce.mjs --snapshot.",
+  "shop": "www.ogkilsbadminton.com",
+  "fetchedAt": "2026-09-12",
+  "products": [
+    {
+      "handle": "insect-breathing",
+      "title": "Insect Breathing Badminton Racket - Speed",
+      "status": "ACTIVE",
+      "tags": ["new-arrival"],
+      "totalInventory": -2,
+      "minPrice": 5500,
+      "featuredImageUrl": "https://cdn.shopify.com/s/files/1/0941/1556/1768/files/1_b10f6038-2af4-479a-b2aa-c0083b4e5c66.png?v=1788584321",
+      "variantSkus": ["OR-INSECT-J-5UG6", "OR-INSECT-J-6UG6", "OR-INSECT-G-5UG6", "OR-INSECT-G-6UG6", "OR-INSECT-F-5UG6", "OR-INSECT-F-6UG6"]
+    },
+    {
+      "handle": "ld88spro-badminton-racket-attack",
+      "title": "LD88SPRO Badminton Racket - Attack",
+      "status": "ACTIVE",
+      "tags": ["new-arrival", "racket"],
+      "totalInventory": 1,
+      "minPrice": 5500,
+      "featuredImageUrl": "https://cdn.shopify.com/s/files/1/0941/1556/1768/files/4_4f9a63ae-570f-46d1-a25e-29221ebdc084.jpg?v=1788012513",
+      "variantSkus": []
+    },
+    {
+      "handle": "annihilation",
+      "title": "Annihilation Badminton Racket - Attack",
+      "status": "ACTIVE",
+      "tags": ["new-arrival", "racket"],
+      "totalInventory": 4,
+      "minPrice": 6000,
+      "featuredImageUrl": "https://cdn.shopify.com/s/files/1/0941/1556/1768/files/1_e5dd68ef-9e5c-4bb6-b63d-89110297fff6.jpg?v=1782440948",
+      "variantSkus": ["OR-ANN-F-3UG5", "OR-ANN-F-4UG5", "OR-ANN-F-4UG6"]
+    },
+    {
+      "handle": "ld88dpro",
+      "title": "LD88D Pro Badminton Racket - Attack",
+      "status": "ACTIVE",
+      "tags": ["ld-series", "racket"],
+      "totalInventory": 16,
+      "minPrice": 5500,
+      "featuredImageUrl": "https://cdn.shopify.com/s/files/1/0941/1556/1768/files/1_9709ee95-d09b-46e5-be06-adc825192ee6.jpg?v=1779958540",
+      "variantSkus": ["OR-LD88DPRO-D-4UG5", "OR-LD88DPRO-D-4UG6"]
+    },
+    {
+      "handle": "ld12",
+      "title": "LD12 Badminton Racket - Speed",
+      "status": "ACTIVE",
+      "tags": ["ld-series", "racket"],
+      "totalInventory": 1,
+      "minPrice": 4000,
+      "featuredImageUrl": "https://cdn.shopify.com/s/files/1/0941/1556/1768/files/1_f618e626-5ffe-4d55-9f90-2ee0424d0769.png?v=1779950277",
+      "variantSkus": ["OR-LD12-F-4UG5", "OR-LD12L-U-4UG5"]
+    },
+    {
+      "handle": "water-breathing-limited",
+      "title": "Water Breathing Malaysia Special Edition - Control",
+      "status": "ACTIVE",
+      "tags": ["breathing-series", "racket"],
+      "totalInventory": 2,
+      "minPrice": 7000,
+      "featuredImageUrl": "https://cdn.shopify.com/s/files/1/0941/1556/1768/files/1_8d9649df-d16d-4cb1-b867-d5c4146b71e7.jpg?v=1774279738",
+      "variantSkus": ["OR-WATER-LIMITED-4UG5"]
+    },
+    {
+      "handle": "wind-breathing",
+      "title": "Wind Breathing Badminton Racket - Speed",
+      "status": "ACTIVE",
+      "tags": ["new-arrival", "racket"],
+      "totalInventory": 4,
+      "minPrice": 7000,
+      "featuredImageUrl": "https://cdn.shopify.com/s/files/1/0941/1556/1768/files/1_9742362c-979b-4c42-968b-b0624757fb84.jpg?v=1773929506",
+      "variantSkus": ["OR-WIND-D-3UG5", "OR-WIND-D-4UG5", "OR-WIND-G-3UG5", "OR-WIND-G-4UG5"]
+    },
+    {
+      "handle": "ld-lyd",
+      "title": "LD-LYD Great Sword Badminton Racket - Speed",
+      "status": "ACTIVE",
+      "tags": ["new-arrival", "racket"],
+      "totalInventory": 3,
+      "minPrice": 4000,
+      "featuredImageUrl": "https://cdn.shopify.com/s/files/1/0941/1556/1768/files/1_58a65c1a-8ff7-4d87-a99c-09e6740301ea.jpg?v=1767450707",
+      "variantSkus": ["OR-LDLYD-E-4UG5", "OR-LDLYD-E-4UG6"]
+    },
+    {
+      "handle": "serpent-breathing",
+      "title": "Serpent Breathing Badminton Racket - Attack",
+      "status": "ACTIVE",
+      "tags": ["breathing-series", "new-arrival", "racket"],
+      "totalInventory": 10,
+      "minPrice": 5200,
+      "featuredImageUrl": "https://cdn.shopify.com/s/files/1/0941/1556/1768/files/1_e9233e38-bf16-4f3a-8be1-f718aa60f350.webp?v=1761701129",
+      "variantSkus": ["OR-SERPENT-J-3UG5", "OR-SERPENT-J-4UG5", "OR-SERPENT-F-3UG5", "OR-SERPENT-F-4UG5"]
+    },
+    {
+      "handle": "ds-pro",
+      "title": "Dimensional Slash Pro Badminton Racket - Control",
+      "status": "ACTIVE",
+      "tags": ["racket"],
+      "totalInventory": 7,
+      "minPrice": 2300,
+      "featuredImageUrl": "https://cdn.shopify.com/s/files/1/0941/1556/1768/files/12.jpg?v=1758643380",
+      "variantSkus": ["OR-DSPRO-J-4UG6", "OR-DSPRO-J-5UG6", "OR-DSPRO-F-4UG6", "OR-DSPRO-F-5UG6", "OR-DSPRO-M-4UG6"]
+    },
+    {
+      "handle": "freezing-racket",
+      "title": "Freezing Series Badminton Racket - Control",
+      "status": "ACTIVE",
+      "tags": ["racket"],
+      "totalInventory": 5,
+      "minPrice": 2000,
+      "featuredImageUrl": "https://cdn.shopify.com/s/files/1/0941/1556/1768/files/177360a6a2cd22d658aa24f317251353.jpg?v=1758643379",
+      "variantSkus": ["OR-FREEZING-07-F-4UG6", "OR-FREEZING-07-F-5UG6", "OR-FREEZING-07-U-4UG6", "OR-FREEZING-07-U-5UG6", "OR-FREEZING-07-I-4UG6"]
+    },
+    {
+      "handle": "ld77pro",
+      "title": "LD77PRO Badminton Racket - Attack",
+      "status": "ACTIVE",
+      "tags": ["leading-series", "racket"],
+      "totalInventory": 5,
+      "minPrice": 4750,
+      "featuredImageUrl": "https://cdn.shopify.com/s/files/1/0941/1556/1768/files/77P_5.0_-02.jpg?v=1758643379",
+      "variantSkus": ["OR-LD77PRO-N-3UG5", "OR-LD77PRO-N-4UG5", "OR-LD77PRO-N-4UG6", "OR-LD77PRO-C-4UG5"]
+    },
+    {
+      "handle": "ld100zz",
+      "title": "LD100ZZ Badminton Racket - Attack",
+      "status": "ACTIVE",
+      "tags": ["leading-series", "racket"],
+      "totalInventory": 1,
+      "minPrice": 5000,
+      "featuredImageUrl": "https://cdn.shopify.com/s/files/1/0941/1556/1768/files/100zz___1.jpg?v=1758644605",
+      "variantSkus": ["OR-LD100ZZ-A-3UG5", "OR-LD100ZZ-A-4UG5", "OR-LD100ZZ-A-4UG6", "OR-LD100ZZ-C-3UG5", "OR-LD100ZZ-C-4UG5"]
+    },
+    {
+      "handle": "ld700",
+      "title": "LD700 Badminton Racket - Speed",
+      "status": "ACTIVE",
+      "tags": ["leading-series", "racket"],
+      "totalInventory": 8,
+      "minPrice": 4000,
+      "featuredImageUrl": "https://cdn.shopify.com/s/files/1/0941/1556/1768/files/ld700__01_f5eed795-cbeb-4a82-ba5c-6f8acdcfbddd.jpg?v=1758643379",
+      "variantSkus": ["OR-LD700-C-3UG5", "OR-LD700-C-4UG5", "OR-LD700-A-3UG5", "OR-LD700-A-4UG5", "OR-LD700-I-4UG6"]
+    },
+    {
+      "handle": "ld800pro",
+      "title": "LD800PRO Badminton Racket - Speed",
+      "status": "ACTIVE",
+      "tags": ["leading-series", "racket"],
+      "totalInventory": 6,
+      "minPrice": 4300,
+      "featuredImageUrl": "https://cdn.shopify.com/s/files/1/0941/1556/1768/files/800P-2-01.jpg?v=1758643379",
+      "variantSkus": ["OR-LD800PRO-I-4UG5", "OR-LD800PRO-I-4UG6", "OR-LD800PRO-R-4UG5", "OR-LD800PRO-R-4UG6"]
+    },
+    {
+      "handle": "ld1000z",
+      "title": "LD1000Z Badminton Racket - Speed",
+      "status": "ACTIVE",
+      "tags": ["leading-series", "racket"],
+      "totalInventory": 2,
+      "minPrice": 4800,
+      "featuredImageUrl": "https://cdn.shopify.com/s/files/1/0941/1556/1768/files/1_b34a663f-2328-47cd-bf3c-3a81c0c23352.jpg?v=1768889950",
+      "variantSkus": ["OR-LD1000Z-C-3UG5", "OR-LD1000Z-C-4UG5", "OR-LD1000Z-Y-4UG5"]
+    },
+    {
+      "handle": "fire-breathing",
+      "title": "Fire Breathing Badminton Racket - Attack",
+      "status": "ACTIVE",
+      "tags": ["breathing-series", "racket"],
+      "totalInventory": 0,
+      "minPrice": 4200,
+      "featuredImageUrl": "https://cdn.shopify.com/s/files/1/0941/1556/1768/files/1_49a40c10-3a06-49c1-a90a-d6c2a05d4c15.webp?v=1761700463",
+      "variantSkus": ["OR-FIRE-D-3UG5", "OR-FIRE-D-4UG5", "OR-FIRE-D-4UG6", "OR-FIRE-D-5UG5", "OR-FIRE-D-5UG6"]
+    },
+    {
+      "handle": "water-breathing",
+      "title": "Water Breathing Badminton Racket - Control",
+      "status": "ACTIVE",
+      "tags": ["breathing-series", "racket"],
+      "totalInventory": 6,
+      "minPrice": 5000,
+      "featuredImageUrl": "https://cdn.shopify.com/s/files/1/0941/1556/1768/files/1_16903706-3016-4868-ba20-172c691a0a3a.webp?v=1761632586",
+      "variantSkus": ["OR-WATER-F-3UG5", "OR-WATER-F-4UG5", "OR-WATER-F-4UG6"]
+    },
+    {
+      "handle": "love-breathing",
+      "title": "Love Breathing Badminton Racket - Speed",
+      "status": "ACTIVE",
+      "tags": ["breathing-series", "racket"],
+      "totalInventory": 22,
+      "minPrice": 3500,
+      "featuredImageUrl": "https://cdn.shopify.com/s/files/1/0941/1556/1768/files/1_12_27634ad6-f2b9-4c16-9853-1fb63546aa50.jpg?v=1758643379",
+      "variantSkus": ["OR-LOVE-A-5UG6", "OR-LOVE-J-5UG6", "OR-LOVE-C-5UG6", "OR-LOVE-A-6UG6", "OR-LOVE-J-6UG6"]
+    },
+    {
+      "handle": "thunder-breathing",
+      "title": "Thunder Breathing Badminton Racket - Speed",
+      "status": "ACTIVE",
+      "tags": ["breathing-series", "racket"],
+      "totalInventory": 6,
+      "minPrice": 5200,
+      "featuredImageUrl": "https://cdn.shopify.com/s/files/1/0941/1556/1768/files/1_6c5fb0fa-e85f-431e-aa43-48418882138e.webp?v=1761632425",
+      "variantSkus": ["OR-THUNDER-B-3UG5", "OR-THUNDER-B-3UG6", "OR-THUNDER-B-4UG5", "OR-THUNDER-A-4UG5", "OR-THUNDER-B-4UG6"]
+    },
+    {
+      "handle": "mist-breathing",
+      "title": "Mist Breathing Badminton Racket - Control",
+      "status": "ACTIVE",
+      "tags": ["breathing-series", "racket"],
+      "totalInventory": 3,
+      "minPrice": 5000,
+      "featuredImageUrl": "https://cdn.shopify.com/s/files/1/0941/1556/1768/files/1.webp?v=1761632213",
+      "variantSkus": ["OR-MIST-U-3UG5", "OR-MIST-I-3UG5", "OR-MIST-U-4UG5", "OR-MIST-I-4UG5", "OR-MIST-U-4UG6"]
+    }
+  ]
+}
