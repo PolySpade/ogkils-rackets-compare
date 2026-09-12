@@ -12,25 +12,40 @@ export type Swing = 'light' | 'balanced' | 'strong';
 export type YesNo = 'yes' | 'no';
 export type TensionPref = 'under24' | '24-27' | '28plus' | 'notsure';
 export type GripPref = GripSize | 'notsure';
+/** Where the player wants the power to come from — the frame, or their own swing. */
+export type PowerSource = 'racket' | 'balanced' | 'me';
+/** Typical time on court, which governs how much swing weight they'll tolerate. */
+export type SessionLength = 'short' | 'medium' | 'long';
 
 export interface FinderAnswers {
   skill?: Skill; // Q1
   context?: PlayContext; // Q2
   style?: Style; // Q3
-  swing?: Swing; // Q4
-  discomfort?: YesNo; // Q5
-  tension?: TensionPref; // Q6
-  grip?: GripPref; // Q7
-  budgetPhp?: number | null; // Q8 (optional)
+  powerSource?: PowerSource; // Q4
+  swing?: Swing; // Q5
+  sessionLength?: SessionLength; // Q6
+  discomfort?: YesNo; // Q7
+  tension?: TensionPref; // Q8
+  grip?: GripPref; // Q9
+  budgetPhp?: number | null; // Q10 (optional)
 }
 
+/**
+ * Style used to drive 45 of 100 points (balance + classification), so four style options
+ * collapsed into roughly four outcomes: across all 3,456 answer combinations the finder
+ * produced only 74 distinct top-threes, one racket won 29% of quizzes, and two rackets
+ * were unreachable. Spreading the weight over more independent axes — and giving swing
+ * weight and price real votes — is what makes the questions actually narrow anything.
+ */
 export const WEIGHTS = {
-  balance: 25,
-  classification: 20,
-  stiffness: 20,
-  weight: 20,
-  tension: 10,
-  shaft: 5,
+  balance: 18,
+  stiffness: 16,
+  weight: 16,
+  classification: 14,
+  maneuver: 12,
+  budget: 12,
+  tension: 8,
+  shaft: 4,
 } as const;
 export type Criterion = keyof typeof WEIGHTS;
 
@@ -57,9 +72,9 @@ interface Crit {
   tradeoff?: string;
 }
 
-// --- Balance fit (25) ---
+// --- Balance fit (18) ---
 export function balanceCrit(a: FinderAnswers, v: Variant): Crit {
-  if (!a.style) return { score: SKIPPED };
+  if (!a.style && !a.powerSource) return { score: SKIPPED };
   const base: Record<Style, number> = {
     smash: 305,
     'all-court': 298,
@@ -72,57 +87,77 @@ export function balanceCrit(a: FinderAnswers, v: Variant): Crit {
     singles: 2,
     mixed: 0,
   };
-  const target = base[a.style] + (a.context ? shift[a.context] : 0);
+  // Mass in the head is what makes a frame hit for you, so this is the axis that lets a
+  // head-heavy speed racket be the right answer for someone who wants the racket to work.
+  const power: Record<PowerSource, number> = { racket: 6, balanced: 0, me: -6 };
+  const target =
+    (a.style ? base[a.style] : 298) +
+    (a.context ? shift[a.context] : 0) +
+    (a.powerSource ? power[a.powerSource] : 0);
   const score = clamp(100 - Math.min(100, Math.abs(v.balancePointMm - target) * 4));
   const diff = v.balancePointMm - target;
+  const forWhat = a.style ? `a ${styleLabel(a.style)} game` : 'how you want the power delivered';
   return {
     score,
     reason:
-      score >= 80
-        ? `Balance point ${v.balancePointMm}mm sits right where a ${styleLabel(a.style)} game wants it.`
-        : undefined,
+      score >= 80 ? `Balance point ${v.balancePointMm}mm sits right where ${forWhat} wants it.` : undefined,
     tradeoff:
       score < 60
         ? diff > 0
-          ? `It's more head-heavy (${v.balancePointMm}mm) than ideal for your style — a touch slower to swing.`
-          : `It's more head-light (${v.balancePointMm}mm) than ideal for your style — less mass behind the smash.`
+          ? `It's more head-heavy (${v.balancePointMm}mm) than ideal for you — a touch slower to swing.`
+          : `It's more head-light (${v.balancePointMm}mm) than ideal for you — less mass behind the smash.`
         : undefined,
   };
 }
 
-// --- Classification fit (20) ---
+/**
+ * Style → classification affinity (14). The old version scored 100/60/20, and a flat 20
+ * for any cross-class pick was heavy enough to make whole classifications unreachable —
+ * a speed frame could never answer a smash question even when every other spec fit.
+ * These softer floors let a strong all-round fit outrank a nominal category match.
+ */
+const CLASS_AFFINITY: Record<Style, Record<Classification, number>> = {
+  smash: { ATTACK: 100, 'ALL-AROUND': 65, SPEED: 50, CONTROL: 30 },
+  'all-court': { 'ALL-AROUND': 100, SPEED: 70, CONTROL: 70, ATTACK: 65 },
+  'fast-defense': { SPEED: 100, 'ALL-AROUND': 65, ATTACK: 50, CONTROL: 45 },
+  control: { CONTROL: 100, 'ALL-AROUND': 70, SPEED: 50, ATTACK: 35 },
+};
+
+// --- Classification fit (14) ---
 export function classificationCrit(a: FinderAnswers, r: Racket): Crit {
   if (!a.style) return { score: SKIPPED };
-  const preferred: Record<Style, Classification> = {
-    smash: 'ATTACK',
-    'all-court': 'ALL-AROUND',
-    'fast-defense': 'SPEED',
-    control: 'CONTROL',
-  };
-  const p = preferred[a.style];
-  let score: number;
-  if (r.classification === p) score = 100;
-  else if (r.classification === 'ALL-AROUND' || p === 'ALL-AROUND') score = 60;
-  else score = 20;
+  const score = CLASS_AFFINITY[a.style][r.classification];
   return {
     score,
-    reason: score === 100 ? `It's an ${r.classification.toLowerCase()} racket — exactly the profile for your game.` : undefined,
+    reason:
+      score === 100
+        ? `It's an ${r.classification.toLowerCase()} racket — exactly the profile for your game.`
+        : undefined,
     tradeoff:
-      score <= 20
+      score <= 50
         ? `It's built as a ${r.classification.toLowerCase()} racket, which pulls against a ${styleLabel(a.style)} style.`
         : undefined,
   };
 }
 
-// --- Stiffness fit (20) ---
+// --- Stiffness fit (16) ---
 export function stiffnessCrit(a: FinderAnswers, r: Racket): Crit {
-  if (!a.skill && !a.swing) return { score: SKIPPED };
-  // Base target from skill (1..4), nudged by swing strength.
-  let target: number;
-  if (a.skill === 'advanced' && a.swing === 'strong') target = 3.5;
-  else if (a.skill === 'beginner' || a.swing === 'light') target = 1.5;
-  else target = 2.5;
+  if (!a.skill && !a.swing && !a.powerSource) return { score: SKIPPED };
+  // Skill sets the target; swing only nudges it. Treating a light swing as an override
+  // meant a light swinger could never be matched to a stiff shaft — which wrongly ruled
+  // out every ultralight stiff frame, the exact class of racket built for that player.
+  let target = 2.5;
+  if (a.skill === 'advanced') target = 3.2;
+  else if (a.skill === 'beginner') target = 1.6;
+  if (a.swing === 'strong') target += 0.4;
+  else if (a.swing === 'light') target -= 0.4;
+  // A flexible shaft loads and springs back, doing some of the work; a stiff one just
+  // transmits what you gave it. Kept deliberately small: shaft flex and head mass are
+  // independent, so this must not cancel out the balance signal it also drives.
+  if (a.powerSource === 'racket') target -= 0.4;
+  else if (a.powerSource === 'me') target += 0.4;
   if (a.discomfort === 'yes') target = Math.min(target - 1, 2); // gentler on the arm
+  target = Math.max(1, Math.min(4, target));
   const ord = r.derived.stiffnessOrdinal;
   const score = clamp(100 - Math.abs(ord - target) * 30);
   return {
@@ -137,13 +172,16 @@ export function stiffnessCrit(a: FinderAnswers, r: Racket): Crit {
   };
 }
 
-// --- Weight fit (20) ---
+// --- Weight fit (16) ---
 export function weightCrit(a: FinderAnswers, v: Variant): Crit {
-  if (!a.swing && !a.skill) return { score: SKIPPED };
+  if (!a.swing && !a.skill && !a.sessionLength) return { score: SKIPPED };
   let target: number; // weightOrdinal: 6U=1 … 3U=4
   if (a.swing === 'strong') target = 3.5;
   else if (a.swing === 'light' || a.skill === 'beginner') target = 2.5;
   else target = 3;
+  // Grams you barely notice in game one are what your shoulder notices in hour three.
+  if (a.sessionLength === 'long') target -= 0.6;
+  else if (a.sessionLength === 'short') target += 0.3;
   if (a.discomfort === 'yes') target -= 1; // one class lighter
   const ord = weightOrdinal(v.weightClass);
   const score = clamp(100 - Math.abs(ord - target) * 30);
@@ -159,7 +197,54 @@ export function weightCrit(a: FinderAnswers, v: Variant): Crit {
   };
 }
 
-// --- Tension headroom (10) ---
+/**
+ * Manoeuvrability (12) — swing weight, which is how heavy the frame *feels* mid-rally
+ * rather than what it reads on a scale. Only 12 of 20 rackets publish it; the rest score
+ * neutral so an unpublished spec never counts against a racket (§4.3).
+ */
+export function maneuverCrit(a: FinderAnswers, v: Variant): Crit {
+  if (!a.sessionLength && !a.style && !a.context) return { score: SKIPPED };
+  if (v.swingWeight === null) return { score: SKIPPED };
+  let target = 86; // mid of the catalogue's 82–90 range
+  if (a.sessionLength === 'long') target -= 2.5;
+  else if (a.sessionLength === 'short') target += 2;
+  if (a.style === 'fast-defense') target -= 1.5;
+  else if (a.style === 'smash') target += 1.5;
+  if (a.context === 'doubles-front') target -= 1;
+  else if (a.context === 'doubles-rear') target += 1;
+  const score = clamp(100 - Math.abs(v.swingWeight - target) * 11);
+  return {
+    score,
+    reason:
+      score >= 80
+        ? `Swing weight ${v.swingWeight} keeps it quick through the air for the way you play.`
+        : undefined,
+    tradeoff:
+      score < 55
+        ? v.swingWeight > target
+          ? `Swing weight ${v.swingWeight} makes it feel heavier in hand than you'll want late in a session.`
+          : `Swing weight ${v.swingWeight} is light in hand — less momentum carried into the shuttle.`
+        : undefined,
+  };
+}
+
+/**
+ * Budget (12). Previously budget was only a flat −40 on the final score, which buried
+ * over-budget rackets without ever rewarding a good in-budget fit. As a criterion it
+ * competes properly, and the residual penalty below just breaks ties toward affordable.
+ */
+export function budgetCrit(a: FinderAnswers, r: Racket): Crit {
+  if (typeof a.budgetPhp !== 'number' || r.pricePhp === null) return { score: SKIPPED };
+  if (r.pricePhp <= a.budgetPhp) return { score: 100 };
+  const over = (r.pricePhp - a.budgetPhp) / a.budgetPhp;
+  const score = over <= 0.1 ? 55 : over <= 0.25 ? 30 : 10;
+  return {
+    score,
+    tradeoff: `At ₱${r.pricePhp.toLocaleString()} it's over the ₱${a.budgetPhp.toLocaleString()} you set.`,
+  };
+}
+
+// --- Tension headroom (8) ---
 function tensionMid(t: TensionPref): number | null {
   if (t === 'under24') return 23;
   if (t === '24-27') return 25.5;
@@ -213,6 +298,8 @@ export function scoreVariant(a: FinderAnswers, r: Racket, v: Variant): ScoredVar
     classification: classificationCrit(a, r),
     stiffness: stiffnessCrit(a, r),
     weight: weightCrit(a, v),
+    maneuver: maneuverCrit(a, v),
+    budget: budgetCrit(a, r),
     tension: tensionCrit(a, v),
     shaft: shaftCrit(a, r),
   };
@@ -225,10 +312,10 @@ export function scoreVariant(a: FinderAnswers, r: Racket, v: Variant): ScoredVar
   });
   let score = weighted / 100;
 
-  // Over budget: a soft penalty so in-budget picks rank first, but over-budget ones
-  // still fill the list rather than leaving the player with fewer than three matches.
+  // Over budget: budgetCrit already carries most of this. A small residual penalty keeps
+  // in-budget picks ahead on ties without starving the list below three matches.
   const overBudget = typeof a.budgetPhp === 'number' && r.pricePhp !== null && r.pricePhp > a.budgetPhp;
-  if (overBudget) score -= 40;
+  if (overBudget) score -= 10;
 
   // Out of stock: keep but rank last (§7.2), never silently hide.
   const inStock = r.inStock;

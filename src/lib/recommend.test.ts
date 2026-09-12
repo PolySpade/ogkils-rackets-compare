@@ -8,6 +8,8 @@ import {
   weightCrit,
   tensionCrit,
   shaftCrit,
+  maneuverCrit,
+  budgetCrit,
   WEIGHTS,
   type FinderAnswers,
 } from './recommend';
@@ -49,10 +51,19 @@ describe('criterion: balance', () => {
 });
 
 describe('criterion: classification', () => {
-  it('gives 100 for an exact match, 60 for all-around, 20 for opposite', () => {
+  it('gives 100 for an exact match, and a softer floor for a mismatch', () => {
     expect(classificationCrit({ style: 'smash' }, R('fire-breathing')).score).toBe(100); // ATTACK
-    expect(classificationCrit({ style: 'smash' }, R('dimensional-slash-pro')).score).toBe(60); // ALL-AROUND
-    expect(classificationCrit({ style: 'control' }, R('fire-breathing')).score).toBe(20); // ATTACK vs CONTROL
+    expect(classificationCrit({ style: 'smash' }, R('dimensional-slash-pro')).score).toBe(65); // ALL-AROUND
+    expect(classificationCrit({ style: 'control' }, R('fire-breathing')).score).toBe(35); // ATTACK vs CONTROL
+  });
+  it('never floors a mismatch hard enough to make a classification unreachable', () => {
+    // The old engine scored every cross-class pick 20, which buried whole categories.
+    const styles = ['smash', 'all-court', 'fast-defense', 'control'] as const;
+    for (const style of styles) {
+      for (const r of catalog) {
+        expect(classificationCrit({ style }, r).score).toBeGreaterThanOrEqual(30);
+      }
+    }
   });
   it('returns 70 when style skipped', () => {
     expect(classificationCrit({}, R('fire-breathing')).score).toBe(70);
@@ -114,6 +125,64 @@ describe('criterion: shaft diameter', () => {
   });
 });
 
+describe('criterion: manoeuvrability (swing weight)', () => {
+  it('prefers a lower swing weight for long sessions than for short ones', () => {
+    const v = variant('fire-breathing', '3U'); // swing weight 90
+    expect(maneuverCrit({ sessionLength: 'long' }, v).score).toBeLessThan(
+      maneuverCrit({ sessionLength: 'short' }, v).score,
+    );
+  });
+  it('scores neutral rather than penalising when swing weight is unpublished', () => {
+    const v = variant('annihilation', '4U');
+    expect(v.swingWeight).toBeNull();
+    expect(maneuverCrit({ sessionLength: 'long' }, v).score).toBe(70);
+  });
+  it('returns 70 when every governing answer is skipped', () => {
+    expect(maneuverCrit({}, variant('fire-breathing', '3U')).score).toBe(70);
+  });
+});
+
+describe('criterion: budget', () => {
+  it('scores 100 in budget and degrades with how far over it is', () => {
+    const cheap = R('freezing'); // 2000
+    expect(budgetCrit({ budgetPhp: 3000 }, cheap).score).toBe(100);
+    expect(budgetCrit({ budgetPhp: 2000 }, cheap).score).toBe(100); // exactly on budget
+    const dear = R('wind-breathing'); // 7000
+    expect(budgetCrit({ budgetPhp: 6800 }, dear).score).toBe(55); // <=10% over
+    expect(budgetCrit({ budgetPhp: 3000 }, dear).score).toBe(10); // way over
+  });
+  it('returns 70 when no budget was given', () => {
+    expect(budgetCrit({}, R('freezing')).score).toBe(70);
+  });
+});
+
+describe('new answers shift the fit', () => {
+  it('powerSource=racket pulls the balance target head-heavier than powerSource=me', () => {
+    const headHeavy = variant('insect-breathing', '5U'); // 310mm
+    expect(balanceCrit({ style: 'fast-defense', powerSource: 'racket' }, headHeavy).score)
+      .toBeGreaterThan(
+        balanceCrit({ style: 'fast-defense', powerSource: 'me' }, headHeavy).score,
+      );
+  });
+  it('powerSource=racket prefers a softer shaft than powerSource=me', () => {
+    const stiff = R('ld1000z'); // Stiff (ordinal 4)
+    expect(stiffnessCrit({ skill: 'intermediate', powerSource: 'me' }, stiff).score)
+      .toBeGreaterThan(
+        stiffnessCrit({ skill: 'intermediate', powerSource: 'racket' }, stiff).score,
+      );
+  });
+  it('long sessions favour a lighter frame than short ones', () => {
+    const heavy = variant('fire-breathing', '3U');
+    expect(weightCrit({ swing: 'balanced', sessionLength: 'long' }, heavy).score)
+      .toBeLessThan(weightCrit({ swing: 'balanced', sessionLength: 'short' }, heavy).score);
+  });
+  it('each new answer alone is enough to score its criteria (no skipped fallback)', () => {
+    expect(balanceCrit({ powerSource: 'racket' }, variant('fire-breathing', '3U')).score).not.toBe(70);
+    expect(stiffnessCrit({ powerSource: 'me' }, R('ld1000z')).score).not.toBe(70);
+    expect(weightCrit({ sessionLength: 'long' }, variant('fire-breathing', '3U')).score).not.toBe(70);
+  });
+});
+
 describe('hard filters', () => {
   it('excludes variants below 28 lbs when the player wants 28+', () => {
     const recs = recommend({ tension: '28plus' }, catalog);
@@ -163,6 +232,67 @@ describe('out-of-stock handling', () => {
       if (rec.inStock) seenInStock = true;
       if (!rec.inStock) expect(seenInStock).toBe(true); // an in-stock pick already preceded it (or it's not first)
     }
+  });
+});
+
+describe('coverage: the finder can reach the whole catalogue', () => {
+  // Guards the failure this engine was rebuilt to fix. The previous scoring collapsed so
+  // hard that two rackets could not be surfaced by ANY combination of answers, and four
+  // rackets won 81% of all quizzes. Sweeping the six style-bearing questions is enough to
+  // catch a regression without enumerating all 124,416 vectors.
+  const skills = ['beginner', 'intermediate', 'advanced'] as const;
+  const contexts = ['singles', 'doubles-front', 'doubles-rear', 'mixed'] as const;
+  const styles = ['smash', 'all-court', 'fast-defense', 'control'] as const;
+  const swings = ['light', 'balanced', 'strong'] as const;
+  const powers = ['racket', 'balanced', 'me'] as const;
+  const sessions = ['short', 'medium', 'long'] as const;
+
+  const shown = new Set<string>();
+  const winners = new Map<string, number>();
+  let vectors = 0;
+  for (const skill of skills)
+    for (const context of contexts)
+      for (const style of styles)
+        for (const swing of swings)
+          for (const powerSource of powers)
+            for (const sessionLength of sessions) {
+              const recs = recommend(
+                { skill, context, style, swing, powerSource, sessionLength },
+                catalog,
+              );
+              vectors += 1;
+              recs.forEach((r) => shown.add(r.racketId));
+              const top = recs.find((r) => !r.alsoConsider);
+              if (top) winners.set(top.racketId, (winners.get(top.racketId) ?? 0) + 1);
+            }
+
+  it('surfaces every racket for at least one set of answers', () => {
+    const missing = catalog.filter((r) => !shown.has(r.id)).map((r) => r.id);
+    expect(missing).toEqual([]);
+  });
+
+  it('lets at least half the catalogue take the top spot', () => {
+    expect(winners.size).toBeGreaterThanOrEqual(Math.ceil(catalog.length / 2));
+  });
+
+  it('no single racket wins more than 40% of quizzes', () => {
+    const most = Math.max(...winners.values());
+    expect(most / vectors).toBeLessThan(0.4);
+  });
+
+  it('produces many distinct line-ups, not a handful of clusters', () => {
+    const sets = new Set<string>();
+    for (const style of styles)
+      for (const powerSource of powers)
+        for (const sessionLength of sessions)
+          for (const swing of swings) {
+            const ids = recommend({ style, powerSource, sessionLength, swing }, catalog)
+              .filter((r) => !r.alsoConsider)
+              .map((r) => r.racketId)
+              .join('|');
+            sets.add(ids);
+          }
+    expect(sets.size).toBeGreaterThan(30);
   });
 });
 

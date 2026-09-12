@@ -60,11 +60,29 @@ const BASE_QUESTIONS: Question[] = [
     ],
   },
   {
+    key: 'powerSource', title: 'Where should the power come from?',
+    help: 'A flexible, head-heavy frame does more of the work. A stiff one rewards your own swing speed.',
+    options: [
+      { value: 'racket', label: 'The racket', desc: 'Give me help on clears and smashes' },
+      { value: 'balanced', label: 'A bit of both' },
+      { value: 'me', label: 'My own swing', desc: 'I generate the power, I want feel and feedback' },
+    ],
+  },
+  {
     key: 'swing', title: 'Your swing & arm strength?',
     options: [
       { value: 'light', label: 'Light and fast' },
       { value: 'balanced', label: 'Balanced' },
       { value: 'strong', label: 'Strong, full swings' },
+    ],
+  },
+  {
+    key: 'sessionLength', title: 'How long is a typical session?',
+    help: 'Longer on court means fatigue matters more than peak power.',
+    options: [
+      { value: 'short', label: 'Under an hour', desc: 'A quick hit' },
+      { value: 'medium', label: '1–2 hours', desc: 'A normal club night' },
+      { value: 'long', label: 'Over 2 hours', desc: 'Long sessions or tournaments' },
     ],
   },
   {
@@ -105,7 +123,8 @@ const BUDGET_QUESTION: Question = {
 };
 
 const ANSWER_KEYS: (keyof FinderAnswers)[] = [
-  'skill', 'context', 'style', 'swing', 'discomfort', 'tension', 'grip', 'budgetPhp',
+  'skill', 'context', 'style', 'powerSource', 'swing', 'sessionLength',
+  'discomfort', 'tension', 'grip', 'budgetPhp',
 ];
 
 function parseUrlAnswers(): { answers: FinderAnswers; done: boolean } {

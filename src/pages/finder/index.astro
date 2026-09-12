@@ -22,8 +22,11 @@ for (const r of catalog) {
 const classes: Classification[] = ['ATTACK', 'SPEED', 'CONTROL', 'ALL-AROUND'];
 const classTokens = Object.fromEntries(classes.map((c) => [c, { label: classMeta(c).label }]));
 
-// Q8 budget only appears when most of the catalog is priced (§7.1).
-const showBudget = pricedFraction() >= 0.8;
+// The budget step used to hide itself when too little of the catalog carried a price.
+// Every racket is priced from the Shopify import now, and budget is a scored criterion
+// rather than a flat penalty, so it always earns its place. Kept as a guard in case a
+// future import leaves the catalog mostly unpriced again.
+const showBudget = pricedFraction() > 0;
 ---
 
 <Base
