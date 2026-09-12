@@ -12,16 +12,28 @@ const classifications = Object.keys(CLASSIFICATION_META) as Classification[];
 const featured = ['fire-breathing', 'wind-breathing', 'dimensional-slash-pro']
   .map((id) => getRacket(id))
   .filter((r): r is NonNullable<typeof r> => Boolean(r));
-const heroRacket = getRacket('wind-breathing')!;
-const heroSeries = seriesLine(heroRacket);
-const heroStiffness = formatStiffness(heroRacket.stiffness, heroRacket.derived.stiffnessWordConflict);
-// Three published figures, so the panel below the artwork carries catalogue information
-// rather than empty space when the copy column runs taller.
-const heroSpecs = [
-  { label: 'Weight', value: formatWeightClasses(heroRacket.variants) },
-  { label: 'Balance point', value: `${racketBalanceRange(heroRacket)} mm` },
-  { label: 'Stiffness', value: heroStiffness.label ?? heroStiffness.primary },
-];
+
+// The campaign panel rotates through the models being pushed this season. Each asset is a
+// full-bleed poster in its own colour world (violet, ice, fire), so the slideshow reads as
+// three campaigns rather than one template repeated — the interface chrome stays turquoise
+// so the artwork keeps the energy (DESIGN.md, "Composition, imagery, and surfaces").
+const heroSlides = ['insect-breathing', 'annihilation', 'ld88dpro']
+  .map((id) => getRacket(id))
+  .filter((r): r is NonNullable<typeof r> => Boolean(r))
+  .map((racket) => {
+    const stiffness = formatStiffness(racket.stiffness, racket.derived.stiffnessWordConflict);
+    return {
+      racket,
+      series: seriesLine(racket),
+      // Three published figures, so the panel below the artwork carries catalogue
+      // information rather than empty space when the copy column runs taller.
+      specs: [
+        { label: 'Weight', value: formatWeightClasses(racket.variants) },
+        { label: 'Balance point', value: `${racketBalanceRange(racket)} mm` },
+        { label: 'Stiffness', value: stiffness.label ?? stiffness.primary },
+      ],
+    };
+  });
 ---
 
 <Base
@@ -49,35 +61,121 @@ const heroSpecs = [
       </div>
     </div>
 
-    <!-- Campaign panel. The artwork is a poster in its own right, so it is shown whole
-         with its caption on a clean surface underneath rather than overprinted. -->
-    <figure class="hero-visual">
-      <a href={`/rackets/${heroRacket.id}`} class="hero-visual-link">
-        <RacketImage
-          racket={heroRacket}
-          eager
-          sizes="(max-width: 639px) 100vw, 620px"
-          widths={[400, 500]}
-        />
-        <figcaption class="hero-visual-caption">
-          <span class="model">{heroRacket.name}</span>
-          <span class="meta">{heroSeries ?? '2026 collection'}</span>
-        </figcaption>
-        <dl class="hero-visual-specs">
+    <!-- Campaign panel. Each artwork is a poster in its own right, so it is shown whole
+         with its caption on a clean surface underneath rather than overprinted.
+         The track is a scroll-snap rail: it swipes with no JavaScript at all, and the
+         script below only adds the arrows, auto-advance and its pause control. Slide
+         captions sit inside each link as plain elements rather than figure/figcaption,
+         because figcaption is only valid as a direct child of figure. -->
+    <section
+      class="hero-visual"
+      data-hero-carousel
+      aria-roledescription="carousel"
+      aria-label="Featured rackets from the 2026 collection"
+    >
+      <ul class="hero-carousel-track" data-carousel-track>
+        {
+          heroSlides.map((slide, i) => (
+            <li
+              class="hero-slide"
+              id={`hero-slide-${i}`}
+              role="group"
+              aria-roledescription="slide"
+              aria-label={`${i + 1} of ${heroSlides.length} — ${slide.racket.name}`}
+            >
+              <a href={`/rackets/${slide.racket.id}`} class="hero-visual-link">
+                <RacketImage
+                  racket={slide.racket}
+                  eager={i === 0}
+                  sizes="(max-width: 639px) 100vw, 620px"
+                  widths={[400, 500]}
+                />
+                <span class="hero-visual-caption">
+                  <span class="model">{slide.racket.name}</span>
+                  <span class="meta">{slide.series ?? '2026 collection'}</span>
+                </span>
+                <dl class="hero-visual-specs">
+                  {slide.specs.map((spec) => (
+                    <div>
+                      <dt>{spec.label}</dt>
+                      <dd class="tnum">{spec.value}</dd>
+                    </div>
+                  ))}
+                </dl>
+                <span class="hero-visual-cta">
+                  See the full spec sheet
+                  <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                    <path d="M5 12h13m-5-6 6 6-6 6" />
+                  </svg>
+                </span>
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+
+      <div class="hero-carousel-rail">
+        <button
+          type="button"
+          class="hero-carousel-step"
+          data-carousel-prev
+          aria-label="Previous racket"
+          hidden
+        >
+          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+            <path d="M15 18 9 12l6-6" />
+          </svg>
+        </button>
+
+        <ol class="hero-carousel-dots">
           {
-            heroSpecs.map((spec) => (
-              <div>
-                <dt>{spec.label}</dt>
-                <dd class="tnum">{spec.value}</dd>
-              </div>
+            heroSlides.map((slide, i) => (
+              <li>
+                <a
+                  href={`#hero-slide-${i}`}
+                  data-carousel-dot={i}
+                  aria-current={i === 0 ? 'true' : undefined}
+                >
+                  <span class="hero-carousel-dot-track">
+                    <span class="hero-carousel-dot-fill" />
+                  </span>
+                  <span class="sr-only">{slide.racket.name}</span>
+                </a>
+              </li>
             ))
           }
-        </dl>
-        <span class="hero-visual-cta">
-          See the full spec sheet <span aria-hidden="true">→</span>
-        </span>
-      </a>
-    </figure>
+        </ol>
+
+        <button
+          type="button"
+          class="hero-carousel-step"
+          data-carousel-next
+          aria-label="Next racket"
+          hidden
+        >
+          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+            <path d="m9 18 6-6-6-6" />
+          </svg>
+        </button>
+
+        <button
+          type="button"
+          class="hero-carousel-step hero-carousel-toggle"
+          data-carousel-toggle
+          aria-label="Pause the slideshow"
+          hidden
+        >
+          <svg class="icon-pause" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+            <path d="M10 5v14M14 5v14" />
+          </svg>
+          <svg class="icon-play" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+            <path d="M8 5.5v13l11-6.5z" />
+          </svg>
+        </button>
+      </div>
+
+      <p class="sr-only" aria-live="off" data-carousel-status></p>
+    </section>
   </section>
 
   <section class="mx-auto max-w-6xl px-4 sm:px-6" aria-label="Ways to explore">
@@ -175,3 +273,127 @@ const heroSpecs = [
     </p>
   </section>
 </Base>
+
+<script>
+  // Progressive enhancement for the campaign carousel. The track already swipes on its
+  // own via scroll-snap and the dots already work as in-page anchors, so everything this
+  // adds is revealed only once it can actually function.
+  const AUTOPLAY_MS = 6000;
+
+  function initHeroCarousel(root: HTMLElement) {
+    const track = root.querySelector<HTMLElement>('[data-carousel-track]');
+    const dots = [...root.querySelectorAll<HTMLAnchorElement>('[data-carousel-dot]')];
+    const prev = root.querySelector<HTMLButtonElement>('[data-carousel-prev]');
+    const next = root.querySelector<HTMLButtonElement>('[data-carousel-next]');
+    const toggle = root.querySelector<HTMLButtonElement>('[data-carousel-toggle]');
+    const status = root.querySelector<HTMLElement>('[data-carousel-status]');
+    const slides = [...root.querySelectorAll<HTMLElement>('.hero-slide')];
+    if (!track || slides.length < 2) return;
+
+    for (const control of [prev, next, toggle]) control?.removeAttribute('hidden');
+
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
+    let index = 0;
+    let timer: number | undefined;
+    // Autoplay is opt-out for most visitors but never starts for a reduced-motion one.
+    let playing = !reduced.matches;
+
+    const go = (to: number, smooth = true) => {
+      index = (to + slides.length) % slides.length;
+      track.scrollTo({
+        left: index * track.clientWidth,
+        behavior: smooth && !reduced.matches ? 'smooth' : 'auto',
+      });
+    };
+
+    const stop = () => {
+      if (timer) window.clearInterval(timer);
+      timer = undefined;
+    };
+    const start = () => {
+      stop();
+      if (playing) timer = window.setInterval(() => go(index + 1), AUTOPLAY_MS);
+    };
+
+    const setPlaying = (on: boolean) => {
+      playing = on;
+      toggle?.classList.toggle('is-paused', !on);
+      toggle?.setAttribute('aria-label', on ? 'Pause the slideshow' : 'Play the slideshow');
+      // While slides advance on their own, announcing each one would talk over the reader.
+      // Once it is paused, movement is user-driven, so changes become worth announcing.
+      status?.setAttribute('aria-live', on ? 'off' : 'polite');
+      on ? start() : stop();
+    };
+
+    // Driven by the scroll position rather than the click, so a swipe, an anchor jump and
+    // a button press all end up reporting the same thing.
+    const sync = () => {
+      const at = Math.round(track.scrollLeft / track.clientWidth);
+      if (at === index && dots[at]?.getAttribute('aria-current') === 'true') return;
+      index = at;
+      dots.forEach((dot, i) => {
+        if (i === at) dot.setAttribute('aria-current', 'true');
+        else dot.removeAttribute('aria-current');
+      });
+      const name = slides[at]?.getAttribute('aria-label');
+      if (status && name) status.textContent = name;
+    };
+
+    let raf = 0;
+    track.addEventListener('scroll', () => {
+      cancelAnimationFrame(raf);
+      raf = requestAnimationFrame(sync);
+    });
+
+    prev?.addEventListener('click', () => {
+      setPlaying(false);
+      go(index - 1);
+    });
+    next?.addEventListener('click', () => {
+      setPlaying(false);
+      go(index + 1);
+    });
+    toggle?.addEventListener('click', () => setPlaying(!playing));
+
+    dots.forEach((dot, i) =>
+      dot.addEventListener('click', (e) => {
+        e.preventDefault(); // keep the page still; scroll the rail instead of jumping to it
+        setPlaying(false);
+        go(i);
+      }),
+    );
+
+    root.addEventListener('keydown', (e) => {
+      if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return;
+      e.preventDefault();
+      setPlaying(false);
+      go(e.key === 'ArrowLeft' ? index - 1 : index + 1);
+    });
+
+    // Hovering or tabbing in means someone is reading this slide — hold it there, then
+    // resume only if they never took manual control.
+    root.addEventListener('pointerenter', stop);
+    root.addEventListener('focusin', stop);
+    root.addEventListener('pointerleave', () => playing && start());
+    root.addEventListener('focusout', (e) => {
+      if (!root.contains(e.relatedTarget as Node) && playing) start();
+    });
+    document.addEventListener('visibilitychange', () =>
+      document.hidden ? stop() : playing && start(),
+    );
+    reduced.addEventListener('change', (e) => e.matches && setPlaying(false));
+    window.addEventListener('resize', () => go(index, false));
+
+    setPlaying(playing);
+  }
+
+  function setupHeroCarousels() {
+    document
+      .querySelectorAll<HTMLElement>('[data-hero-carousel]')
+      .forEach((el) => initHeroCarousel(el));
+  }
+
+  setupHeroCarousels();
+  // Astro View Transitions swap the DOM without a reload, so re-bind on every navigation.
+  document.addEventListener('astro:after-swap', setupHeroCarousels);
+</script>

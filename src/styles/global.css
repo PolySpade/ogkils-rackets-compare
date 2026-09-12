@@ -1050,13 +1050,127 @@ html[data-theme="dark"] .spec-table td {
 .hero-visual {
   position: relative;
   display: flex;
+  flex-direction: column;
+  /* The track is three slides wide, and a grid item's default `min-width: auto` sizes to
+     that content — which pushed the whole column past the viewport on narrow screens.
+     Both this and the track have to opt out before the scroller can actually scroll. */
+  min-width: 0;
   border: 1px solid var(--color-line);
   background: var(--color-panel);
 }
 .hero-visual-link {
   display: flex;
   width: 100%;
+  height: 100%;
   flex-direction: column;
+}
+
+/* The slideshow rail. Scroll-snap does the moving, so the panel keeps working — swipe on
+   touch, anchor links on the dots — with the script switched off entirely. */
+.hero-carousel-track {
+  display: flex;
+  flex: 1;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+}
+.hero-carousel-track::-webkit-scrollbar {
+  display: none;
+}
+.hero-slide {
+  flex: 0 0 100%;
+  min-width: 0;
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+}
+
+.hero-carousel-rail {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  border-top: 1px solid var(--color-line);
+  padding: 0.3rem 0.5rem;
+}
+.hero-carousel-step {
+  display: grid;
+  place-items: center;
+  width: 2.75rem; /* 44px — standalone touch target */
+  height: 2.75rem;
+  color: var(--color-fg-muted);
+  transition:
+    color var(--dur-fast) var(--ease-out),
+    background-color var(--dur-fast) var(--ease-out);
+}
+.hero-carousel-step:hover {
+  color: var(--color-brand-strong);
+  background: var(--color-panel-2);
+}
+.hero-carousel-step svg {
+  width: 1.1rem;
+  height: 1.1rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.75;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+/* Kept in the left cluster rather than pushed to the far edge: the assistant launcher is
+   fixed to the bottom-right of the viewport and covered this control outright. */
+.hero-carousel-toggle {
+  margin-left: 0.15rem;
+}
+.hero-carousel-toggle .icon-play,
+.hero-carousel-toggle.is-paused .icon-pause {
+  display: none;
+}
+.hero-carousel-toggle.is-paused .icon-play {
+  display: block;
+  fill: currentColor;
+  stroke: none;
+}
+
+.hero-carousel-dots {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.hero-carousel-dots a {
+  display: grid;
+  place-items: center;
+  width: 2rem;
+  height: 2.75rem; /* full-height hit area around a deliberately fine mark */
+}
+/* A rule rather than a circle: the catalogue is built from fine horizontal lines, and the
+   progress marks belong to that vocabulary rather than to a generic dot row. */
+.hero-carousel-dot-track {
+  display: block;
+  width: 100%;
+  height: 3px;
+  background: var(--color-line-strong);
+  transition: background-color var(--dur) var(--ease-out);
+}
+.hero-carousel-dot-fill {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: var(--color-brand-strong);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform var(--dur) var(--ease-out);
+}
+.hero-carousel-dots a:hover .hero-carousel-dot-track {
+  background: color-mix(in oklab, var(--color-brand) 55%, var(--color-line-strong));
+}
+.hero-carousel-dots a[aria-current='true'] .hero-carousel-dot-fill {
+  transform: scaleX(1);
 }
 .hero-visual .stage {
   background: var(--color-stage);
@@ -1121,8 +1235,22 @@ html[data-theme="dark"] .spec-table td {
   text-transform: uppercase;
   transition: background-color var(--dur-fast) var(--ease-out);
 }
+.hero-visual-cta svg {
+  width: 1.05rem;
+  height: 1.05rem;
+  flex: none;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.75;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  transition: transform var(--dur) var(--ease-out);
+}
 .hero-visual-link:hover .hero-visual-cta {
   background: color-mix(in oklab, var(--color-brand) 28%, var(--color-panel));
+}
+.hero-visual-link:hover .hero-visual-cta svg {
+  transform: translateX(3px);
 }
 
 .explore-grid {
