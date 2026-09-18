@@ -6,6 +6,7 @@ import Footer from '../components/Footer.astro';
 import MobileTabBar from '../components/MobileTabBar.astro';
 import CompareBar from '../components/islands/CompareBar.tsx';
 import AssistantWidget from '../components/islands/AssistantWidget.tsx';
+import Analytics from '@vercel/analytics/astro';
 import { catalog } from '../lib/data';
 
 interface Props {
@@ -87,6 +88,7 @@ const compareNames = Object.fromEntries(catalog.map((r) => [r.id, r.name]));
     <MobileTabBar />
     {showCompareBar && <CompareBar client:only="react" names={compareNames} transition:persist />}
     <AssistantWidget client:only="react" transition:persist />
+    <Analytics />
   </body>
 </html>
 
