@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
+import { matchesTokens, tokenize } from '../../lib/search';
 
 export interface FilterGroup {
   key: string;
@@ -17,28 +18,41 @@ interface Props {
 
 type Selected = Record<string, Set<string>>;
 
-function readFromUrl(groups: FilterGroup[]): Selected {
+/** Text query param, shared with the header search overlay's "browse the full lineup" link. */
+const QUERY_KEY = 'q';
+
+function readFromUrl(groups: FilterGroup[]): { selected: Selected; query: string } {
   const sel: Selected = {};
   const params = new URLSearchParams(window.location.search);
   for (const g of groups) {
     const raw = params.get(g.key);
     sel[g.key] = new Set(raw ? raw.split(',').filter(Boolean) : []);
   }
-  return sel;
+  return { selected: sel, query: params.get(QUERY_KEY) ?? '' };
 }
 
-function writeToUrl(groups: FilterGroup[], sel: Selected): void {
+function writeToUrl(groups: FilterGroup[], sel: Selected, query: string): void {
   const params = new URLSearchParams(window.location.search);
   for (const g of groups) {
     const s = sel[g.key];
     if (s && s.size) params.set(g.key, [...s].join(','));
     else params.delete(g.key);
   }
+  if (query.trim()) params.set(QUERY_KEY, query.trim());
+  else params.delete(QUERY_KEY);
   const qs = params.toString();
   history.replaceState(null, '', qs ? `?${qs}` : window.location.pathname);
 }
 
-function cardMatches(card: Element, groups: FilterGroup[], sel: Selected): boolean {
+function cardMatches(
+  card: Element,
+  groups: FilterGroup[],
+  sel: Selected,
+  tokens: string[],
+): boolean {
+  if (tokens.length && !matchesTokens(card.getAttribute('data-search') ?? '', tokens)) {
+    return false;
+  }
   for (const g of groups) {
     const chosen = sel[g.key];
     if (!chosen || chosen.size === 0) continue;
@@ -59,6 +73,7 @@ export default function FilterBar({ groups, total }: Props) {
     [groups],
   );
   const [selected, setSelected] = useState<Selected>(emptyState);
+  const [query, setQuery] = useState('');
   const [shown, setShown] = useState(total);
   const [ready, setReady] = useState(false);
   const [sheetOpen, setSheetOpen] = useState(false);
@@ -66,24 +81,27 @@ export default function FilterBar({ groups, total }: Props) {
   const dialogRef = useRef<HTMLDialogElement>(null);
 
   useEffect(() => {
-    setSelected(readFromUrl(groups));
+    const fromUrl = readFromUrl(groups);
+    setSelected(fromUrl.selected);
+    setQuery(fromUrl.query);
     setReady(true);
   }, [groups]);
 
   useEffect(() => {
     if (!ready) return;
+    const tokens = tokenize(query);
     const cards = document.querySelectorAll<HTMLElement>('[data-racket-card]');
     let visible = 0;
     cards.forEach((card) => {
-      const match = cardMatches(card, groups, selected);
+      const match = cardMatches(card, groups, selected, tokens);
       card.hidden = !match;
       if (match) visible += 1;
     });
     setShown(visible);
     const empty = document.getElementById('rackets-empty');
     if (empty) empty.hidden = visible !== 0;
-    writeToUrl(groups, selected);
-  }, [selected, ready, groups]);
+    writeToUrl(groups, selected, query);
+  }, [selected, query, ready, groups]);
 
   // Native modal semantics keep keyboard focus inside and support Escape.
   useEffect(() => {
@@ -117,7 +135,8 @@ export default function FilterBar({ groups, total }: Props) {
     };
   }, [sheetOpen]);
 
-  const activeCount = Object.values(selected).reduce((n, s) => n + s.size, 0);
+  const chipCount = Object.values(selected).reduce((n, s) => n + s.size, 0);
+  const activeCount = chipCount + (query.trim() ? 1 : 0);
 
   function toggle(groupKey: string, option: string) {
     setSelected((prev) => {
@@ -131,6 +150,7 @@ export default function FilterBar({ groups, total }: Props) {
 
   function clearAll() {
     setSelected(Object.fromEntries(groups.map((g) => [g.key, new Set<string>()])));
+    setQuery('');
   }
 
   // The three filters players reach for first stay open on desktop; the rest fold behind
@@ -168,8 +188,46 @@ export default function FilterBar({ groups, total }: Props) {
     </div>
   );
 
+  // One field, rendered in the desktop sidebar and at the top of the mobile sheet.
+  // Labelled rather than <label for>, since both copies can be in the DOM at once.
+  const searchField = (
+    <div className="relative">
+      <svg
+        width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+        strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"
+        className="pointer-events-none absolute left-2.5 top-1/2 -translate-y-1/2 text-fg-faint"
+      >
+        <circle cx="11" cy="11" r="7" />
+        <path d="M20 20l-3.6-3.6" />
+      </svg>
+      <input
+        type="text"
+        value={query}
+        onChange={(e) => setQuery(e.target.value)}
+        placeholder="Search the lineup"
+        aria-label="Search the lineup"
+        autoComplete="off"
+        spellCheck={false}
+        className="min-h-11 w-full rounded-[2px] border border-line-strong bg-panel py-2 pl-8 pr-9 text-sm text-fg placeholder:text-fg-faint focus:border-brand-strong focus:outline-none"
+      />
+      {query !== '' && (
+        <button
+          type="button"
+          onClick={() => setQuery('')}
+          aria-label="Clear search"
+          className="icon-btn absolute right-0.5 top-1/2 h-9 w-9 min-h-9 min-w-9 -translate-y-1/2"
+        >
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true">
+            <path d="M6 6l12 12M18 6L6 18" />
+          </svg>
+        </button>
+      )}
+    </div>
+  );
+
   const desktopControls = (
     <div className="flex flex-col gap-3">
+      {searchField}
       {renderGroups(primaryGroups)}
       {secondaryGroups.length > 0 && (
         <div className="border-t border-line pt-3">
@@ -270,7 +328,10 @@ export default function FilterBar({ groups, total }: Props) {
                 </button>
               </div>
             </div>
-            <div className="flex-1 overflow-y-auto p-4">{renderGroups(groups)}</div>
+            <div className="flex-1 space-y-4 overflow-y-auto p-4">
+              {searchField}
+              {renderGroups(groups)}
+            </div>
             <div className="border-t border-line p-4">
               <button
                 type="button"

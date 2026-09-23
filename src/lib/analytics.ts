@@ -8,7 +8,9 @@ export type AnalyticsEvent =
   | 'compare_view'
   | 'finder_complete'
   | 'assistant_intent'
-  | 'assistant_fallback';
+  | 'assistant_fallback'
+  | 'search_open'
+  | 'search_select';
 
 type Props = Record<string, string | number | boolean | null | undefined>;
 

@@ -25,6 +25,8 @@ const weights = r.variants.map((v) => v.weightClass).join(' ');
 const grips = formatGripSizes(r.variants).split(' · ').join(' ');
 const price = formatPrice(r.pricePhp);
 const series = seriesLine(r);
+// Haystack for the browse-page search box (src/lib/search.ts matches word prefixes).
+const searchText = [r.name, r.modelCode, r.series, r.classification, r.balance, weights, ...r.aliases].join(' ');
 ---
 
 <article
@@ -35,6 +37,7 @@ const series = seriesLine(r);
   data-weights={weights}
   data-grips={grips}
   data-stiffness={r.stiffness.word}
+  data-search={searchText}
   class="lift group racket-card relative flex flex-col border border-line bg-panel transition-colors hover:border-brand"
 >
   <a href={`/rackets/${r.id}`} class="flex flex-1 flex-col">
