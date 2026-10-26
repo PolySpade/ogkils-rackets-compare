@@ -38,17 +38,27 @@ export function howItPlaysFallback(r: Racket): string {
   const maxTension = Math.max(...r.variants.map((v) => v.maxTensionLbs));
   const grips = [...new Set(r.variants.flatMap((v) => v.gripSizes))].sort().join(' and ');
   const shaftFeel =
-    r.shaftDiameterMm <= 6.6
-      ? 'a thinner shaft that cuts through the air for quicker swings'
-      : 'a fuller shaft that stays stable through powerful hits';
+    r.shaftDiameterMm === null
+      ? null
+      : r.shaftDiameterMm <= 6.6
+        ? 'a thinner shaft that cuts through the air for quicker swings'
+        : 'a fuller shaft that stays stable through powerful hits';
+  const frame = r.frameHoleType ? `a ${r.frameHoleType.toLowerCase()} frame` : null;
+  const build =
+    shaftFeel && frame
+      ? `pairs ${shaftFeel} (${r.shaftDiameterMm}mm) with ${frame}`
+      : shaftFeel
+        ? `has ${shaftFeel} (${r.shaftDiameterMm}mm)`
+        : frame
+          ? `is built on ${frame}`
+          : `is built for ${r.classification.toLowerCase()} play`;
 
   const stiffnessNote = stiff.label
     ? `The ${stiff.label.toLowerCase()} shaft ${stiff.label.includes('Stiff') ? 'rewards clean, well-timed contact with a crisp, controlled response' : 'loads and springs back to add repulsion, which is more forgiving of imperfect timing'}.`
     : `Its shaft is measured at ${stiff.primary}.`;
 
   return (
-    `Built from ${r.materials.join(', ').toLowerCase()}, the ${r.name} pairs ${shaftFeel} ` +
-    `(${r.shaftDiameterMm}mm) with a ${r.frameHoleType.toLowerCase()} frame. ` +
+    `Built from ${r.materials.join(', ').toLowerCase()}, the ${r.name} ${build}. ` +
     `${stiffnessNote} ` +
     `It can be strung up to ${maxTension} lbs — a ceiling rather than a recommendation, so ` +
     `string comfortably below it for durability and cleaner control. ` +

@@ -421,7 +421,7 @@ export const DIMENSIONS: Dimension[] = [
     highNoun: 'the thickest shaft',
     lowNoun: 'the thinnest shaft',
     value: (r) => r.shaftDiameterMm,
-    say: (r) => `${r.shaftDiameterMm}mm`,
+    say: (r) => (r.shaftDiameterMm === null ? `${DASH} (not published)` : `${r.shaftDiameterMm}mm`),
   },
   {
     key: 'price',
@@ -733,7 +733,9 @@ function specSentence(r: Racket, normalized: string, attrs: Attrs): string {
     return `The ${r.name} is built from ${r.materials.join(', ')}.`;
   }
   if (has(normalized, ['hole', 'grommet'])) {
-    return `The ${r.name} has a ${r.frameHoleType.toLowerCase()} frame.`;
+    return r.frameHoleType
+      ? `The ${r.name} has a ${r.frameHoleType.toLowerCase()} frame.`
+      : `The ${r.name}'s hole count isn't published.`;
   }
 
   const stiff = formatStiffness(r.stiffness, r.derived.stiffnessWordConflict);

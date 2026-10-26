@@ -5,6 +5,26 @@
   "fetchedAt": "2026-09-12",
   "products": [
     {
+      "handle": "ld800lt",
+      "title": "LD800LT Badminton Racket - Speed",
+      "status": "ACTIVE",
+      "tags": ["leading-series", "new-arrival", "racket"],
+      "totalInventory": 6,
+      "minPrice": 4750,
+      "featuredImageUrl": "https://cdn.shopify.com/s/files/1/0941/1556/1768/files/ld800lt_main_1.jpg?v=1792991068",
+      "variantSkus": ["OR-LD800LT-A-4UG5", "OR-LD800LT-A-4UG6", "OR-LD800LT-A-5UG5", "OR-LD800LT-A-5UG6", "OR-LD800LT-F-4UG5", "OR-LD800LT-F-4UG6", "OR-LD800LT-F-5UG5", "OR-LD800LT-F-5UG6"]
+    },
+    {
+      "handle": "ld99",
+      "title": "LD99 Badminton Racket - Attack",
+      "status": "ACTIVE",
+      "tags": ["new-arrival", "racket"],
+      "totalInventory": 4,
+      "minPrice": 5300,
+      "featuredImageUrl": "https://cdn.shopify.com/s/files/1/0941/1556/1768/files/1_407cd04b-ba66-4b7a-8bf5-b46ffc1546e0.png?v=1790583326",
+      "variantSkus": ["OR-LD99-O-3UG5", "OR-LD99-O-4UG5", "OR-LD99-O-4UG6"]
+    },
+    {
       "handle": "insect-breathing",
       "title": "Insect Breathing Badminton Racket - Speed",
       "status": "ACTIVE",

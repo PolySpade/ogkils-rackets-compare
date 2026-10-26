@@ -40,7 +40,7 @@ const rows: Row[] = [
   { label: 'Balance point', termKey: 'balance-point', unit: 'mm', diff: 'both', minSpread: MIN_SPREAD.balancePointMm, cell: (r) => ({ display: `${v0(r).balancePointMm}`, num: v0(r).balancePointMm }) },
   { label: 'Weight', termKey: 'weight-class', unit: 'g', diff: 'both', cell: (r) => ({ display: `${v0(r).weightRangeG[0]}–${v0(r).weightRangeG[1]}`, num: v0(r).weightMidG }) },
   { label: 'Swing weight', termKey: 'swing-weight', diff: 'both', cell: (r) => (v0(r).swingWeightMissing ? { display: DASH, num: null } : { display: `${v0(r).swingWeight}`, num: v0(r).swingWeight }) },
-  { label: 'Shaft diameter', termKey: 'shaft-diameter', unit: 'mm', diff: 'both', minSpread: MIN_SPREAD.shaftDiameterMm, cell: (r) => ({ display: `${r.shaftDiameterMm}`, num: r.shaftDiameterMm }) },
+  { label: 'Shaft diameter', termKey: 'shaft-diameter', unit: 'mm', diff: 'both', minSpread: MIN_SPREAD.shaftDiameterMm, cell: (r) => (r.shaftDiameterMm === null ? { display: DASH, num: null } : { display: `${r.shaftDiameterMm}`, num: r.shaftDiameterMm }) },
   { label: 'Max tension', termKey: 'max-tension', unit: 'lbs', diff: 'both', cell: (r) => ({ display: `${v0(r).maxTensionLbs}`, num: v0(r).maxTensionLbs }) },
   { label: 'Frame area', termKey: 'frame-area', unit: 'cm²', diff: 'both', cell: (r) => (r.frameAreaCm2 === null ? { display: DASH, num: null } : { display: `${r.frameAreaCm2}`, num: r.frameAreaCm2 }) },
   { label: 'Grip length', unit: 'mm', diff: 'both', cell: (r) => { const g = trustedGripLengthMm(r); return g === null ? { display: DASH, num: null } : { display: `${g}`, num: g }; } },

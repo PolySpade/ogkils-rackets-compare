@@ -267,6 +267,7 @@ export function tensionCrit(a: FinderAnswers, v: Variant): Crit {
 // --- Shaft diameter (5) ---
 export function shaftCrit(a: FinderAnswers, r: Racket): Crit {
   if (!a.style && !a.skill) return { score: SKIPPED };
+  if (r.shaftDiameterMm === null) return { score: SKIPPED };
   let preferred = 6.7;
   if (a.style === 'fast-defense') preferred = 6.4;
   else if (a.style === 'smash' || a.skill === 'beginner') preferred = 6.9;

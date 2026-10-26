@@ -73,6 +73,13 @@
       "sku": "OR-LD77PRO",
       "image": "ld77pro.png"
     },
+    "ld800lt": {
+      "pricePhp": 4750,
+      "stockLevel": "In Stock",
+      "buyUrl": "https://www.ogkilsbadminton.com/products/ld800lt",
+      "sku": "OR-LD800LT",
+      "image": "ld800lt.png"
+    },
     "ld800pro": {
       "pricePhp": 4300,
       "stockLevel": "In Stock",
@@ -93,6 +100,13 @@
       "buyUrl": "https://www.ogkilsbadminton.com/products/ld88spro-badminton-racket-attack",
       "sku": null,
       "image": "ld88spro.png"
+    },
+    "ld99": {
+      "pricePhp": 5300,
+      "stockLevel": "In Stock",
+      "buyUrl": "https://www.ogkilsbadminton.com/products/ld99",
+      "sku": "OR-LD99-O",
+      "image": "ld99.png"
     },
     "ldlyd": {
       "pricePhp": 4000,

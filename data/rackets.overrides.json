@@ -21,6 +21,8 @@
     "ld12l": { "aliases": ["12l", "ld12", "12 l"] },
     "annihilation": { "aliases": ["annihilator", "anni", "annihilate"] },
     "ld88spro": { "aliases": ["88s", "ld88s", "88spro", "88 s"] },
-    "insect-breathing": { "aliases": ["insect", "bug", "insect breath"] }
+    "insect-breathing": { "aliases": ["insect", "bug", "insect breath"] },
+    "ld99": { "aliases": ["99", "ld 99"] },
+    "ld800lt": { "aliases": ["800lt", "ld800 lt", "800 lt"] }
   }
 }

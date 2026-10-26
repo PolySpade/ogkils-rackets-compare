@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "source": "Product_Database_Racket_Specs.xlsx",
-  "count": 20,
+  "count": 22,
   "rackets": [
     {
       "id": "mist-breathing",
@@ -1420,6 +1420,159 @@
           ],
           "maxTensionLbs": 29.0,
           "balancePointMm": 313.0,
+          "balancePointToleranceMm": 3.0,
+          "swingWeight": null,
+          "swingWeightTolerance": null,
+          "swingWeightMissing": true
+        }
+      ],
+      "tagline": null,
+      "description": null,
+      "pricePhp": null,
+      "images": [],
+      "inStock": true,
+      "links": {
+        "shopify": null,
+        "shopee": null,
+        "lazada": null,
+        "tiktok": null
+      }
+    },
+    {
+      "id": "ld99",
+      "name": "LD99",
+      "modelCode": "LD99",
+      "series": "LD",
+      "classification": "ATTACK",
+      "balance": "Head-Heavy",
+      "materials": [
+        "TORAY M46J",
+        "M40",
+        "M30 HIGH MODULUS CARBON FIBER"
+      ],
+      "materialsRaw": "TORAY M46J + M40 + M30 HIGH MODULUS CARBON FIBER",
+      "shaftDiameterMm": null,
+      "shaftNote": null,
+      "stiffness": {
+        "word": "Medium",
+        "rangeLow": null,
+        "rangeHigh": null,
+        "value": null,
+        "raw": null
+      },
+      "frameHoleCount": null,
+      "frameHoleType": null,
+      "frameAreaCm2": null,
+      "gripLengthMm": null,
+      "racketLengthMm": 673.0,
+      "variants": [
+        {
+          "weightClass": "3U",
+          "weightRangeG": [
+            85.0,
+            89.9
+          ],
+          "weightMidG": 87.5,
+          "gripSizes": [
+            "G5"
+          ],
+          "maxTensionLbs": 31.0,
+          "balancePointMm": 303.0,
+          "balancePointToleranceMm": 3.0,
+          "swingWeight": null,
+          "swingWeightTolerance": null,
+          "swingWeightMissing": true
+        },
+        {
+          "weightClass": "4U",
+          "weightRangeG": [
+            80.0,
+            84.9
+          ],
+          "weightMidG": 82.5,
+          "gripSizes": [
+            "G5",
+            "G6"
+          ],
+          "maxTensionLbs": 30.0,
+          "balancePointMm": 306.0,
+          "balancePointToleranceMm": 3.0,
+          "swingWeight": null,
+          "swingWeightTolerance": null,
+          "swingWeightMissing": true
+        }
+      ],
+      "tagline": null,
+      "description": null,
+      "pricePhp": null,
+      "images": [],
+      "inStock": true,
+      "links": {
+        "shopify": null,
+        "shopee": null,
+        "lazada": null,
+        "tiktok": null
+      }
+    },
+    {
+      "id": "ld800lt",
+      "name": "LD800LT",
+      "modelCode": "LD800LT",
+      "series": "LD",
+      "classification": "SPEED",
+      "balance": "Head-Heavy",
+      "materials": [
+        "TORAY T1100",
+        "M46J",
+        "JAPANESE HIGH MODULUS CARBON FIBER"
+      ],
+      "materialsRaw": "TORAY T1100 + M46J + JAPANESE HIGH MODULUS CARBON FIBER",
+      "shaftDiameterMm": 6.6,
+      "shaftNote": "6.6mm",
+      "stiffness": {
+        "word": "Stiff",
+        "rangeLow": null,
+        "rangeHigh": null,
+        "value": null,
+        "raw": null
+      },
+      "frameHoleCount": 76,
+      "frameHoleType": "76 Hole",
+      "frameAreaCm2": null,
+      "gripLengthMm": null,
+      "racketLengthMm": 673.0,
+      "variants": [
+        {
+          "weightClass": "4U",
+          "weightRangeG": [
+            80.0,
+            84.9
+          ],
+          "weightMidG": 82.5,
+          "gripSizes": [
+            "G5",
+            "G6"
+          ],
+          "maxTensionLbs": 30.0,
+          "balancePointMm": 302.0,
+          "balancePointToleranceMm": 3.0,
+          "swingWeight": null,
+          "swingWeightTolerance": null,
+          "swingWeightMissing": true
+        },
+        {
+          "weightClass": "5U",
+          "weightRangeG": [
+            75.0,
+            79.9
+          ],
+          "weightMidG": 77.5,
+          "gripSizes": [
+            "G5",
+            "G6"
+          ],
+          "maxTensionLbs": 29.0,
+          "balancePointMm": 310.0,
           "balancePointToleranceMm": 3.0,
           "swingWeight": null,
           "swingWeightTolerance": null,

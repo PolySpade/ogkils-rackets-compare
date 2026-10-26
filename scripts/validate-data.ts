@@ -57,8 +57,10 @@ for (const r of rackets) {
   if (!BALANCE.has(r.balance)) err(`${tag}: bad balance "${r.balance}"`);
   if (!Array.isArray(r.materials) || r.materials.length === 0)
     err(`${tag}: materials must be a non-empty array`);
-  if (!isNum(r.shaftDiameterMm) || r.shaftDiameterMm <= 0)
-    err(`${tag}: bad shaftDiameterMm`);
+  if (r.shaftDiameterMm === null) warn(`${tag}: shaft diameter not published — render "—".`);
+  else if (!isNum(r.shaftDiameterMm) || r.shaftDiameterMm <= 0) err(`${tag}: bad shaftDiameterMm`);
+  if (r.frameHoleType === null) warn(`${tag}: frame hole count not published — render "—".`);
+  else if (!isStr(r.frameHoleType)) err(`${tag}: bad frameHoleType`);
   if (!isNum(r.racketLengthMm) || r.racketLengthMm <= 0)
     err(`${tag}: bad racketLengthMm`);
   if (typeof r.inStock !== 'boolean') err(`${tag}: inStock must be boolean`);

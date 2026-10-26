@@ -58,11 +58,12 @@ export interface GeneratedRacket {
   balance: BalanceLabel;
   materials: string[];
   materialsRaw: string;
-  shaftDiameterMm: number;
-  shaftNote: string;
+  /** null when the brand hasn't published it — render "—". */
+  shaftDiameterMm: number | null;
+  shaftNote: string | null;
   stiffness: Stiffness;
-  frameHoleCount: number;
-  frameHoleType: string;
+  frameHoleCount: number | null;
+  frameHoleType: string | null;
   frameAreaCm2: number | null;
   gripLengthMm: number | null;
   racketLengthMm: number;

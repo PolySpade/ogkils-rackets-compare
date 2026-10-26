@@ -33,8 +33,8 @@ export interface CompareRacket {
   stiffnessPrimary: string;
   stiffnessLabel: string | null;
   stiffnessOrdinal: number;
-  shaftDiameterMm: number;
-  frameHoleType: string;
+  shaftDiameterMm: number | null;
+  frameHoleType: string | null;
   frameAreaCm2: number | null;
   gripLengthMm: number | null;
   racketLengthMm: number;
@@ -90,7 +90,7 @@ const ROWS: RowDef[] = [
   },
   {
     key: 'shaft', label: 'Shaft diameter', termKey: 'shaft-diameter', unit: 'mm', diff: 'both', minSpread: MIN_SPREAD.shaftDiameterMm,
-    cell: (r) => ({ display: `${r.shaftDiameterMm}`, num: r.shaftDiameterMm }),
+    cell: (r) => (r.shaftDiameterMm === null ? { display: DASH, num: null } : { display: `${r.shaftDiameterMm}`, num: r.shaftDiameterMm }),
   },
   {
     key: 'maxTension', label: 'Max tension', termKey: 'max-tension', unit: 'lbs', diff: 'both',
@@ -100,7 +100,7 @@ const ROWS: RowDef[] = [
     key: 'frameArea', label: 'Frame area', termKey: 'frame-area', unit: 'cm²', diff: 'both',
     cell: (r) => (r.frameAreaCm2 === null ? { display: DASH, num: null } : { display: `${r.frameAreaCm2}`, num: r.frameAreaCm2 }),
   },
-  { key: 'frameHoles', label: 'Frame holes', termKey: 'frame-holes', diff: null, cell: (r) => ({ display: r.frameHoleType, num: null }) },
+  { key: 'frameHoles', label: 'Frame holes', termKey: 'frame-holes', diff: null, cell: (r) => ({ display: r.frameHoleType ?? DASH, num: null }) },
   { key: 'grips', label: 'Grip sizes', termKey: 'grip-size', diff: null, cell: (_r, v) => ({ display: v.gripSizes.join(' · '), num: null }) },
   {
     key: 'gripLen', label: 'Grip length', unit: 'mm', diff: 'both',
