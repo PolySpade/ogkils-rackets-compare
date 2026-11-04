@@ -29,7 +29,7 @@ for (const r of catalog) {
         primary: l.primary,
         url: buildBuyUrl(l.url, r.id, l.channel, 'compare'),
       }))
-    : [{ label: 'OGKILS Store', channel: 'shopify', primary: true, url: STORE_FALLBACK_URL }];
+    : [{ label: 'Buy Now', channel: 'shopify', primary: true, url: STORE_FALLBACK_URL }];
 
   data[r.id] = {
     id: r.id,

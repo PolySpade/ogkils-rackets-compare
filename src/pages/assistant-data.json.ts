@@ -11,7 +11,7 @@ export const GET: APIRoute = () => {
     const links = buyLinks(r);
     buys[r.id] = links.length
       ? links.map((l) => ({ label: l.label, channel: l.channel, primary: l.primary, url: buildBuyUrl(l.url, r.id, l.channel, 'chat') }))
-      : [{ label: 'OGKILS Store', channel: 'shopify', primary: true, url: STORE_FALLBACK_URL }];
+      : [{ label: 'Buy Now', channel: 'shopify', primary: true, url: STORE_FALLBACK_URL }];
   }
   return new Response(JSON.stringify({ rackets: catalog, glossary: allTerms(), buys }), {
     headers: { 'content-type': 'application/json' },
