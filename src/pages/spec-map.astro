@@ -1,0 +1,35 @@
+---
+import Base from '../layouts/Base.astro';
+import SpecMap from '../components/islands/SpecMap.tsx';
+import { catalog } from '../lib/data';
+import { getTerm } from '../lib/glossary';
+import { AXES, AXIS_ORDER, buildSpecPoints, type AxisKey } from '../lib/specmap';
+
+const points = buildSpecPoints(catalog);
+const axisHelp: Partial<Record<AxisKey, string>> = {};
+for (const k of AXIS_ORDER) {
+  const g = AXES[k].glossary ? getTerm(AXES[k].glossary!) : undefined;
+  if (g) axisHelp[k] = g.short;
+}
+---
+
+<Base
+  title="Spec map: see how OGKILS rackets differ"
+  description="An interactive chart of every OGKILS badminton racket. Plot balance, weight, swing weight, stiffness and more to see how the models differ."
+  path="/spec-map"
+>
+  <div class="mx-auto max-w-6xl px-4 py-12 sm:px-6">
+    <header class="mb-8">
+      <p class="section-kicker">Rackets / Spec map</p>
+      <h1 class="display-heading is-title mt-2 text-4xl text-fg sm:text-5xl">Spec map</h1>
+      <p class="prose-measure mt-3 text-fg-muted">
+        Every OGKILS racket in each weight it comes in, plotted by the two specs you choose.
+        Rackets close together play alike. Rackets far apart play differently.
+      </p>
+    </header>
+
+    <div class="catalog-rule pt-5">
+      <SpecMap client:only="react" points={points} axisHelp={axisHelp} />
+    </div>
+  </div>
+</Base>

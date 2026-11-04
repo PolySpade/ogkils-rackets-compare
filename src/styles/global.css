@@ -1447,3 +1447,116 @@ html[data-theme="dark"] .spec-table td {
     border-bottom: 0;
   }
 }
+
+/* Spec map (/spec-map). Neutral marks, shape = classification; teal = focused or in
+   compare. Grid and axes stay recessive so the points carry the read. */
+.specmap-select {
+  min-height: 2.5rem;
+  border: 1px solid var(--color-line-strong);
+  border-radius: var(--radius-control);
+  background: var(--color-panel);
+  padding: 0.4rem 0.6rem;
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: var(--color-fg);
+}
+.specmap-select:hover {
+  border-color: var(--color-brand-strong);
+}
+.specmap-svg {
+  overflow: visible;
+  cursor: crosshair;
+  font-family: inherit;
+}
+.specmap-grid {
+  stroke: var(--color-line);
+  stroke-width: 1;
+  opacity: 0.6;
+}
+.specmap-axis {
+  stroke: var(--color-line-strong);
+  stroke-width: 1;
+}
+.specmap-band {
+  fill: var(--color-panel-2);
+  opacity: 0.55;
+}
+.specmap-band-label {
+  fill: var(--color-fg-muted);
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.specmap-tick {
+  fill: var(--color-fg-muted);
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+}
+.specmap-axis-title {
+  fill: var(--color-fg);
+  font-size: 12px;
+  font-weight: 800;
+}
+.specmap-hint {
+  fill: var(--color-fg-faint);
+  font-size: 10.5px;
+  font-weight: 600;
+}
+.specmap-pt path {
+  fill: var(--color-fg-faint);
+  stroke: var(--color-ink);
+  stroke-width: 2;
+  paint-order: stroke;
+  transition: fill var(--dur-fast) var(--ease-out), opacity var(--dur-fast) var(--ease-out);
+}
+.specmap-pt[data-dim] path {
+  opacity: 0.18;
+}
+.specmap-pt[data-hi] path {
+  fill: var(--color-brand-strong);
+}
+.specmap-pt[data-hover] path {
+  stroke: var(--color-fg);
+  stroke-width: 1.5;
+}
+.specmap-trail {
+  fill: none;
+  stroke: var(--color-brand-strong);
+  stroke-width: 2;
+  stroke-linejoin: round;
+  opacity: 0.55;
+}
+.specmap-label {
+  fill: var(--color-fg);
+  font-size: 11.5px;
+  font-weight: 800;
+  stroke: var(--color-ink);
+  stroke-width: 3px;
+  paint-order: stroke;
+}
+.specmap-key {
+  fill: var(--color-fg-faint);
+}
+.specmap-key-hi {
+  fill: var(--color-brand-strong);
+}
+.specmap-tip {
+  min-width: 11rem;
+  border: 1px solid var(--color-line-strong);
+  border-radius: var(--radius-control);
+  background: var(--color-panel);
+  padding: 0.6rem 0.75rem;
+  box-shadow: 0 6px 20px rgb(0 0 0 / 0.12);
+}
+.specmap-on-axis dd {
+  color: var(--color-brand-strong);
+}
+@media (prefers-reduced-motion: no-preference) {
+  .specmap-pt {
+    transition: transform 420ms var(--ease-out);
+  }
+}
+.specmap-svg:focus:not(:focus-visible) {
+  outline: none;
+}
