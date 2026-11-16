@@ -5,13 +5,27 @@ import RacketImage from '../components/RacketImage.astro';
 import { catalog, getRacket } from '../lib/data';
 import { CLASSIFICATION_META } from '../lib/classification';
 import { organizationJsonLd } from '../lib/jsonld';
-import { seriesLine, formatWeightClasses, racketBalanceRange, formatStiffness } from '../lib/format';
+import { seriesLine, formatWeightClasses, racketBalanceRange, formatStiffness, formatPrice } from '../lib/format';
 import type { Classification } from '../lib/types';
 
 const classifications = Object.keys(CLASSIFICATION_META) as Classification[];
-const featured = ['fire-breathing', 'wind-breathing', 'dimensional-slash-pro']
+// Breathing has its own feature block above, so the lineup teaser shows the rest of the range.
+const featured = ['ld100zz', 'ld800pro', 'dimensional-slash-pro']
   .map((id) => getRacket(id))
   .filter((r): r is NonNullable<typeof r> => Boolean(r));
+
+// Breathing series feature: every model, grouped by playing style, with a one-tap
+// comparison per style (the compare page takes up to four).
+const breathing = catalog.filter((r) => r.series === 'Breathing');
+const breathingStyles = classifications
+  .map((c) => ({
+    classification: c,
+    label: CLASSIFICATION_META[c].label,
+    rackets: breathing.filter((r) => r.classification === c),
+  }))
+  .filter((g) => g.rackets.length > 0);
+const breathingPrices = breathing.map((r) => r.pricePhp).filter((p): p is number => p !== null);
+const breathingFrom = breathingPrices.length ? formatPrice(Math.min(...breathingPrices)) : null;
 
 // The campaign panel rotates through the models being pushed this season. Each asset is a
 // full-bleed poster in its own colour world (violet, ice, fire), so the slideshow reads as
@@ -225,6 +239,92 @@ const heroSlides = ['insect-breathing', 'annihilation', 'ld88dpro']
         }
       </dl>
     </section>
+  </section>
+
+  <!-- Breathing series feature -->
+  <section class="breathing mt-16" aria-labelledby="breathing-heading">
+    <div class="mx-auto max-w-6xl px-4 sm:px-6">
+      <div class="breathing-head">
+        <div>
+          <p class="section-kicker">Featured series</p>
+          <h2 id="breathing-heading" class="breathing-title display-heading">
+            Breathing <span>series</span>
+          </h2>
+          <p class="prose-measure mt-3 text-fg-muted">
+            {breathing.length} rackets, each built around its own element — from the
+            head-heavy Fire and Serpent for attacking players to the even-balanced Mist and
+            Water for control.{breathingFrom && ` From ${breathingFrom}.`}
+          </p>
+        </div>
+        <div class="flex flex-wrap gap-3">
+          <a href="/rackets?series=Breathing" class="primary-action press">
+            Browse the series <span aria-hidden="true">→</span>
+          </a>
+        </div>
+      </div>
+
+      <ul class="breathing-grid">
+        {
+          breathing.map((r) => (
+            <li class="breathing-tile group">
+              <a href={`/rackets/${r.id}`} class="breathing-tile-link">
+                <RacketImage
+                  racket={r}
+                  ratio="square"
+                  sizes="(max-width: 639px) 50vw, (max-width: 1023px) 33vw, 280px"
+                  widths={[240, 400]}
+                  class="breathing-art"
+                />
+                <span class="breathing-meta">
+                  <span class="breathing-class">{CLASSIFICATION_META[r.classification].label}</span>
+                  <span class="breathing-name">{r.name}</span>
+                  <span class="breathing-sub tnum">
+                    {r.balance}
+                    {r.pricePhp !== null && <> · {formatPrice(r.pricePhp)}</>}
+                  </span>
+                </span>
+              </a>
+              <button
+                type="button"
+                data-compare-toggle={r.id}
+                aria-pressed="false"
+                aria-label={`Add ${r.name} to comparison`}
+                class="compare-btn absolute right-2 top-2 z-10"
+              >
+                <span class="compare-btn-add">＋ Compare</span>
+                <span class="compare-btn-on">✓ Added</span>
+              </button>
+            </li>
+          ))
+        }
+      </ul>
+
+      <div class="breathing-styles">
+        <p class="panel-heading">Compare within a style</p>
+        <ul>
+          {
+            breathingStyles.map((g) => (
+              <li>
+                <span class="breathing-style-label">{g.label}</span>
+                <span class="breathing-style-names">{g.rackets.map((r) => r.name.replace(' Breathing', '')).join(' · ')}</span>
+                {g.rackets.length > 1 ? (
+                  <a
+                    href={`/compare?ids=${g.rackets.slice(0, 4).map((r) => r.id).join(',')}`}
+                    class="secondary-action action-sm press"
+                  >
+                    Compare {Math.min(g.rackets.length, 4)} <span aria-hidden="true">→</span>
+                  </a>
+                ) : (
+                  <a href={`/rackets/${g.rackets[0]!.id}`} class="secondary-action action-sm press">
+                    View <span aria-hidden="true">→</span>
+                  </a>
+                )}
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+    </div>
   </section>
 
   <!-- Featured -->

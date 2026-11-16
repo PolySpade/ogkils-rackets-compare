@@ -60,7 +60,7 @@ const computed = rows.map((row) => {
   {
     DIFF_KEY.map((k) => (
       <li>
-        <span class:list={[k.muted ? 'spec-missing' : 'text-diff']} aria-hidden="true">{k.glyph}</span>
+        <span class:list={[k.muted ? 'spec-missing' : k.glyph === '▲' ? 'diff-high' : 'diff-low']} aria-hidden="true">{k.glyph}</span>
         {k.label}
       </li>
     ))
@@ -111,7 +111,7 @@ const computed = rows.map((row) => {
             const marked = isHigh || isLow;
             const missing = c.display === DASH;
             return (
-              <td class:list={[marked && 'is-marked']}>
+              <td class:list={[marked && 'is-marked', isHigh && 'is-high', isLow && !isHigh && 'is-low']}>
                 <span
                   class:list={[missing ? 'spec-missing' : 'tnum font-semibold']}
                   title={missing ? 'Not published by OGKILS' : undefined}

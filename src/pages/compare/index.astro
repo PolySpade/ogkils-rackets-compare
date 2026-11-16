@@ -12,6 +12,8 @@ import { formatStiffness, trustedGripLengthMm, formatPrice } from '../../lib/for
 import { stiffnessOrdinal } from '../../lib/derive';
 import { buyLinks, buildBuyUrl, STORE_FALLBACK_URL } from '../../lib/links';
 import { racketImage } from '../../lib/images';
+import { buildSpecPoints } from '../../lib/specmap';
+import { LINEUP_SPECS, type LineupCatalogue } from '../../lib/lineup';
 
 // Build the compact, serialisable compare record for every racket (any pair is possible).
 const data: Record<string, CompareRacket> = {};
@@ -66,6 +68,19 @@ for (const r of catalog) {
   };
 }
 
+// Every published value across the catalogue (racket × weight class), per spec: the
+// backdrop the lineup chart places the shortlist against.
+const points = buildSpecPoints(catalog);
+const catalogue = Object.fromEntries(
+  LINEUP_SPECS.map((spec) => {
+    const values =
+      spec.key === 'price'
+        ? catalog.map((r) => r.pricePhp)
+        : points.map((p) => p.values[spec.key as Exclude<typeof spec.key, 'price'>]);
+    return [spec.key, values.filter((v): v is number => v !== null)];
+  }),
+) as LineupCatalogue;
+
 const suggestions: SuggestedPair[] = (comparisonsFile.pairs ?? [])
   .slice(0, 4)
   .map((p: { a: string; b: string }) => {
@@ -87,13 +102,13 @@ const suggestions: SuggestedPair[] = (comparisonsFile.pairs ?? [])
       <p class="section-kicker">Technical table / Up to four rackets</p>
       <h1 class="display-heading is-title mt-2 text-4xl text-fg sm:text-5xl">Compare rackets</h1>
       <p class="prose-measure mt-3 text-fg-muted">
-        Shortlist up to four rackets. Compare a pair on your phone or the full shortlist on
-        a larger screen, with the differences that matter marked automatically.
+        Shortlist up to four rackets. See the biggest differences in plain words, every spec
+        side by side, and a chart of where each pick sits in the whole OGKILS lineup.
         Your shortlist is also highlighted on the <a href="/spec-map" class="font-bold text-brand-strong underline underline-offset-2">spec map</a>.
       </p>
     </header>
 
-    <CompareTray client:only="react" data={data} suggestions={suggestions} />
+    <CompareTray client:only="react" data={data} suggestions={suggestions} catalogue={catalogue} />
   </div>
 </Base>
 

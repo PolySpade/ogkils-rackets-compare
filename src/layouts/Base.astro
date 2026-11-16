@@ -41,7 +41,7 @@ const compareNames = Object.fromEntries(catalog.map((r) => [r.id, r.name]));
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang="en" data-theme="dark">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -50,18 +50,34 @@ const compareNames = Object.fromEntries(catalog.map((r) => [r.id, r.name]));
     {canonical && <link rel="canonical" href={canonical} />}
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <ClientRouter />
-    <meta name="theme-color" content="#ffffff" />
-    <!-- Apply the saved theme before paint (default light) to avoid a flash. -->
+    <meta name="theme-color" content="#0b0f14" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Anton&family=Archivo:wght@400;500;600;700;800&display=swap"
+    />
+    <!-- Apply the saved theme before paint (default dark, like the store) to avoid a flash. -->
     <script is:inline>
       (function () {
         try {
           var t = localStorage.getItem('theme');
-          if (t !== 'dark' && t !== 'light') t = 'light';
+          if (t !== 'dark' && t !== 'light') t = 'dark';
           document.documentElement.dataset.theme = t;
           var m = document.querySelector('meta[name="theme-color"]');
-          if (m) m.setAttribute('content', t === 'dark' ? '#101719' : '#ffffff');
+          if (m) m.setAttribute('content', t === 'dark' ? '#0b0f14' : '#ffffff');
         } catch (e) {}
       })();
+      // View Transitions copy the incoming page's <html> attributes (data-theme="dark"),
+      // so re-apply a saved light choice after every client-side navigation.
+      document.addEventListener('astro:after-swap', function () {
+        try {
+          var t = localStorage.getItem('theme');
+          document.documentElement.dataset.theme = t === 'light' ? 'light' : 'dark';
+        } catch (e) {
+          document.documentElement.dataset.theme = 'dark';
+        }
+      });
     </script>
 
     <!-- OpenGraph / Twitter -->
@@ -135,7 +151,7 @@ const compareNames = Object.fromEntries(catalog.map((r) => [r.id, r.name]));
       /* private mode */
     }
     const meta = document.querySelector('meta[name="theme-color"]');
-    if (meta) meta.setAttribute('content', t === 'dark' ? '#101719' : '#ffffff');
+    if (meta) meta.setAttribute('content', t === 'dark' ? '#0b0f14' : '#ffffff');
   }
   document.addEventListener('click', (e) => {
     const el = (e.target as HTMLElement | null)?.closest<HTMLElement>('[data-theme-toggle]');

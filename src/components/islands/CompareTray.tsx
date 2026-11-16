@@ -3,6 +3,8 @@ import { useStore } from '@nanostores/react';
 import { compareIds, removeCompare, setCompare } from '../../stores/compare';
 import { extremeIndices } from '../../lib/derive';
 import { DIFF_FOOTNOTE, DIFF_KEY, MIN_SPREAD } from '../../lib/compare';
+import { keyDifferences, type LineupCatalogue, type LineupValues } from '../../lib/lineup';
+import LineupChart, { SeriesMark, type ChartEntry } from './LineupChart';
 
 // --- Shapes passed from compare/index.astro (compact, serialisable) -------------------
 export interface CompareVariant {
@@ -52,6 +54,41 @@ export interface SuggestedPair {
 interface Props {
   data: Record<string, CompareRacket>;
   suggestions: SuggestedPair[];
+  /** Every published value in the catalogue, per spec — the lineup chart's backdrop. */
+  catalogue: LineupCatalogue;
+}
+
+/** The selected variant's figures in the shape the lineup chart and summary use. */
+function lineupValues(r: CompareRacket, v: CompareVariant): LineupValues {
+  return {
+    balance: v.balancePointMm,
+    weight: v.weightMidG,
+    swing: v.swingWeightMissing ? null : v.swingWeight,
+    tension: v.maxTensionLbs,
+    stiffness: r.stiffnessOrdinal || null,
+    shaft: r.shaftDiameterMm,
+    frame: r.frameAreaCm2,
+    price: r.pricePhp,
+  };
+}
+
+/**
+ * Series slots follow the racket, never its position: removing the second pick must not
+ * repaint the third. Each racket keeps the first free slot from when it was added.
+ */
+function useSeriesSlots(ids: string[]): Record<string, number> {
+  const ref = useRef<Record<string, number>>({});
+  const next: Record<string, number> = {};
+  for (const id of ids) if (ref.current[id] !== undefined) next[id] = ref.current[id]!;
+  for (const id of ids) {
+    if (next[id] !== undefined) continue;
+    const used = new Set(Object.values(next));
+    let slot = 0;
+    while (used.has(slot)) slot++;
+    next[id] = slot;
+  }
+  ref.current = next;
+  return next;
 }
 
 const DASH = '—';
@@ -118,12 +155,13 @@ function useSelectedRackets(data: Record<string, CompareRacket>): CompareRacket[
   return ids.map((id) => data[id]).filter((r): r is CompareRacket => Boolean(r));
 }
 
-export default function CompareTray({ data, suggestions }: Props) {
+export default function CompareTray({ data, suggestions, catalogue }: Props) {
   const rackets = useSelectedRackets(data);
   const [variantIdx, setVariantIdx] = useState<Record<string, number>>({});
   const [mobile, setMobile] = useState(false);
   const [pairIds, setPairIds] = useState<string[]>([]);
   const [scrollable, setScrollable] = useState(false);
+  const [diffOnly, setDiffOnly] = useState(false);
   const tableWrapRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -153,6 +191,7 @@ export default function CompareTray({ data, suggestions }: Props) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   const ids = useStore(compareIds);
+  const slots = useSeriesSlots(ids);
   useEffect(() => {
     const qs = ids.length ? `?ids=${ids.join(',')}` : '';
     window.history.replaceState(null, '', qs || window.location.pathname);
@@ -245,6 +284,18 @@ export default function CompareTray({ data, suggestions }: Props) {
     return { row, cells, highs, lows, uniform };
   });
 
+  const shownRows = diffOnly ? rowMeta.filter((m) => !m.uniform) : rowMeta;
+  const hiddenCount = rowMeta.length - shownRows.length;
+
+  const chartEntries: ChartEntry[] = visibleRackets.map((r) => ({
+    id: r.id,
+    name: r.name,
+    slot: slots[r.id] ?? 0,
+    weightClass: variantOf(r).weightClass,
+    values: lineupValues(r, variantOf(r)),
+  }));
+  const differences = keyDifferences(chartEntries, catalogue);
+
   const renderRow = ({ row, cells, highs, lows, uniform }: (typeof rowMeta)[number]) => (
     <tr key={row.key} className={uniform ? 'is-uniform' : ''}>
       <th scope="row">
@@ -267,7 +318,7 @@ export default function CompareTray({ data, suggestions }: Props) {
         const marked = isHigh || isLow;
         const missing = c.display === DASH;
         return (
-          <td key={i} className={marked ? 'is-marked' : undefined}>
+          <td key={i} className={marked ? `is-marked ${isHigh ? 'is-high' : 'is-low'}` : undefined}>
             <span
               className={missing ? 'spec-missing' : 'tnum font-semibold'}
               title={missing ? 'Not published by OGKILS' : undefined}
@@ -295,16 +346,52 @@ export default function CompareTray({ data, suggestions }: Props) {
 
   return (
     <div>
+      {/* Biggest differences — the table's headline, in words */}
+      <section className="diff-summary" aria-labelledby="diff-summary-title">
+        <h2 id="diff-summary-title" className="panel-heading">Biggest differences</h2>
+        {differences.length ? (
+          <ol className="diff-summary-list">
+            {differences.map((d, i) => (
+              <li key={d.key}>
+                <span className="diff-summary-rank tnum" aria-hidden="true">{i + 1}</span>
+                <div>
+                  <p className="font-bold uppercase tracking-[0.06em] text-fg">{d.label}</p>
+                  <p className="mt-0.5 text-sm leading-relaxed text-fg-muted">{d.sentence}</p>
+                </div>
+              </li>
+            ))}
+          </ol>
+        ) : (
+          <p className="mt-2 text-sm text-fg-muted">
+            These rackets are close on every published spec — the choice comes down to feel,
+            looks and price.
+          </p>
+        )}
+      </section>
+
       {/* Controls */}
       <div className="mb-4 flex flex-wrap items-center justify-between gap-x-6 gap-y-3">
-        <p className="text-sm text-fg-muted">
-          <span className="tnum font-bold text-fg">{mobile ? `2 of ${rackets.length}` : rackets.length}</span>{' '}
-          rackets compared
-        </p>
+        <div className="flex flex-wrap items-center gap-x-5 gap-y-2">
+          <p className="text-sm text-fg-muted">
+            <span className="tnum font-bold text-fg">{mobile ? `2 of ${rackets.length}` : rackets.length}</span>{' '}
+            rackets compared
+          </p>
+          <label className="diff-toggle">
+            <input
+              type="checkbox"
+              checked={diffOnly}
+              onChange={(e) => setDiffOnly(e.target.checked)}
+            />
+            <span>Differences only</span>
+            {diffOnly && hiddenCount > 0 && (
+              <span className="text-fg-faint">({hiddenCount} matching hidden)</span>
+            )}
+          </label>
+        </div>
         <ul className="spec-key">
           {DIFF_KEY.map((k) => (
             <li key={k.glyph}>
-              <span className={k.muted ? 'spec-missing' : 'text-diff'} aria-hidden="true">{k.glyph}</span>
+              <span className={k.muted ? 'spec-missing' : k.glyph === '▲' ? 'diff-high' : 'diff-low'} aria-hidden="true">{k.glyph}</span>
               {k.label}
             </li>
           ))}
@@ -381,7 +468,8 @@ export default function CompareTray({ data, suggestions }: Props) {
                       </svg>
                     </button>
 
-                    <a href={`/rackets/${r.id}`} className="th-name uppercase">
+                    <a href={`/rackets/${r.id}`} className="th-name inline-flex items-center gap-1.5 uppercase">
+                      <SeriesMark slot={slots[r.id] ?? 0} size={10} />
                       {r.name}
                     </a>
 
@@ -415,7 +503,7 @@ export default function CompareTray({ data, suggestions }: Props) {
           <tbody>
             {/* Every spec, always, in the order the brochure lists them. Rows where the
                 values match are tinted a shade lighter — a quiet cue, never a hidden row. */}
-            {rowMeta.map((meta) => renderRow(meta))}
+            {shownRows.map((meta) => renderRow(meta))}
 
             {/* Stock */}
             <tr>
@@ -459,6 +547,8 @@ export default function CompareTray({ data, suggestions }: Props) {
       </div>
 
       <p className="spec-footnote">{DIFF_FOOTNOTE}</p>
+
+      <LineupChart entries={chartEntries} catalogue={catalogue} />
     </div>
   );
 }
