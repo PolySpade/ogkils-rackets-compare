@@ -2,7 +2,7 @@
 import { CHANNEL_ORDER } from './data';
 import type { Channel, Racket } from './types';
 
-export type Placement = 'detail' | 'compare' | 'finder' | 'chat';
+export type Placement = 'detail' | 'compare' | 'finder' | 'chat' | 'roulette';
 
 export const CHANNEL_LABEL: Record<Channel, string> = {
   shopify: 'OGKILS Store',

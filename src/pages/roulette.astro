@@ -1,0 +1,56 @@
+---
+import { getImage } from 'astro:assets';
+import Base from '../layouts/Base.astro';
+import RacketRoulette, { type RouletteRacket } from '../components/islands/RacketRoulette.tsx';
+import { catalog } from '../lib/data';
+import { classMeta } from '../lib/classification';
+import { formatPrice, formatStiffness } from '../lib/format';
+import { racketImage } from '../lib/images';
+import { buyLinks, buildBuyUrl, STORE_FALLBACK_URL } from '../lib/links';
+
+const rackets: RouletteRacket[] = [];
+for (const r of catalog) {
+  const img = racketImage(r.id);
+  const stiff = formatStiffness(r.stiffness, r.derived.stiffnessWordConflict);
+  const primary = buyLinks(r).find((l) => l.primary) ?? buyLinks(r)[0];
+  rackets.push({
+    id: r.id,
+    name: r.name,
+    classLabel: classMeta(r.classification).label,
+    series: r.series,
+    weightClasses: r.variants.map((v) => v.weightClass),
+    pricePhp: r.pricePhp,
+    priceLabel: formatPrice(r.pricePhp),
+    thumb: img ? (await getImage({ src: img, width: 96, format: 'webp' })).src : null,
+    image: img ? (await getImage({ src: img, width: 192, format: 'webp' })).src : null,
+    balance: r.balance,
+    stiffness: stiff.label ?? stiff.primary,
+    blurb: r.whoItsFor ?? r.tagline ?? null,
+    buyUrl: primary ? buildBuyUrl(primary.url, r.id, primary.channel, 'roulette') : STORE_FALLBACK_URL,
+    buyLabel: primary ? `Buy on ${primary.label}` : 'OGKILS Store',
+  });
+}
+---
+
+<Base
+  title="Racket Roulette — spin to pick an OGKILS racket"
+  description="Can't decide? Narrow the wheel by style, budget and weight, then spin to land on an OGKILS badminton racket."
+  path="/roulette"
+>
+  <div class="mx-auto max-w-6xl px-4 py-10 sm:px-6">
+    <header class="mb-8">
+      <p class="section-kicker">Rackets / Game</p>
+      <h1 class="display-heading is-title mt-2 text-4xl text-fg sm:text-6xl">Racket roulette</h1>
+      <p class="prose-measure mt-3 text-fg-muted">
+        Stuck between rackets? Put the ones that fit you on the wheel and let it decide.
+        Then check the specs before you commit — or <a href="/finder" class="font-bold text-brand-strong underline underline-offset-2">take the finder quiz</a> for a matched pick.
+      </p>
+    </header>
+    <RacketRoulette client:only="react" rackets={rackets} />
+  </div>
+</Base>
+
+<script>
+  import { initBuyTracking } from '../lib/analytics';
+  initBuyTracking();
+</script>

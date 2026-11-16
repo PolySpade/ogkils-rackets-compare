@@ -1,15 +1,55 @@
 ---
 import Base from '../layouts/Base.astro';
+import { getImage } from 'astro:assets';
 import SpecMap from '../components/islands/SpecMap.tsx';
+import RacketBalls, { type BallRacket } from '../components/islands/RacketBalls.tsx';
+import { classMeta } from '../lib/classification';
+import { formatPrice } from '../lib/format';
+import { racketImage } from '../lib/images';
 import { catalog } from '../lib/data';
 import { getTerm } from '../lib/glossary';
-import { AXES, AXIS_ORDER, buildSpecPoints, type AxisKey } from '../lib/specmap';
+import { AXES, AXIS_ORDER, buildSpecPoints, variantValues, type AxisKey } from '../lib/specmap';
 
 const points = buildSpecPoints(catalog);
 const axisHelp: Partial<Record<AxisKey, string>> = {};
 for (const k of AXIS_ORDER) {
   const g = AXES[k].glossary ? getTerm(AXES[k].glossary!) : undefined;
   if (g) axisHelp[k] = g.short;
+}
+
+// One ball per racket: each spec is the midpoint across its weight classes, with the
+// range kept for the label.
+const balls: BallRacket[] = [];
+for (const r of catalog) {
+  const perVariant = r.variants.map((v) => variantValues(r, v));
+  const values = {} as BallRacket['values'];
+  const ranges = {} as BallRacket['ranges'];
+  for (const k of AXIS_ORDER) {
+    const nums = perVariant.map((v) => v[k]).filter((n): n is number => n !== null);
+    if (!nums.length) {
+      values[k] = null;
+      ranges[k] = null;
+      continue;
+    }
+    const lo = Math.min(...nums);
+    const hi = Math.max(...nums);
+    values[k] = (lo + hi) / 2;
+    ranges[k] = [lo, hi];
+  }
+  const img = racketImage(r.id);
+  balls.push({
+    id: r.id,
+    name: r.name,
+    classification: r.classification,
+    classLabel: classMeta(r.classification).label,
+    balanceBucket: r.derived.balanceBucket,
+    series: r.series,
+    weightClasses: r.variants.map((v) => v.weightClass),
+    thumb: img ? (await getImage({ src: img, width: 112, format: 'webp' })).src : null,
+    priceLabel: formatPrice(r.pricePhp),
+    values,
+    ranges,
+  });
 }
 ---
 
@@ -30,6 +70,10 @@ for (const k of AXIS_ORDER) {
 
     <div class="catalog-rule pt-5">
       <SpecMap client:only="react" points={points} axisHelp={axisHelp} />
+    </div>
+
+    <div class="catalog-rule mt-16 pt-6">
+      <RacketBalls client:only="react" rackets={balls} />
     </div>
   </div>
 </Base>

@@ -74,6 +74,10 @@ export default function LineupChart({ entries, catalogue }: Props) {
           const range = lineupRange(spec, all);
           if (!range) return null;
           const ticks = Array.from(new Set(all));
+          // Unpublished figures are left off the strip, not parked on it.
+          const lanes = entries.filter((e) => e.values[spec.key] !== null);
+          const missing = entries.filter((e) => e.values[spec.key] === null);
+          if (lanes.length === 0) return null;
           return (
             <figure key={spec.key} className="lineup-spec">
               <figcaption className="lineup-spec-head">
@@ -100,7 +104,7 @@ export default function LineupChart({ entries, catalogue }: Props) {
               </div>
 
               <ul className="lineup-lanes">
-                {entries.map((e) => {
+                {lanes.map((e) => {
                   const v = e.values[spec.key];
                   const pos = v === null ? null : positionOn(v, range);
                   const isHover = hover?.spec === spec.key && hover.id === e.id;
@@ -160,6 +164,11 @@ export default function LineupChart({ entries, catalogue }: Props) {
                   );
                 })}
               </ul>
+              {missing.length > 0 && (
+                <p className="mt-1 text-[0.7rem] text-fg-faint">
+                  Not published for {missing.map((e) => e.name).join(', ')}.
+                </p>
+              )}
             </figure>
           );
         })}
