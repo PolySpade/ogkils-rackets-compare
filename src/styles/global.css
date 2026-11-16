@@ -39,10 +39,10 @@
   --color-diff-surface: #fbf0da;
   /* ▲ highest and ▼ lowest get their own hue so the two ends read apart at a glance.
      Warm vs cool, neither green nor red: an extreme is a measurement, not a win. */
-  --color-diff-high: #9a4a00;
-  --color-diff-high-surface: #fcefdc;
-  --color-diff-low: #0b6f80;
-  --color-diff-low-surface: #e1f3f6;
+  --color-diff-high: #0b6f80;
+  --color-diff-high-surface: #e1f3f6;
+  --color-diff-low: #9a4a00;
+  --color-diff-low-surface: #fcefdc;
 
   --color-stage: #f2f5f7;
 
@@ -89,10 +89,10 @@ html[data-theme="dark"] {
   --color-focus: #d7ff3c;
   --color-diff: #f7b23b;
   --color-diff-surface: #2b2616;
-  --color-diff-high: #f7b23b;
-  --color-diff-high-surface: #2e2616;
-  --color-diff-low: #56cfe1;
-  --color-diff-low-surface: #122a33;
+  --color-diff-high: #56cfe1;
+  --color-diff-high-surface: #122a33;
+  --color-diff-low: #f7b23b;
+  --color-diff-low-surface: #2e2616;
   --color-stage: #111820;
 }
 
@@ -877,8 +877,8 @@ html[data-theme="dark"] [data-theme-toggle] .icon-to-light {
 .spec-table tbody tr.is-uniform td {
   background: color-mix(in oklab, var(--color-panel-2) 45%, var(--color-panel));
 }
-/* Marked extreme: tinted field + a solid edge + a glyph — amber ▲ for the highest,
-   cyan ▼ for the lowest. The glyph keeps it from resting on colour alone. */
+/* Marked extreme: tinted field + a solid edge + a glyph — cyan ▲ for the highest,
+   amber ▼ for the lowest. The glyph keeps it from resting on colour alone. */
 .spec-table tbody td.is-marked {
   background: var(--color-diff-surface);
   box-shadow: inset 3px 0 0 var(--color-diff);
